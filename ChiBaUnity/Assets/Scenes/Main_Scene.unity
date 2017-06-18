@@ -273,6 +273,18 @@ Prefab:
       propertyPath: m_Name
       value: ShibaDog
       objectReference: {fileID: 0}
+    - target: {fileID: 100016, guid: e6db5b8690570144e9781dc37e3f378e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100036, guid: e6db5b8690570144e9781dc37e3f378e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100042, guid: e6db5b8690570144e9781dc37e3f378e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e6db5b8690570144e9781dc37e3f378e, type: 3}
   m_IsPrefabParent: 0
