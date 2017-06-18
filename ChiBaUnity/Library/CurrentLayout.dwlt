@@ -20,7 +20,7 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 2}
-  m_MinSize: {x: 950, y: 300}
+  m_MinSize: {x: 950, y: 492}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &2
 MonoBehaviour:
@@ -88,10 +88,10 @@ MonoBehaviour:
     y: 30
     width: 3440
     height: 1307
-  m_MinSize: {x: 913, y: 442}
-  m_MaxSize: {x: 22008, y: 10021}
+  m_MinSize: {x: 917, y: 442}
+  m_MaxSize: {x: 22012, y: 10021}
   vertical: 0
-  controlID: 21
+  controlID: 129
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -135,7 +135,7 @@ MonoBehaviour:
   m_MinSize: {x: 202, y: 442}
   m_MaxSize: {x: 4002, y: 8042}
   vertical: 1
-  controlID: 22
+  controlID: 130
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -154,8 +154,8 @@ MonoBehaviour:
     y: 0
     width: 410
     height: 1307
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 204, y: 221}
+  m_MaxSize: {x: 4004, y: 4021}
   m_ActualView: {fileID: 12}
   m_Panes:
   - {fileID: 12}
@@ -289,9 +289,9 @@ MonoBehaviour:
     height: 1286
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 0ab4fdff
-    m_LastClickedID: -150518
-    m_ExpandedIDs: b2b4fdffe48cfeff148ffeffeab8feffecb8feff42b9feff42cdfeff14d0feff3c5dffff885dffffdafaffffe0fbffff00000000d2290000dc290000c23a0000c43a0000d83a0000e43a0000fc3a0000163b00003a3b00004a3b00007450000088550000c2550000bc600000ca600000d4600000
+    m_SelectedIDs: 
+    m_LastClickedID: 0
+    m_ExpandedIDs: e0fbffff00000000f8290000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -374,7 +374,7 @@ MonoBehaviour:
     width: 559
     height: 1286
   m_SearchFilter:
-    m_NameFilter: RETICLE
+    m_NameFilter: 
     m_ClassNames: []
     m_AssetLabels: []
     m_AssetBundleNames: []
@@ -384,33 +384,33 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/GoogleVR/Demos/Prefabs/ScrollingUIDemo/Pages
+    - Assets/StaticAssets/Effects/Models
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/GoogleVR/Demos/Prefabs/ScrollingUIDemo/Pages
+  - Assets/StaticAssets/Effects/Models
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\Jhomar\OneDrive\UniStuff\5. Semester\EMM\git-ChiBa\ChiBa\ChiBaUnity
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 
-    m_LastClickedID: 0
-    m_ExpandedIDs: 00000000dc250000322600004e260000d62600001027000012270000182700004c2700007e2700006228000000ca9a3bffffff7f
+    m_SelectedIDs: 2a290000
+    m_LastClickedID: 10538
+    m_ExpandedIDs: 00000000d62500002c2600004c260000d62600001027000012270000182700004c270000c62700002a29000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: Models
-      m_OriginalName: Models
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 10338
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 8}
     m_SearchString: 
@@ -424,7 +424,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000dc250000322600004e260000d626000012270000182700004c2700007e270000
+    m_ExpandedIDs: 00000000d62500002c2600004c260000d62600001027000012270000182700004c270000c62700002a290000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -587,9 +587,9 @@ MonoBehaviour:
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -139.12888, y: 97.866455, z: 50.58277}
+    m_Target: {x: 57.6753, y: 61.17342, z: -25.121605}
     speed: 2
-    m_Value: {x: -139.12888, y: 97.866455, z: 50.58277}
+    m_Value: {x: 57.6753, y: 61.17342, z: -25.121605}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -612,13 +612,13 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
   m_Rotation:
-    m_Target: {x: 0.10798917, y: -0.68052936, z: 0.102433085, w: 0.7174413}
+    m_Target: {x: 0.09904589, y: -0.45889178, z: 0.05156476, w: 0.881447}
     speed: 2
-    m_Value: {x: 0.10798936, y: -0.68053055, z: 0.10243327, w: 0.71744263}
+    m_Value: {x: 0.09904591, y: -0.4588919, z: 0.05156477, w: 0.88144726}
   m_Size:
-    m_Target: 366.5258
+    m_Target: 94.97557
     speed: 2
-    m_Value: 366.5258
+    m_Value: 94.97557
   m_Ortho:
     m_Target: 0
     speed: 2
