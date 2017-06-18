@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/ic_add_appointment"
+        android:icon="@drawable/ic_add_appointment"
+        android:title="Termin">
+    </item>
+
+    <item
+        android:id="@+id/ic_add_todo"
+        android:icon="@drawable/ic_add_todo"
+        android:title="ToDo">
+    </item>
+</menu>
