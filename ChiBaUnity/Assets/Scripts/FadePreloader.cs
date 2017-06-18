@@ -7,7 +7,7 @@ public class FadePreloader : MonoBehaviour {
 
   
     private float loadTime;
-    private float minimumLogoTime = 5.0f;
+    private float minimumLogoTime = 6.0f;
     private CanvasGroup fadeGroup;
 
     private void Start()
