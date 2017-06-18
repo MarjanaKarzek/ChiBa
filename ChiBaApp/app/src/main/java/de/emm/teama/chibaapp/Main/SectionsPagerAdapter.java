@@ -9,11 +9,13 @@ import java.util.List;
 
 /**
  * Created by Marjana Karzek on 18.06.2017.
+ *
+ * Class for storing fragments for tabs
  */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
     private static final String TAG = "SectionsPagerAdapter";
 
-    private final List<Fragment> mFragmentList = new ArrayList<>();
+    private final List<Fragment> fragmentList = new ArrayList<>();
 
     public SectionsPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -21,16 +23,15 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return mFragmentList.get(position);
+        return fragmentList.get(position);
     }
-
 
     @Override
     public int getCount() {
-        return mFragmentList.size();
+        return fragmentList.size();
     }
 
     public void addFragment(Fragment fragment){
-        mFragmentList.add(fragment);
+        fragmentList.add(fragment);
     }
 }

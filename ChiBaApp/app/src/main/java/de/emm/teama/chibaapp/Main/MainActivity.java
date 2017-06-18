@@ -19,16 +19,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d(TAG,"onCreate: starting.");
-        setupViewPager();
+        ViewPager viewPager = (ViewPager) findViewById(R.id.container);
+
+        setupBottomNavigationView();
+        setupViewPager(viewPager);
     }
 
-    private void setupViewPager(){
+    /**
+     * ViewPager setup
+     */
+    private void setupViewPager(ViewPager viewPager){
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new MainFragment());
         adapter.addFragment(new CalendarFragment());
         adapter.addFragment(new ToDoListFragment());
         adapter.addFragment(new SettingsFragment());
-        ViewPager viewPager = (ViewPager)findViewById(R.id.container);
         viewPager.setAdapter(adapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -39,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(3).setIcon(R.drawable.ic_settings);
     }
 
+    /**
+     * BottomNavgationView setup
+     */
     private void setupBottomNavigationView(){
         Log.d(TAG,"setupBottomNavigationView: setting up BottomNavigationView");
         BottomNavigationView bottomNavigationView = (BottomNavigationView)findViewById(R.id.bottomNavViewBar);

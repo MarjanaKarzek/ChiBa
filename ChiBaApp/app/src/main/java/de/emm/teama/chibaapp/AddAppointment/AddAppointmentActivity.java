@@ -8,7 +8,7 @@ import android.util.Log;
 import de.emm.teama.chibaapp.R;
 
 /**
- * Created by marja on 18.06.2017.
+ * Created by Marjana Karzek on 18.06.2017.
  */
 
 public class AddAppointmentActivity extends AppCompatActivity{
@@ -17,7 +17,7 @@ public class AddAppointmentActivity extends AppCompatActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_add_appointment);
         Log.d(TAG, "onCreate: started");
     }
 

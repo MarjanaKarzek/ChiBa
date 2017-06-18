@@ -4,11 +4,21 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/textViewCalendar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Calendar"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:textSize="20sp"/>
+        android:layout_marginTop="100dp"
+        android:textSize="20sp"
+        android:text="Calendar" />
+
+    <TextView
+        android:id="@+id/textViewCalendar2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewCalendar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="17dp"
+        android:text="Tab2" />
 
 </RelativeLayout>
