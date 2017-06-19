@@ -18,10 +18,6 @@ public class FadePreloader : MonoBehaviour {
         // Start with a white screen;
         fadeGroup.alpha = 1;
 
-        // Pre load the next scene
-        // ---
-
-        // Show Logo for minimum time
         if (Time.time < minimumLogoTime)
             loadTime = minimumLogoTime;
         else
@@ -36,14 +32,5 @@ public class FadePreloader : MonoBehaviour {
             fadeGroup.alpha = 1 - Time.time;
         }
 
-        // Fade-out
-        if(Time.time > minimumLogoTime && loadTime != 0)
-        {
-            fadeGroup.alpha = Time.time - minimumLogoTime;
-            if(fadeGroup.alpha >=1)
-            {
-                SceneManager.LoadScene("Main_Scene");
-            }
-        }
     }
 }
