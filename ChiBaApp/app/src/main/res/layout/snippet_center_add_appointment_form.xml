@@ -1,0 +1,121 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/addAppointmentEditTextTitle"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:inputType="text"
+            android:text="Titel" />
+
+        <Switch
+            android:id="@+id/addAppointmentSwitchFullday"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/addAppointmentEditTextTitle"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:text="Ganztägig" />
+
+        <LinearLayout
+            android:id="@+id/addAppointmentDateSettings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/addAppointmentSwitchFullday"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:id="@+id/addAppointmentStartDate"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/addAppointmentTextViewStartDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+
+                    android:text="17. Mai 2017" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/addAppointmentTimeSettings"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/addAppointmentTextViewStartTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="12:00" />
+
+                    <TextView
+                        android:id="@+id/addAppointmentTextViewStart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="Start" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/addAppointmentTextViewEndTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="14:00" />
+
+                    <TextView
+                        android:id="@+id/addAppointmentTextViewEnd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="Ende" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <EditText
+            android:id="@+id/EditTextLocation"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/addAppointmentDateSettings"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:inputType="text"
+            android:text="Ort" />
+
+
+    </RelativeLayout>
+</merge>
