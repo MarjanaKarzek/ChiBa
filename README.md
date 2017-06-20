@@ -1,5 +1,21 @@
 # ChiBa
 
+## Android Requirements
+The app is developed for a specific android environment. To avoid conflicts we set up the following requirements:
+- Samsung Galaxy S7 Edge
+- 5,5 " screen size
+- resolution of 1440 x 2560 px
+- 4 GB RAM
+
+## OpenGL Requirements
+- OpenGL ES 2.0 API
+- data format: OBJ 
+- calculation of normals
+- transformations: scaling, rotation, translation
+- colors
+- textures
+- lightning
+
 ## Version control
 
 ### Commit messages
