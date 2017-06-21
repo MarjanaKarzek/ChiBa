@@ -66,7 +66,7 @@ public class AddAppointmentActivity extends AppCompatActivity{
         endTime = (TextView) findViewById(R.id.addAppointmentTextViewEndTime);
         viewFlipperFullDay = (ViewFlipper) findViewById( R.id.addAppointmentViewFlipperFullDay );
 
-
+        setupToolbar();
         setupDateTimePickers();
         setupPickersOnClickListener();
 
