@@ -119,6 +119,7 @@ public class AddToDoActivity extends AppCompatActivity{
                 adapter2.notifyDataSetChanged();
             }
         });
+        hashtagListView.setEmptyView( findViewById( R.id.addToDoListViewHashtagEmpty) );
         assignedHashtagListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -131,6 +132,7 @@ public class AddToDoActivity extends AppCompatActivity{
                 adapter2.notifyDataSetChanged();
             }
         });
+        assignedHashtagListView.setEmptyView(findViewById(R.id.addToDoListViewAssignedHashtagEmpty));
     }
 
     private void initializeHashtags(){

@@ -43,7 +43,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_below="@+id/addToDoEditTextLocation">
+            android:layout_below="@+id/addToDoEditTextLocation"
+            android:layout_marginTop="16dp">
             <ListView
                 android:id="@+id/addToDoListViewAssignedHashtag"
                 android:layout_width="match_parent"
@@ -51,6 +52,16 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginBottom="16dp" />
+            <TextView
+                android:id="@+id/addToDoListViewAssignedHashtagEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:gravity="center"
+                android:text="keine Hashtags hinzugefügt"
+                android:textStyle="italic"
+                android:visibility="gone" />
             <EditText
                 android:id="@+id/addToDoEditTextSearchHashtag"
                 android:layout_width="match_parent"
@@ -67,6 +78,16 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginBottom="20dp" />
+            <TextView
+                android:id="@+id/addToDoListViewHashtagEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:gravity="center"
+                android:textStyle="italic"
+                android:text="keine weiteren Hashtags verfügbar"
+                android:visibility="gone" />
         </LinearLayout>
 
     </RelativeLayout>
