@@ -10,12 +10,14 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Switch;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import de.emm.teama.chibaapp.AddAppointment.AddAppointmentActivity;
 import de.emm.teama.chibaapp.Main.MainActivity;
@@ -105,6 +107,30 @@ public class AddToDoActivity extends AppCompatActivity{
         hashtagListView.setAdapter(adapter);
         adapter2 = new RemoveHashtagListAdapter(this, R.layout.layout_remove_hashtag_adapter_view, assignedHashtags);
         assignedHashtagListView.setAdapter(adapter2);
+        hashtagListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "onItemClick: clicked " + hashtags.get(position));
+                String currentItem = hashtags.get(position);
+                hashtags.remove(position);
+                assignedHashtags.add(currentItem);
+                Collections.sort(assignedHashtags);
+                adapter.notifyDataSetChanged();
+                adapter2.notifyDataSetChanged();
+            }
+        });
+        assignedHashtagListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "onItemClick: clicked " + assignedHashtags.get(position));
+                String currentItem = assignedHashtags.get(position);
+                assignedHashtags.remove(position);
+                hashtags.add(currentItem);
+                Collections.sort(hashtags);
+                adapter.notifyDataSetChanged();
+                adapter2.notifyDataSetChanged();
+            }
+        });
     }
 
     private void initializeHashtags(){
@@ -113,36 +139,6 @@ public class AddToDoActivity extends AppCompatActivity{
         hashtags.add("Einkaufen");
         hashtags.add("Arzt");
         hashtags.add("Haushalt");
-        hashtags.add("Fitness");
-        hashtags.add("Kochen");
-        hashtags.add("Einkaufen");
-        hashtags.add("Arzt");
-        hashtags.add("Haushalt");
-        hashtags.add("Fitness");
-        hashtags.add("Kochen");
-        hashtags.add("Einkaufen");
-        hashtags.add("Arzt");
-        hashtags.add("Haushalt");
-        hashtags.add("Fitness");
-        hashtags.add("Kochen");
-        hashtags.add("Einkaufen");
-        hashtags.add("Arzt");
-        hashtags.add("Haushalt");
-        hashtags.add("Fitness");
-        hashtags.add("Kochen");
-        hashtags.add("Einkaufen");
-        hashtags.add("Arzt");
-        hashtags.add("Haushalt");
-        hashtags.add("Fitness");
-        hashtags.add("Kochen");
-        hashtags.add("Einkaufen");
-        hashtags.add("Arzt");
-        hashtags.add("Haushalt");
-        hashtags.add("Fitness");
-        hashtags.add("Kochen");
-        hashtags.add("Einkaufen");
-        hashtags.add("Arzt");
-        hashtags.add("Haushalt");
-        assignedHashtags.add("Assigend Hashtag");
+        Collections.sort(hashtags);
     }
 }
