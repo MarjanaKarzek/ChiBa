@@ -151,6 +151,7 @@ public class AddAppointmentActivity extends AppCompatActivity{
                 adapter2.notifyDataSetChanged();
             }
         });
+        hashtagListView.setEmptyView( findViewById( R.id.addAppointmentListViewHashtagEmpty) );
         assignedHashtagListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -163,6 +164,7 @@ public class AddAppointmentActivity extends AppCompatActivity{
                 adapter2.notifyDataSetChanged();
             }
         });
+        assignedHashtagListView.setEmptyView(findViewById(R.id.addAppointmentListViewAssignedHashtagEmpty));
     }
 
     private void setupPickersOnClickListener() {
