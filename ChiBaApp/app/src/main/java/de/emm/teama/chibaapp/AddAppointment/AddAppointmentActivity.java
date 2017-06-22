@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import java.text.SimpleDateFormat;
@@ -32,7 +33,10 @@ import java.util.Locale;
 import de.emm.teama.chibaapp.Main.MainActivity;
 import de.emm.teama.chibaapp.R;
 import de.emm.teama.chibaapp.Utils.AddHashtagListAdapter;
+import de.emm.teama.chibaapp.Utils.DatabaseHelper;
 import de.emm.teama.chibaapp.Utils.RemoveHashtagListAdapter;
+
+import static de.emm.teama.chibaapp.Main.MainActivity.database;
 
 /**
  * Created by Marjana Karzek on 18.06.2017.
@@ -70,6 +74,13 @@ public class AddAppointmentActivity extends AppCompatActivity{
     private AddHashtagListAdapter adapter;
     private RemoveHashtagListAdapter adapter2;
 
+    //Database Fields
+    //private DatabaseHelper database;
+
+    //Remaining Form Fields Initialization
+    private EditText title;
+    private EditText location;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +109,10 @@ public class AddAppointmentActivity extends AppCompatActivity{
         setupFullDaySwitch();
         setupListViews();
         setupSearchField();
+
+        //Remaining Form Fields Initialization
+        title = (EditText) findViewById(R.id.addAppointmentEditTextTitle);
+        location = (EditText) findViewById(R.id.addAppointmentEditTextLocation);
     }
 
     private void setupSearchField() {
@@ -216,8 +231,20 @@ public class AddAppointmentActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onClick: add appointment option selected");
+
+                String titleString = title.getText().toString();
+                boolean fulldayBoolean = fulldaySwitch.isChecked();
+                String locationString = location.getText().toString();
+
+                boolean insertData = database.addEvent(titleString,fulldayBoolean,0,0,0,0,locationString);
+                int successState = 0;
+                if(insertData == true)
+                    successState = 1;
+
                 Intent intent = new Intent(context, MainActivity.class);
+                intent.putExtra("EXTRA_SUCCESS_STATE", successState);
                 context.startActivity(intent);
+
             }
         });
     }
