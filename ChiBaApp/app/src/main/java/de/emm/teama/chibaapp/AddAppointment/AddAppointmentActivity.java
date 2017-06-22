@@ -4,31 +4,30 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.ViewFlipper;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
 import de.emm.teama.chibaapp.Main.MainActivity;
 import de.emm.teama.chibaapp.R;
+import de.emm.teama.chibaapp.Utils.AddHashtagListAdapter;
+import de.emm.teama.chibaapp.Utils.RemoveHashtagListAdapter;
 
 /**
  * Created by Marjana Karzek on 18.06.2017.
@@ -51,8 +50,12 @@ public class AddAppointmentActivity extends AppCompatActivity{
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.GERMANY);
     private SimpleDateFormat simpleTimeFormat = new SimpleDateFormat(timeFormat, Locale.GERMANY);
     private ViewFlipper viewFlipperFullDay;
+    private Switch fulldaySwitch;
 
-
+    private ArrayList<String> hashtags = new ArrayList<String>();
+    private ArrayList<String> assignedHashtags = new ArrayList<String>();
+    private ListView hashtagListView;
+    private ListView assignedHashtagListView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,12 +68,18 @@ public class AddAppointmentActivity extends AppCompatActivity{
         startTime = (TextView) findViewById(R.id.addAppointmentTextViewStartTime);
         endTime = (TextView) findViewById(R.id.addAppointmentTextViewEndTime);
         viewFlipperFullDay = (ViewFlipper) findViewById( R.id.addAppointmentViewFlipperFullDay );
+        hashtagListView = (ListView) findViewById(R.id.addAppointmentListViewHashtag);
+        assignedHashtagListView = (ListView) findViewById(R.id.addAppointmentListViewAssignedHashtag);
+        fulldaySwitch = (Switch) findViewById(R.id.addAppointmentSwitchFullday);
 
         setupToolbar();
         setupDateTimePickers();
         setupPickersOnClickListener();
+        setupListViews();
+        setupFullDaySwitch();
+    }
 
-        Switch fulldaySwitch = (Switch) findViewById(R.id.addAppointmentSwitchFullday);
+    private void setupFullDaySwitch() {
         fulldaySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -82,7 +91,14 @@ public class AddAppointmentActivity extends AppCompatActivity{
                 }
             }
         });
+    }
 
+    private void setupListViews() {
+        initializeHashtags();
+        AddHashtagListAdapter adapter = new AddHashtagListAdapter(this, R.layout.layout_add_hashtag_adapter_view, hashtags);
+        hashtagListView.setAdapter(adapter);
+        RemoveHashtagListAdapter adapter2 = new RemoveHashtagListAdapter(this, R.layout.layout_remove_hashtag_adapter_view, assignedHashtags);
+        assignedHashtagListView.setAdapter(adapter2);
     }
 
     private void setupPickersOnClickListener() {
@@ -182,5 +198,44 @@ public class AddAppointmentActivity extends AppCompatActivity{
                 endTime.setText(simpleTimeFormat.format(calendar.getTime()));
             }
         };
+    }
+
+    private void initializeHashtags(){
+        hashtags.add("Fitness");
+        hashtags.add("Kochen");
+        hashtags.add("Einkaufen");
+        hashtags.add("Arzt");
+        hashtags.add("Haushalt");
+        hashtags.add("Fitness");
+        hashtags.add("Kochen");
+        hashtags.add("Einkaufen");
+        hashtags.add("Arzt");
+        hashtags.add("Haushalt");
+        hashtags.add("Fitness");
+        hashtags.add("Kochen");
+        hashtags.add("Einkaufen");
+        hashtags.add("Arzt");
+        hashtags.add("Haushalt");
+        hashtags.add("Fitness");
+        hashtags.add("Kochen");
+        hashtags.add("Einkaufen");
+        hashtags.add("Arzt");
+        hashtags.add("Haushalt");
+        hashtags.add("Fitness");
+        hashtags.add("Kochen");
+        hashtags.add("Einkaufen");
+        hashtags.add("Arzt");
+        hashtags.add("Haushalt");
+        hashtags.add("Fitness");
+        hashtags.add("Kochen");
+        hashtags.add("Einkaufen");
+        hashtags.add("Arzt");
+        hashtags.add("Haushalt");
+        hashtags.add("Fitness");
+        hashtags.add("Kochen");
+        hashtags.add("Einkaufen");
+        hashtags.add("Arzt");
+        hashtags.add("Haushalt");
+        assignedHashtags.add("Assigend Hashtag");
     }
 }
