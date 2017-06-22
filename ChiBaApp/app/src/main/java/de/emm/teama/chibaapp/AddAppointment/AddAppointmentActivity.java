@@ -8,10 +8,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Switch;
@@ -56,6 +59,9 @@ public class AddAppointmentActivity extends AppCompatActivity{
     private ArrayList<String> assignedHashtags = new ArrayList<String>();
     private ListView hashtagListView;
     private ListView assignedHashtagListView;
+    private EditText searchfield;
+    private AddHashtagListAdapter adapter;
+    private RemoveHashtagListAdapter adapter2;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,12 +77,30 @@ public class AddAppointmentActivity extends AppCompatActivity{
         hashtagListView = (ListView) findViewById(R.id.addAppointmentListViewHashtag);
         assignedHashtagListView = (ListView) findViewById(R.id.addAppointmentListViewAssignedHashtag);
         fulldaySwitch = (Switch) findViewById(R.id.addAppointmentSwitchFullday);
+        searchfield = (EditText) findViewById(R.id.addAppointmentEditTextSearchHashtag);
 
         setupToolbar();
         setupDateTimePickers();
         setupPickersOnClickListener();
         setupListViews();
         setupFullDaySwitch();
+
+        searchfield.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                (AddAppointmentActivity.this).adapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     private void setupFullDaySwitch() {
@@ -95,9 +119,9 @@ public class AddAppointmentActivity extends AppCompatActivity{
 
     private void setupListViews() {
         initializeHashtags();
-        AddHashtagListAdapter adapter = new AddHashtagListAdapter(this, R.layout.layout_add_hashtag_adapter_view, hashtags);
+        adapter = new AddHashtagListAdapter(this, R.layout.layout_add_hashtag_adapter_view, hashtags);
         hashtagListView.setAdapter(adapter);
-        RemoveHashtagListAdapter adapter2 = new RemoveHashtagListAdapter(this, R.layout.layout_remove_hashtag_adapter_view, assignedHashtags);
+        adapter2 = new RemoveHashtagListAdapter(this, R.layout.layout_remove_hashtag_adapter_view, assignedHashtags);
         assignedHashtagListView.setAdapter(adapter2);
     }
 
