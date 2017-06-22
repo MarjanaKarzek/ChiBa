@@ -12,18 +12,62 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:inputType="text"
-            android:text="Titel" />
+            android:textSize="20sp"
+            android:hint="Titel" />
 
         <EditText
-            android:id="@+id/addToDoEditTextLocation"
+            android:id="@+id/addToDoEditTextduration"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_below="@+id/addToDoEditTextTitle"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:inputType="text"
-            android:text="Ort"
+            android:textSize="20sp"
+            android:hint="Dauer in Stunden"
             tools:ignore="LabelFor" />
+
+        <EditText
+            android:id="@+id/addToDoEditTextLocation"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/addToDoEditTextduration"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:inputType="text"
+            android:textSize="20sp"
+            android:hint="Ort"
+            tools:ignore="LabelFor" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@+id/addToDoEditTextLocation">
+            <ListView
+                android:id="@+id/addToDoListViewAssignedHashtag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="16dp" />
+            <EditText
+                android:id="@+id/addToDoEditTextSearchHashtag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Search Hashtags"
+                android:textSize="20sp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                />
+            <ListView
+                android:id="@+id/addToDoListViewHashtag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="20dp" />
+        </LinearLayout>
 
     </RelativeLayout>
 </merge>

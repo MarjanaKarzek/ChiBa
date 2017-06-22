@@ -39,6 +39,8 @@ import de.emm.teama.chibaapp.Utils.RemoveHashtagListAdapter;
 public class AddAppointmentActivity extends AppCompatActivity{
     private static final String TAG = "AddAppointmentActivity";
     private Context context = AddAppointmentActivity.this;
+
+    //Calendar Fields
     private Calendar calendar = Calendar.getInstance();
     private TextView startDate;
     private TextView endDate;
@@ -52,9 +54,12 @@ public class AddAppointmentActivity extends AppCompatActivity{
     private String timeFormat = "kk:mm";
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.GERMANY);
     private SimpleDateFormat simpleTimeFormat = new SimpleDateFormat(timeFormat, Locale.GERMANY);
+
+    //Switch Fields
     private ViewFlipper viewFlipperFullDay;
     private Switch fulldaySwitch;
 
+    //Hashtag List Fields
     private ArrayList<String> hashtags = new ArrayList<String>();
     private ArrayList<String> assignedHashtags = new ArrayList<String>();
     private ListView hashtagListView;
@@ -69,22 +74,31 @@ public class AddAppointmentActivity extends AppCompatActivity{
         setContentView(R.layout.activity_add_appointment);
         Log.d(TAG, "onCreate: started");
 
+        //Calendar Fields Initialization
         startDate = (TextView) findViewById(R.id.addAppointmentTextViewStartDate);
         endDate = (TextView) findViewById(R.id.addAppointmentTextViewEndDate);
         startTime = (TextView) findViewById(R.id.addAppointmentTextViewStartTime);
         endTime = (TextView) findViewById(R.id.addAppointmentTextViewEndTime);
+
+        //Switch Fields Initialization
         viewFlipperFullDay = (ViewFlipper) findViewById( R.id.addAppointmentViewFlipperFullDay );
+        fulldaySwitch = (Switch) findViewById(R.id.addAppointmentSwitchFullday);
+
+        //Hashtag List Fields Initialization
         hashtagListView = (ListView) findViewById(R.id.addAppointmentListViewHashtag);
         assignedHashtagListView = (ListView) findViewById(R.id.addAppointmentListViewAssignedHashtag);
-        fulldaySwitch = (Switch) findViewById(R.id.addAppointmentSwitchFullday);
         searchfield = (EditText) findViewById(R.id.addAppointmentEditTextSearchHashtag);
 
+        //Setup Components
         setupToolbar();
         setupDateTimePickers();
         setupPickersOnClickListener();
-        setupListViews();
         setupFullDaySwitch();
+        setupListViews();
+        setupSearchField();
+    }
 
+    private void setupSearchField() {
         searchfield.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -98,7 +112,7 @@ public class AddAppointmentActivity extends AppCompatActivity{
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                (AddAppointmentActivity.this).adapter.getFilter().filter(s);
             }
         });
     }
