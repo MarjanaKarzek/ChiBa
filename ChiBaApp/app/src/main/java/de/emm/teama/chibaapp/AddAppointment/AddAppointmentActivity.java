@@ -236,7 +236,7 @@ public class AddAppointmentActivity extends AppCompatActivity{
                 boolean fulldayBoolean = fulldaySwitch.isChecked();
                 String locationString = location.getText().toString();
 
-                boolean insertData = database.addEvent(titleString,fulldayBoolean,0,0,0,0,locationString);
+                boolean insertData = database.addEvent(titleString,fulldayBoolean,0,0,0,0,locationString,assignedHashtags);
                 int successState = 0;
                 if(insertData == true)
                     successState = 1;

@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+
 /**
  * Created by Marjana Karzek on 22.06.2017.
  */
@@ -87,23 +89,51 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public boolean addEvent(String title, boolean fullday, long startdate, long enddate, long starttime, long endtime, String location) {
+    public boolean addEvent(String title, boolean fullday, long startdate, long enddate, long starttime, long endtime, String location, ArrayList<String> hashtags) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_EVENTS_TITLE, title);
-        contentValues.put(COLUMN_EVENTS_FULLDAY, fullday);
-        contentValues.put(COLUMN_EVENTS_STARTDATE, startdate);
-        contentValues.put(COLUMN_EVENTS_ENDDATE, enddate);
-        contentValues.put(COLUMN_EVENTS_STARTTIME, starttime);
-        contentValues.put(COLUMN_EVENTS_ENDTIME, endtime);
-        contentValues.put(COLUMN_EVENTS_LOCATION, location);
+        ContentValues contentEventValues = new ContentValues();
+        contentEventValues.put(COLUMN_EVENTS_TITLE, title);
+        contentEventValues.put(COLUMN_EVENTS_FULLDAY, fullday);
+        contentEventValues.put(COLUMN_EVENTS_STARTDATE, startdate);
+        contentEventValues.put(COLUMN_EVENTS_ENDDATE, enddate);
+        contentEventValues.put(COLUMN_EVENTS_STARTTIME, starttime);
+        contentEventValues.put(COLUMN_EVENTS_ENDTIME, endtime);
+        contentEventValues.put(COLUMN_EVENTS_LOCATION, location);
 
-        long result = db.insert(TABLE_NAME_EVENTS, null, contentValues);
+        long result = db.insert(TABLE_NAME_EVENTS, null, contentEventValues);
+        if (result == -1)
+            return false;
+        int eventId = getEventIdByLastEvent();
+
+        ContentValues contentEventHashtagValues = new ContentValues();
+        for(String hashtag: hashtags){
+            int hashtagId = getHashtagIdByName(hashtag);
+            contentEventHashtagValues.put(COLUMN_EVENTMATCHING_EVENT_ID,eventId);
+            contentEventHashtagValues.put(COLUMN_EVENTMATCHING_HASHTAG_ID,hashtagId);
+        }
+
+        result = db.insert(TABLE_NAME_EVENTMATCHING, null, contentEventHashtagValues);
         if (result == -1)
             return false;
         else
             return true;
+
+
     }
+
+    private int getEventIdByLastEvent() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT TOP 1 " + COLUMN_EVENTS_ID + " FROM " + TABLE_NAME_EVENTS + " ORDER BY " + COLUMN_EVENTS_ID + " DESC", null);
+        return Integer.valueOf(data.getString(0));
+    }
+
+    private int getHashtagIdByName(String hashtag) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT " + COLUMN_HASHTAGS_ID + " FROM " + TABLE_NAME_HASHTAGS + " WHERE " + COLUMN_HASHTAGS_NAME + " = '" + hashtag + "'", null);
+        return Integer.valueOf(data.getString(0));
+    }
+
+
 
     public Cursor showEvent(){
         SQLiteDatabase db = this.getWritableDatabase();
