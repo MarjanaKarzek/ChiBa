@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Marjana Karzek on 22.06.2017.
@@ -46,6 +48,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_TODOMATCHING_TODO_ID = "TODO_ID";
     public static final String COLUMN_TODOMATCHING_HASHTAG_ID = "HASHTAG_ID";
 
+    private ArrayList<String> hashtags = new ArrayList<>(Arrays.asList("Arzt", "Fitness", "Kochen", "Einkaufen", "Haushalt"));
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -146,10 +149,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return Integer.valueOf(id);
     }
-    
+
     public Cursor showEvent(){
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_EVENTS, null);
+        return data;
+    }
+
+    public void checkHashtagTable() {
+        Log.d(TAG, "checkHashtagTable: started");
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_NAME_HASHTAGS, null);
+        int amountEntries = 0;
+        if(data != null && data.moveToNext()) {
+            amountEntries = Integer.valueOf(data.getString(0));
+            data.close();
+        }
+
+        if(amountEntries != hashtags.size()){
+            Log.d(TAG, "checkHashtagTable: entries must be added");
+            db.execSQL("DROP TABLE " + TABLE_NAME_HASHTAGS);
+            String createTableHashtags = "CREATE TABLE " + TABLE_NAME_HASHTAGS + "("
+                    + COLUMN_HASHTAGS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+                    + COLUMN_HASHTAGS_NAME + " TEXT)";
+            db.execSQL(createTableHashtags);
+            for(String hashtag: hashtags) {
+                ContentValues contentEventValues = new ContentValues();
+                contentEventValues.put(COLUMN_HASHTAGS_NAME, hashtag);
+                db.insert(TABLE_NAME_HASHTAGS, null, contentEventValues);
+            }
+        }
+    }
+
+    public Cursor showHashtags(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_HASHTAGS, null);
         return data;
     }
 }

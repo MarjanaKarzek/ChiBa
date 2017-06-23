@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.d(TAG,"onCreate: starting.");
 
+
         //Success Toast for add Event
         int successState = getIntent().getIntExtra("EXTRA_SUCCESS_STATE",3);
         if(successState == 1)
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         setupBottomNavigationView();
         database = new DatabaseHelper(this);
+        database.checkHashtagTable();
     }
 
     /**

@@ -2,6 +2,7 @@ package de.emm.teama.chibaapp.AddToDo;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,8 @@ import de.emm.teama.chibaapp.Main.MainActivity;
 import de.emm.teama.chibaapp.R;
 import de.emm.teama.chibaapp.Utils.AddHashtagListAdapter;
 import de.emm.teama.chibaapp.Utils.RemoveHashtagListAdapter;
+
+import static de.emm.teama.chibaapp.Main.MainActivity.database;
 
 /**
  * Created by Marjana Karzek on 18.06.2017.
@@ -136,11 +139,16 @@ public class AddToDoActivity extends AppCompatActivity{
     }
 
     private void initializeHashtags(){
-        hashtags.add("Fitness");
-        hashtags.add("Kochen");
-        hashtags.add("Einkaufen");
-        hashtags.add("Arzt");
-        hashtags.add("Haushalt");
+        Cursor data = database.showHashtags();
+        if(data.getCount() != 0) {
+            String hashtag = "";
+            while (data.moveToNext()) {
+                hashtag += data.getString(1);
+                hashtags.add(hashtag);
+                hashtag = "";
+            }
+        }
         Collections.sort(hashtags);
+        Log.d(TAG, "initializeHashtags: hashtags:" + hashtags.toString());
     }
 }
