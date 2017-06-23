@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -103,38 +104,49 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long result = db.insert(TABLE_NAME_EVENTS, null, contentEventValues);
         if (result == -1)
             return false;
-        int eventId = getEventIdByLastEvent();
+        if(hashtags.size() > 0) {
+            int eventId = getEventIdByLastEvent();
 
-        ContentValues contentEventHashtagValues = new ContentValues();
-        for(String hashtag: hashtags){
-            int hashtagId = getHashtagIdByName(hashtag);
-            contentEventHashtagValues.put(COLUMN_EVENTMATCHING_EVENT_ID,eventId);
-            contentEventHashtagValues.put(COLUMN_EVENTMATCHING_HASHTAG_ID,hashtagId);
+            ContentValues contentEventHashtagValues = new ContentValues();
+            for (String hashtag : hashtags) {
+                Log.d(TAG, "addEvent: hashtag name: " + hashtag);
+                int hashtagId = getHashtagIdByName(hashtag);
+                contentEventHashtagValues.put(COLUMN_EVENTMATCHING_EVENT_ID, eventId);
+                contentEventHashtagValues.put(COLUMN_EVENTMATCHING_HASHTAG_ID, hashtagId);
+            }
+
+            result = db.insert(TABLE_NAME_EVENTMATCHING, null, contentEventHashtagValues);
+            if (result == -1)
+                return false;
+            else
+                return true;
         }
-
-        result = db.insert(TABLE_NAME_EVENTMATCHING, null, contentEventHashtagValues);
-        if (result == -1)
-            return false;
         else
             return true;
-
-
     }
 
     private int getEventIdByLastEvent() {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor data = db.rawQuery("SELECT TOP 1 " + COLUMN_EVENTS_ID + " FROM " + TABLE_NAME_EVENTS + " ORDER BY " + COLUMN_EVENTS_ID + " DESC", null);
-        return Integer.valueOf(data.getString(0));
+        Cursor data = db.rawQuery("SELECT MAX(" + COLUMN_EVENTS_ID + ") FROM " + TABLE_NAME_EVENTS, null);
+        String id = "";
+        if(data != null && data.moveToNext()) {
+            id = data.getString(0);
+            data.close();
+        }
+        return Integer.valueOf(id);
     }
 
     private int getHashtagIdByName(String hashtag) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT " + COLUMN_HASHTAGS_ID + " FROM " + TABLE_NAME_HASHTAGS + " WHERE " + COLUMN_HASHTAGS_NAME + " = '" + hashtag + "'", null);
-        return Integer.valueOf(data.getString(0));
+        String id = "";
+        if(data != null && data.moveToNext()) {
+            id = data.getString(0);
+            data.close();
+        }
+        return Integer.valueOf(id);
     }
-
-
-
+    
     public Cursor showEvent(){
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_EVENTS, null);
