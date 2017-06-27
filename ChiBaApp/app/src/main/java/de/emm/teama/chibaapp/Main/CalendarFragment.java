@@ -2,14 +2,22 @@ package de.emm.teama.chibaapp.Main;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 import de.emm.teama.chibaapp.R;
 import de.emm.teama.chibaapp.Utils.AddHashtagListAdapter;
@@ -25,7 +33,11 @@ public class CalendarFragment extends Fragment {
     private static final String TAG = "CalendarFragment";
     private ArrayList<String> currentEvents = new ArrayList<String>();
     private DisplayEventListAdapter adapter;
-
+    private TextView selectedDate;
+    private String dateFormat = "d. MMMM yyyy";
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.GERMANY);
+    private CalendarView calendarView;
+    private Calendar calendar = Calendar.getInstance();
 
     private ListView eventlist;
 
@@ -39,6 +51,18 @@ public class CalendarFragment extends Fragment {
         displayData();
         adapter = new DisplayEventListAdapter(inflater.getContext(), R.layout.layout_list_events_adapter_view, currentEvents);
         eventlist.setAdapter(adapter);
+        selectedDate = (TextView) view.findViewById(R.id.selectedDate);
+        calendarView = (CalendarView) view.findViewById(R.id.calendarView);
+        selectedDate.setText(simpleDateFormat.format(calendarView.getDate()));
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                selectedDate.setText(simpleDateFormat.format(calendar.getTime()));
+            }
+        });
 
 
         return view;
@@ -47,21 +71,11 @@ public class CalendarFragment extends Fragment {
     private void displayData() {
         Cursor data = database.showEvent();
 
-        if(data.getCount() != 0){
+        if (data.getCount() != 0) {
             String event = "";
-            while(data.moveToNext()){
+            while (data.moveToNext()) {
                 event += data.getString(5) + " ";
                 event += data.getString(1);
-
-                /*event += "ID: " + data.getString(0) + "\n";
-                event += "TITLE: " + data.getString(1) + "\n";
-                event += "FULLDAY: " + data.getString(2) + "\n";
-                event += "STARTDATE: " + data.getString(3) + "\n";
-                event += "ENDDATE: " + data.getString(4) + "\n";
-                event += "STARTTIME: " + data.getString(5) + "\n";
-                event += "ENDTIME: " + data.getString(6) + "\n";
-                event += "LOCATION: " + data.getString(7) + "\n";*/
-
                 currentEvents.add(event);
                 event = "";
             }
