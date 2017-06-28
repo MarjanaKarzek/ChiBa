@@ -17,38 +17,48 @@ import java.util.Arrays;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "DatabaseHelper";
-    public static final String DATABASE_NAME = "events.db";
-    public static final String TABLE_NAME_EVENTS = "events_table";
-    public static final String COLUMN_EVENTS_ID = "ID";
-    public static final String COLUMN_EVENTS_TITLE = "TITLE";
-    public static final String COLUMN_EVENTS_FULLDAY = "FULLDAY";
-    public static final String COLUMN_EVENTS_STARTDATE = "STARTDATE";
-    public static final String COLUMN_EVENTS_ENDDATE = "ENDDATE";
-    public static final String COLUMN_EVENTS_STARTTIME = "STARTTIME";
-    public static final String COLUMN_EVENTS_ENDTIME = "ENDTIME";
-    public static final String COLUMN_EVENTS_LOCATION = "LOCATION";
+    private static final String DATABASE_NAME = "events.db";
+    private static final String TABLE_NAME_EVENTS = "events_table";
+    private static final String COLUMN_EVENTS_ID = "ID";
+    private static final String COLUMN_EVENTS_TITLE = "TITLE";
+    private static final String COLUMN_EVENTS_FULLDAY = "FULLDAY";
+    private static final String COLUMN_EVENTS_STARTDATE = "STARTDATE";
+    private static final String COLUMN_EVENTS_ENDDATE = "ENDDATE";
+    private static final String COLUMN_EVENTS_STARTTIME = "STARTTIME";
+    private static final String COLUMN_EVENTS_ENDTIME = "ENDTIME";
+    private static final String COLUMN_EVENTS_LOCATION = "LOCATION";
 
-    public static final String TABLE_NAME_TODOS = "todos_table";
-    public static final String COLUMN_TODO_ID = "ID";
-    public static final String COLUMN_TODO_TITLE = "TITLE";
-    public static final String COLUMN_TODO_DURATION = "DURATION";
-    public static final String COLUMN_TODO_LOCATION = "LOCATION";
+    private static final String TABLE_NAME_TODOS = "todos_table";
+    private static final String COLUMN_TODO_ID = "ID";
+    private static final String COLUMN_TODO_TITLE = "TITLE";
+    private static final String COLUMN_TODO_DURATION = "DURATION";
+    private static final String COLUMN_TODO_STARTDATE = "STARTDATE";
+    private static final String COLUMN_TODO_STARTTIME = "STARTTIME";
+    private static final String COLUMN_TODO_LOCATION = "LOCATION";
 
-    public static final String TABLE_NAME_HASHTAGS = "hashtags_table";
-    public static final String COLUMN_HASHTAGS_ID = "ID";
-    public static final String COLUMN_HASHTAGS_NAME = "NAME";
+    private static final String TABLE_NAME_HASHTAGS = "hashtags_table";
+    private static final String COLUMN_HASHTAGS_ID = "ID";
+    private static final String COLUMN_HASHTAGS_NAME = "NAME";
 
-    public static final String TABLE_NAME_EVENTMATCHING = "eventmatching_table";
-    public static final String COLUMN_EVENTMATCHING_ID = "ID";
-    public static final String COLUMN_EVENTMATCHING_EVENT_ID = "EVENT_ID";
-    public static final String COLUMN_EVENTMATCHING_HASHTAG_ID = "HASHTAG_ID";
+    private static final String TABLE_NAME_EVENTMATCHING = "eventmatching_table";
+    private static final String COLUMN_EVENTMATCHING_ID = "ID";
+    private static final String COLUMN_EVENTMATCHING_EVENT_ID = "EVENT_ID";
+    private static final String COLUMN_EVENTMATCHING_HASHTAG_ID = "HASHTAG_ID";
 
-    public static final String TABLE_NAME_TODOMATCHING = "todomatching_table";
-    public static final String COLUMN_TODOMATCHING_ID = "ID";
-    public static final String COLUMN_TODOMATCHING_TODO_ID = "TODO_ID";
-    public static final String COLUMN_TODOMATCHING_HASHTAG_ID = "HASHTAG_ID";
+    private static final String TABLE_NAME_TODOMATCHING = "todomatching_table";
+    private static final String COLUMN_TODOMATCHING_ID = "ID";
+    private static final String COLUMN_TODOMATCHING_TODO_ID = "TODO_ID";
+    private static final String COLUMN_TODOMATCHING_HASHTAG_ID = "HASHTAG_ID";
 
-    private ArrayList<String> hashtags = new ArrayList<>(Arrays.asList("Arzt", "Fitness", "Kochen", "Einkaufen", "Haushalt"));
+    private ArrayList<String> hashtags = new ArrayList<>(Arrays.asList("Ballsport", "Fitness", "Schwimmen",
+                                                                        "Restaurant", "Brunch", "Business Launch",
+                                                                        "Geburtstag", "Jahrestag", "Muttertag", "Vatertag", "Valentinstag",
+                                                                        "Weihnachten", "Halloween", "Silvester", "Chanukka", "Chinesisches Neujahr", "Ostern",
+                                                                        "Sommersonnenwende", "Kino",
+                                                                        "Einkaufen", "Wäsche waschen", "Geschirrspühlen", "Bügeln", "Staub wischen", "Staub saugen",
+                                                                        "Prüfungsanmeldung", "Kursbelegung", "Klausur", "Lerngruppe", "Lernen",
+                                                                        "Laptop", "Unterlagen", "Hausaufgaben",
+                                                                        "Arbeit", "Party"));
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -70,6 +80,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_TODO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
                 + COLUMN_TODO_TITLE + " TEXT,"
                 + COLUMN_TODO_DURATION + " INTEGER,"
+                + COLUMN_TODO_STARTDATE + " DATE, "
+                + COLUMN_TODO_STARTTIME + " DATETIME,"
                 + COLUMN_TODO_LOCATION + " TEXT)";
         db.execSQL(createTableToDos);
         String createTableHashtags = "CREATE TABLE " + TABLE_NAME_HASHTAGS + "("
