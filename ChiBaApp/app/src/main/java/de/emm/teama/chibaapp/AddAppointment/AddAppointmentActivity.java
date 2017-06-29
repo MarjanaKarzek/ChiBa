@@ -236,10 +236,14 @@ public class AddAppointmentActivity extends AppCompatActivity{
                 String titleString = title.getText().toString();
                 boolean fulldayBoolean = fulldaySwitch.isChecked();
                 String locationString = location.getText().toString();
+                String startDateString = startDate.getText().toString();
+                String endDateString = endDate.getText().toString();
+                String startTimeString = startTime.getText().toString();
+                String endTimeString = endTime.getText().toString();
 
-                boolean insertData = database.addEvent(titleString,fulldayBoolean,0,0,0,0,locationString,assignedHashtags);
+                boolean insertData = database.addEvent(titleString,fulldayBoolean,startDateString,endDateString,startTimeString,endTimeString,locationString,assignedHashtags);
                 int successState = 0;
-                if(insertData == true)
+                if(insertData)
                     successState = 1;
 
                 Intent intent = new Intent(context, MainActivity.class);

@@ -105,7 +105,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public boolean addEvent(String title, boolean fullday, long startdate, long enddate, long starttime, long endtime, String location, ArrayList<String> hashtags) {
+    public boolean addEvent(String title, boolean fullday, String startdate, String enddate, String starttime, String endtime, String location, ArrayList<String> hashtags) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentEventValues = new ContentValues();
         contentEventValues.put(COLUMN_EVENTS_TITLE, title);
