@@ -44,6 +44,17 @@ import static de.emm.teama.chibaapp.Main.MainActivity.database;
 public class EditAppointmentActivity extends AppCompatActivity{
     private static final String TAG = "EditAppointmentActivity";
     private Context context = EditAppointmentActivity.this;
+    private int eventId;
+
+    //Current Event Information
+    private String currentEventTitle;
+    private String currentFullDayState;
+    private String currentStartDate;
+    private String currentEndDate;
+    private String currentStartTime;
+    private String currentEndTime;
+    private String currentLocation;
+    private ArrayList<String> currentAssignedHashtags = new ArrayList<String>();
 
     //Calendar Fields
     private Calendar calendar = Calendar.getInstance();
@@ -85,21 +96,50 @@ public class EditAppointmentActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_appointment);
         Log.d(TAG, "onCreate: started");
+        eventId = getIntent().getIntExtra("EXTRA_EVENT_ID",-1);
+
+        //Get Event Information
+        Cursor data = database.showEventByEventId(eventId);
+        if (data.getCount() != 0) {
+            while (data.moveToNext()) {
+                currentEventTitle = data.getString(1);
+                currentFullDayState = data.getString(2);
+                currentStartDate = data.getString(3);
+                currentEndDate = data.getString(4);
+                currentStartTime = data.getString(5);
+                currentEndTime = data.getString(6);
+                currentLocation= data.getString(7);
+            }
+        }
+        data.close();
+        currentAssignedHashtags = database.showHashtagsByEventId(eventId);
 
         //Calendar Fields Initialization
         startDate = (TextView) findViewById(R.id.addAppointmentTextViewStartDate);
+        startDate.setText(currentStartDate);
         endDate = (TextView) findViewById(R.id.addAppointmentTextViewEndDate);
+        endDate.setText(currentEndDate);
         startTime = (TextView) findViewById(R.id.addAppointmentTextViewStartTime);
+        startTime.setText(currentStartTime);
         endTime = (TextView) findViewById(R.id.addAppointmentTextViewEndTime);
+        endTime.setText(currentEndTime);
 
         //Switch Fields Initialization
         viewFlipperFullDay = (ViewFlipper) findViewById( R.id.addAppointmentViewFlipperFullDay );
         fulldaySwitch = (Switch) findViewById(R.id.addAppointmentSwitchFullday);
+        if(currentFullDayState != "0") {
+            fulldaySwitch.setChecked(true);
+            viewFlipperFullDay.showNext();
+        }
+        else
+            fulldaySwitch.setChecked(false);
 
         //Hashtag List Fields Initialization
         hashtagListView = (ListView) findViewById(R.id.addAppointmentListViewHashtag);
         assignedHashtagListView = (ListView) findViewById(R.id.addAppointmentListViewAssignedHashtag);
         searchfield = (EditText) findViewById(R.id.addAppointmentEditTextSearchHashtag);
+        assignedHashtags = currentAssignedHashtags;
+
 
         //Setup Components
         setupToolbar();
@@ -111,7 +151,12 @@ public class EditAppointmentActivity extends AppCompatActivity{
 
         //Remaining Form Fields Initialization
         title = (EditText) findViewById(R.id.addAppointmentEditTextTitle);
+        title.setText(currentEventTitle);
         location = (EditText) findViewById(R.id.addAppointmentEditTextLocation);
+        location.setText(currentLocation);
+        for(String hashtag: currentAssignedHashtags){
+            hashtags.remove(hashtag);
+        }
     }
 
     private void setupSearchField() {
@@ -239,7 +284,7 @@ public class EditAppointmentActivity extends AppCompatActivity{
                 String startTimeString = startTime.getText().toString();
                 String endTimeString = endTime.getText().toString();
 
-                boolean insertData = database.addEvent(titleString,fulldayBoolean,startDateString,endDateString,startTimeString,endTimeString,locationString,assignedHashtags);
+                boolean insertData = database.updateEvent(eventId, titleString,fulldayBoolean,startDateString,endDateString,startTimeString,endTimeString,locationString,assignedHashtags);
                 int successState = 0;
                 if(insertData)
                     successState = 1;

@@ -174,6 +174,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return data;
     }
 
+    public boolean updateEvent(int eventId, String title, boolean fullday, String startdate, String enddate, String starttime, String endtime, String location, ArrayList<String> hashtags){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_NAME_EVENTS +
+                " SET " + COLUMN_EVENTS_TITLE + " = '" + title + "', " +
+                COLUMN_EVENTS_FULLDAY + " = '" + fullday + "', " +
+                COLUMN_EVENTS_STARTDATE + " = '" + startdate + "', " +
+                COLUMN_EVENTS_ENDDATE + " = '" + enddate + "', " +
+                COLUMN_EVENTS_STARTTIME + " = '" + starttime + "', " +
+                COLUMN_EVENTS_ENDTIME + " = '" + endtime + "', " +
+                COLUMN_EVENTS_LOCATION + " = '" + location + "' " +
+                " WHERE " + COLUMN_EVENTS_ID + " = " + eventId;
+        db.execSQL(query);
+        deleteAssignedHashtagsByEventId(eventId);
+        insertAssignedHashtags(eventId,hashtags);
+        return true;
+    }
+
     public void checkHashtagTable() {
         Log.d(TAG, "checkHashtagTable: started");
         SQLiteDatabase db = this.getWritableDatabase();
@@ -238,5 +255,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         data.close();
 
         return hashtag;
+    }
+
+    public boolean insertAssignedHashtags(int eventId, ArrayList<String> hashtags){
+        SQLiteDatabase db = this.getWritableDatabase();
+        if(hashtags.size() > 0) {
+            ContentValues contentEventHashtagValues = new ContentValues();
+            for (String hashtag : hashtags) {
+                Log.d(TAG, "insertAssignedHashtags: hashtag name: " + hashtag);
+                int hashtagId = getHashtagIdByName(hashtag);
+                contentEventHashtagValues.put(COLUMN_EVENTMATCHING_EVENT_ID, eventId);
+                contentEventHashtagValues.put(COLUMN_EVENTMATCHING_HASHTAG_ID, hashtagId);
+            }
+
+            long result = db.insert(TABLE_NAME_EVENTMATCHING, null, contentEventHashtagValues);
+            if (result == -1)
+                return false;
+            else
+                return true;
+        }
+        else
+            return true;
+    }
+
+    public void deleteAssignedHashtagsByEventId(int eventId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DELETE FROM " + TABLE_NAME_EVENTMATCHING +
+                " WHERE " + COLUMN_EVENTMATCHING_EVENT_ID + " = " + eventId;
+        db.execSQL(query);
     }
 }

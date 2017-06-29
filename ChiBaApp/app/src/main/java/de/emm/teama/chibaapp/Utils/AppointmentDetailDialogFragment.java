@@ -93,6 +93,7 @@ public class AppointmentDetailDialogFragment extends DialogFragment {
             public void onClick(View view) {
                 Log.d(TAG, "onClick: edit appointment");
                 Intent intent = new Intent(getActivity(), EditAppointmentActivity.class);
+                intent.putExtra("EXTRA_EVENT_ID", eventId);
                 startActivity(intent);
             }
         });
