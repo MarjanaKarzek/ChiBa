@@ -168,6 +168,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return data;
     }
 
+    public Cursor showEventByEventId(int eventId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_EVENTS + " WHERE " + COLUMN_EVENTS_ID + " = " + eventId, null);
+        return data;
+    }
+
     public void checkHashtagTable() {
         Log.d(TAG, "checkHashtagTable: started");
         SQLiteDatabase db = this.getWritableDatabase();

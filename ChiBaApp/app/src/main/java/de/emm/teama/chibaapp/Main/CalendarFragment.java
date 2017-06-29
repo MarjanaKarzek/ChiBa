@@ -1,13 +1,16 @@
 package de.emm.teama.chibaapp.Main;
 
+import android.support.v4.app.DialogFragment;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CalendarView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,7 +23,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import de.emm.teama.chibaapp.R;
-import de.emm.teama.chibaapp.Utils.AddHashtagListAdapter;
+import de.emm.teama.chibaapp.Utils.AppointmentDetailDialogFragment;
 import de.emm.teama.chibaapp.Utils.DisplayEventListAdapter;
 
 import static de.emm.teama.chibaapp.Main.MainActivity.database;
@@ -38,6 +41,7 @@ public class CalendarFragment extends Fragment {
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.GERMANY);
     private CalendarView calendarView;
     private Calendar calendar = Calendar.getInstance();
+    private ArrayList<Integer> displayedEvents = new ArrayList<Integer>();
 
     private ListView eventlist;
 
@@ -63,6 +67,21 @@ public class CalendarFragment extends Fragment {
                 selectedDate.setText(simpleDateFormat.format(calendar.getTime()));
             }
         });
+        eventlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                Fragment prev = getFragmentManager().findFragmentByTag("appointment_detail_fragment");
+                if (prev != null) {
+                    transaction.remove(prev);
+                }
+                transaction.addToBackStack(null);
+
+                // Create and show the dialog.
+                DialogFragment newDialog = AppointmentDetailDialogFragment.newInstance(displayedEvents.get(position));
+                newDialog.show(transaction, "appointment_detail_fragment");
+            }
+        });
 
 
         return view;
@@ -76,6 +95,7 @@ public class CalendarFragment extends Fragment {
             while (data.moveToNext()) {
                 event += data.getString(5) + " ";
                 event += data.getString(1);
+                displayedEvents.add(Integer.valueOf(data.getString(0)));
                 currentEvents.add(event);
                 event = "";
             }
