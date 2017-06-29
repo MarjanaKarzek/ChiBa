@@ -204,4 +204,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_HASHTAGS, null);
         return data;
     }
+
+    public ArrayList<String> showHashtagsByEventId(int eventId){
+        ArrayList<String> hashtagIds = new ArrayList<String>();
+        ArrayList<String> hashtags = new ArrayList<String>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT " + COLUMN_EVENTMATCHING_HASHTAG_ID + " FROM " + TABLE_NAME_EVENTMATCHING + " WHERE " + COLUMN_EVENTMATCHING_EVENT_ID + " = " + eventId, null);
+
+        if (data.getCount() != 0) {
+            while (data.moveToNext()) {
+                hashtagIds.add(data.getString(0));
+            }
+        }
+        data.close();
+
+        for(String id: hashtagIds){
+            hashtags.add(showHashtagNameById(id));
+        }
+
+        return hashtags;
+    }
+
+    public String showHashtagNameById(String hashtagId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String hashtag = "";
+        Cursor data = db.rawQuery("SELECT " + COLUMN_HASHTAGS_NAME + " FROM " + TABLE_NAME_HASHTAGS + " WHERE " + COLUMN_HASHTAGS_ID + " = " + hashtagId, null);
+
+        if (data.getCount() != 0) {
+            while (data.moveToNext()) {
+                hashtag = data.getString(0);
+            }
+        }
+        data.close();
+
+        return hashtag;
+    }
 }

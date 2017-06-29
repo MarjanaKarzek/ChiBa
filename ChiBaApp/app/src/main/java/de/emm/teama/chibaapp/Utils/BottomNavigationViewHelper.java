@@ -6,8 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.view.MenuItem;
 
-import de.emm.teama.chibaapp.AddAppointment.AddAppointmentActivity;
-import de.emm.teama.chibaapp.AddToDo.AddToDoActivity;
+import de.emm.teama.chibaapp.Appointment.AddAppointmentActivity;
+import de.emm.teama.chibaapp.ToDo.AddToDoActivity;
 import de.emm.teama.chibaapp.R;
 
 /**

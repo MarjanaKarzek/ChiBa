@@ -1,4 +1,4 @@
-package de.emm.teama.chibaapp.AddToDo;
+package de.emm.teama.chibaapp.ToDo;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,12 +15,10 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Switch;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-import de.emm.teama.chibaapp.AddAppointment.AddAppointmentActivity;
 import de.emm.teama.chibaapp.Main.MainActivity;
 import de.emm.teama.chibaapp.R;
 import de.emm.teama.chibaapp.Utils.AddHashtagListAdapter;

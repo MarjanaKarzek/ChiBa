@@ -1,17 +1,22 @@
 package de.emm.teama.chibaapp.Utils;
 
+import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-import org.w3c.dom.Text;
+import java.util.ArrayList;
 
+import de.emm.teama.chibaapp.Appointment.EditAppointmentActivity;
 import de.emm.teama.chibaapp.R;
 
 import static de.emm.teama.chibaapp.Main.MainActivity.database;
@@ -21,6 +26,7 @@ import static de.emm.teama.chibaapp.Main.MainActivity.database;
  */
 
 public class AppointmentDetailDialogFragment extends DialogFragment {
+    private static final String TAG = "AppointmentDetailDialog";
     private int eventId;
     private String eventTitle;
     private String eventFullDay;
@@ -29,6 +35,7 @@ public class AppointmentDetailDialogFragment extends DialogFragment {
     private String eventStartTime;
     private String eventEndTime;
     private String eventLocation;
+    private ArrayList<String> eventHashtags = new ArrayList<String>();
 
 
     public AppointmentDetailDialogFragment() {
@@ -62,21 +69,44 @@ public class AppointmentDetailDialogFragment extends DialogFragment {
                 eventLocation= data.getString(7);
             }
         }
+        data.close();
+
+        eventHashtags = database.showHashtagsByEventId(eventId);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_appointment_detail_fragment, container);
+        //set bar navigation
+        ImageView cancel = (ImageView) view.findViewById(R.id.appointmentDetailCancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "onClick: cancel appointment detail dialog");
+                getDialog().dismiss();
+            }
+        });
+        ImageView editOption = (ImageView) view.findViewById(R.id.appointmentDetailEditOption);
+        editOption.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "onClick: edit appointment");
+                Intent intent = new Intent(getActivity(), EditAppointmentActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+        //set view details
         TextView modalTitle = (TextView) view.findViewById(R.id.appointmentDetailModalTitle);
-        //modalTitle.setText(eventTitle);
-        modalTitle.setText(eventFullDay);
+        modalTitle.setText(eventTitle);
         TextView eventLocationView = (TextView) view.findViewById(R.id.appointmentDetailEventLocation);
         eventLocationView.setText(eventLocation);
         TextView eventStartDateView = (TextView) view.findViewById(R.id.appointmentDetailTextViewStartDate);
         eventStartDateView.setText(eventStartDate);
         ViewFlipper viewFlipperFullDay = (ViewFlipper) view.findViewById( R.id.appointmentDetailViewFlipperFullDay);
-        if(eventFullDay == "1"){
+        if(eventFullDay != "0"){
             viewFlipperFullDay.showNext();
             TextView eventEndDateView = (TextView) view.findViewById(R.id.appointmentDetailTextViewEndDate);
             eventEndDateView.setText(eventEndDate);
@@ -87,6 +117,11 @@ public class AppointmentDetailDialogFragment extends DialogFragment {
             TextView eventEndTimeView = (TextView) view.findViewById(R.id.appointmentDetailTextViewEndTime);
             eventEndTimeView.setText(eventEndTime);
         }
+        ListView hashtagList = (ListView) view.findViewById(R.id.appointmentDetailListViewAssignedHashtag);
+        HashtagListAdapter adapter = new HashtagListAdapter(this.getContext(), R.layout.layout_hashtag_adapter_view, eventHashtags);
+        hashtagList.setAdapter(adapter);
+        hashtagList.setEmptyView( view.findViewById( R.id.appointmentDetailListViewAssignedHashtagEmpty) );
+
         return view;
     }
 }

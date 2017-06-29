@@ -1,4 +1,4 @@
-package de.emm.teama.chibaapp.AddAppointment;
+package de.emm.teama.chibaapp.Appointment;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -22,7 +22,6 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import java.text.SimpleDateFormat;
@@ -34,7 +33,6 @@ import java.util.Locale;
 import de.emm.teama.chibaapp.Main.MainActivity;
 import de.emm.teama.chibaapp.R;
 import de.emm.teama.chibaapp.Utils.AddHashtagListAdapter;
-import de.emm.teama.chibaapp.Utils.DatabaseHelper;
 import de.emm.teama.chibaapp.Utils.RemoveHashtagListAdapter;
 
 import static de.emm.teama.chibaapp.Main.MainActivity.database;
@@ -43,9 +41,9 @@ import static de.emm.teama.chibaapp.Main.MainActivity.database;
  * Created by Marjana Karzek on 18.06.2017.
  */
 
-public class AddAppointmentActivity extends AppCompatActivity{
-    private static final String TAG = "AddAppointmentActivity";
-    private Context context = AddAppointmentActivity.this;
+public class EditAppointmentActivity extends AppCompatActivity{
+    private static final String TAG = "EditAppointmentActivity";
+    private Context context = EditAppointmentActivity.this;
 
     //Calendar Fields
     private Calendar calendar = Calendar.getInstance();
@@ -125,12 +123,12 @@ public class AddAppointmentActivity extends AppCompatActivity{
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                (AddAppointmentActivity.this).adapter.getFilter().filter(s);
+                (EditAppointmentActivity.this).adapter.getFilter().filter(s);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                (AddAppointmentActivity.this).adapter.getFilter().filter(s);
+                (EditAppointmentActivity.this).adapter.getFilter().filter(s);
             }
         });
     }
@@ -187,28 +185,28 @@ public class AddAppointmentActivity extends AppCompatActivity{
         startDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(AddAppointmentActivity.this, startDatePicker, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+                new DatePickerDialog(EditAppointmentActivity.this, startDatePicker, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
         endDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(AddAppointmentActivity.this, endDatePicker, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+                new DatePickerDialog(EditAppointmentActivity.this, endDatePicker, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
         startTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(AddAppointmentActivity.this, startTimePicker, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
+                new TimePickerDialog(EditAppointmentActivity.this, startTimePicker, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
             }
         });
 
         endTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(AddAppointmentActivity.this, endTimePicker, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
+                new TimePickerDialog(EditAppointmentActivity.this, endTimePicker, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
             }
         });
     }
