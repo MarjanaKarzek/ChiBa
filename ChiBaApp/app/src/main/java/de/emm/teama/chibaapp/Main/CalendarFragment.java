@@ -52,9 +52,6 @@ public class CalendarFragment extends Fragment {
 
         eventlist = (ListView) view.findViewById(R.id.eventlist);
         eventlist.setEmptyView(view.findViewById(R.id.textViewEventsEmpty));
-        displayData();
-        adapter = new DisplayEventListAdapter(inflater.getContext(), R.layout.layout_list_events_adapter_view, currentEvents);
-        eventlist.setAdapter(adapter);
         selectedDate = (TextView) view.findViewById(R.id.selectedDate);
         calendarView = (CalendarView) view.findViewById(R.id.calendarView);
         selectedDate.setText(simpleDateFormat.format(calendarView.getDate()));
@@ -65,6 +62,7 @@ public class CalendarFragment extends Fragment {
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 selectedDate.setText(simpleDateFormat.format(calendar.getTime()));
+                updateEventList();
             }
         });
         eventlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -83,12 +81,26 @@ public class CalendarFragment extends Fragment {
             }
         });
 
+        displayData();
+        adapter = new DisplayEventListAdapter(inflater.getContext(), R.layout.layout_list_events_adapter_view, currentEvents);
+        eventlist.setAdapter(adapter);
+
 
         return view;
     }
 
+    private void updateEventList() {
+        displayedEvents.clear();
+        currentEvents.clear();
+        displayData();
+        synchronized (adapter){
+            adapter.notifyDataSetChanged();
+        }
+
+    }
+
     private void displayData() {
-        Cursor data = database.showEvent();
+        Cursor data = database.showEventsByStartDate(selectedDate.getText().toString());
 
         if (data.getCount() != 0) {
             String event = "";
