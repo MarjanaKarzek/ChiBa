@@ -185,9 +185,6 @@ public class EditAppointmentActivity extends AppCompatActivity{
                 deleteDialogBuilder.setMessage("Möchten Sie wirklich den Termin " + title.getText() + " löschen?");
                 AlertDialog cancleEditDialog = deleteDialogBuilder.create();
                 cancleEditDialog.show();
-
-
-
             }
         });
     }

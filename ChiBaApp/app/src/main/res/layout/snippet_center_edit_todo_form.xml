@@ -1,0 +1,110 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/editToDoEditTextTitle"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:inputType="text"
+            android:textSize="20sp"
+            android:hint="Titel" />
+
+        <EditText
+            android:id="@+id/editToDoEditTextDuration"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/editToDoEditTextTitle"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:inputType="text"
+            android:textSize="20sp"
+            android:hint="Dauer in Stunden"
+            tools:ignore="LabelFor" />
+
+        <EditText
+            android:id="@+id/editToDoEditTextLocation"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/editToDoEditTextduration"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:inputType="text"
+            android:textSize="20sp"
+            android:hint="Ort"
+            tools:ignore="LabelFor" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@+id/editToDoEditTextLocation"
+            android:layout_marginTop="16dp">
+            <ListView
+                android:id="@+id/editToDoListViewAssignedHashtag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="16dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/editToDoListViewAssignedHashtagEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:gravity="center"
+                android:text="keine Hashtags hinzugefügt"
+                android:textStyle="italic"
+                android:visibility="gone"
+                android:layout_weight="1"/>
+            <EditText
+                android:id="@+id/editToDoEditTextSearchHashtag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Search Hashtags"
+                android:textSize="20sp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                />
+            <ListView
+                android:id="@+id/editToDoListViewHashtag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_weight="1" />
+            <TextView
+                android:id="@+id/editToDoListViewHashtagEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:gravity="center"
+                android:textStyle="italic"
+                android:text="keine weiteren Hashtags verfügbar"
+                android:visibility="gone"
+                android:layout_weight="1"/>
+            <Button
+                android:id="@+id/editToDoDeleteButton"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_below="@+id/editToDoListViewHashtagEmpty"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_weight="0.25"
+                android:background="@color/colorDelete"
+                android:text="ToDo löschen"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+    </RelativeLayout>
+</merge>
