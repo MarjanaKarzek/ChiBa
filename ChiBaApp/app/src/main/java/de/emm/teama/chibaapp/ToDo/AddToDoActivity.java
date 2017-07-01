@@ -43,6 +43,11 @@ public class AddToDoActivity extends AppCompatActivity{
     private AddHashtagListAdapter adapter;
     private RemoveHashtagListAdapter adapter2;
 
+    //Form fields
+    private EditText title;
+    private EditText duration;
+    private EditText location;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +61,10 @@ public class AddToDoActivity extends AppCompatActivity{
         setupToolbar();
         setupListViews();
         setupSearchField();
+
+        title = (EditText) findViewById(R.id.addToDoEditTextTitle);
+        duration = (EditText) findViewById(R.id.addToDoEditTextDuration);
+        location = (EditText) findViewById(R.id.addToDoEditTextLocation);
     }
 
     private void setupToolbar(){
@@ -66,7 +75,7 @@ public class AddToDoActivity extends AppCompatActivity{
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: cancel add appointment");
+                Log.d(TAG, "onClick: cancel add todo");
                 Intent intent = new Intent(context, MainActivity.class);
                 context.startActivity(intent);
             }
@@ -76,8 +85,19 @@ public class AddToDoActivity extends AppCompatActivity{
         check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: add appointment option selected");
+                Log.d(TAG, "onClick: add todo option selected");
+
+                String titleString = title.getText().toString();
+                String durationString = duration.getText().toString();
+                String locationString = location.getText().toString();
+
+                boolean insertData = database.addToDo(titleString,durationString,locationString,false,assignedHashtags);
+                int successState = 0;
+                if(insertData)
+                    successState = 1;
+
                 Intent intent = new Intent(context, MainActivity.class);
+                intent.putExtra("EXTRA_SUCCESS_STATE", successState);
                 context.startActivity(intent);
             }
         });

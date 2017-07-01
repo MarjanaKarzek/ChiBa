@@ -35,6 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_TODO_STARTDATE = "STARTDATE";
     private static final String COLUMN_TODO_STARTTIME = "STARTTIME";
     private static final String COLUMN_TODO_LOCATION = "LOCATION";
+    private static final String COLUMN_TODO_STATE = "STATE";
 
     private static final String TABLE_NAME_HASHTAGS = "hashtags_table";
     private static final String COLUMN_HASHTAGS_ID = "ID";
@@ -78,11 +79,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(createTableEvents);
         String createTableToDos = "CREATE TABLE " + TABLE_NAME_TODOS + "("
                 + COLUMN_TODO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
-                + COLUMN_TODO_TITLE + " TEXT,"
-                + COLUMN_TODO_DURATION + " INTEGER,"
+                + COLUMN_TODO_TITLE + " TEXT, "
+                + COLUMN_TODO_DURATION + " INTEGER, "
                 + COLUMN_TODO_STARTDATE + " DATE, "
-                + COLUMN_TODO_STARTTIME + " DATETIME,"
-                + COLUMN_TODO_LOCATION + " TEXT)";
+                + COLUMN_TODO_STARTTIME + " DATETIME, "
+                + COLUMN_TODO_LOCATION + " TEXT, "
+                + COLUMN_TODO_STATE + " BOOLEAN)";
         db.execSQL(createTableToDos);
         String createTableHashtags = "CREATE TABLE " + TABLE_NAME_HASHTAGS + "("
                 + COLUMN_HASHTAGS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
@@ -349,6 +351,103 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "DELETE FROM " + TABLE_NAME_TODOMATCHING +
                 " WHERE " + COLUMN_TODOMATCHING_TODO_ID+ " = " + todoId;
+        db.execSQL(query);
+    }
+
+    public String getToDoTitleById(int todoId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT " + COLUMN_TODO_TITLE + " FROM " + TABLE_NAME_TODOS +
+                " WHERE " + COLUMN_TODO_ID+ " = " + todoId, null);
+        String toDoTitle = "";
+        data.moveToNext();
+        if (data.getCount() != 0) {
+            toDoTitle = data.getString(0);
+            data.close();
+        }
+        return toDoTitle;
+    }
+
+    public String getToDoDurationById(int todoId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT " + COLUMN_TODO_DURATION + " FROM " + TABLE_NAME_TODOS +
+                " WHERE " + COLUMN_TODO_ID+ " = " + todoId, null);
+        String toDoDuration = "";
+        data.moveToNext();
+        if (data.getCount() != 0) {
+            toDoDuration = data.getString(0);
+            data.close();
+        }
+        return toDoDuration;
+    }
+
+    public String getToDoStateById(int todoId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT " + COLUMN_TODO_STATE + " FROM " + TABLE_NAME_TODOS +
+                " WHERE " + COLUMN_TODO_ID+ " = " + todoId, null);
+        String toDoState = "";
+        data.moveToNext();
+        if (data.getCount() != 0) {
+            toDoState = data.getString(0);
+            data.close();
+        }
+        return toDoState;
+    }
+
+    public Cursor showToDos() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_TODOS, null);
+        return data;
+    }
+
+    public boolean addToDo(String title, String duration, String location, boolean state, ArrayList<String> hashtags) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentToDoValues = new ContentValues();
+        contentToDoValues.put(COLUMN_TODO_TITLE, title);
+        contentToDoValues.put(COLUMN_TODO_DURATION, duration);
+        contentToDoValues.put(COLUMN_TODO_LOCATION, location);
+        contentToDoValues.put(COLUMN_TODO_STATE, state);
+
+        long result = db.insert(TABLE_NAME_TODOS, null, contentToDoValues);
+        if (result == -1)
+            return false;
+        if(hashtags.size() > 0) {
+            int todoId = getToDoIdByLastToDo();
+
+            ContentValues contentToDoHashtagValues = new ContentValues();
+            for (String hashtag : hashtags) {
+                Log.d(TAG, "addToDo: hashtag name: " + hashtag);
+                int hashtagId = getHashtagIdByName(hashtag);
+                contentToDoHashtagValues.put(COLUMN_TODOMATCHING_TODO_ID, todoId);
+                contentToDoHashtagValues.put(COLUMN_TODOMATCHING_HASHTAG_ID, hashtagId);
+            }
+
+            result = db.insert(TABLE_NAME_TODOMATCHING, null, contentToDoHashtagValues);
+            if (result == -1)
+                return false;
+            else
+                return true;
+        }
+        else
+            return true;
+    }
+
+    private int getToDoIdByLastToDo() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT MAX(" + COLUMN_TODO_ID + ") FROM " + TABLE_NAME_TODOS, null);
+        String id = "";
+        if(data != null && data.moveToNext()) {
+            id = data.getString(0);
+            data.close();
+        }
+        return Integer.valueOf(id);
+    }
+
+    public void setStateOfToDoByToDoId(int todoId, boolean state) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_NAME_TODOS +
+                " SET " + COLUMN_TODO_STATE + " = '" + state + "'" +
+                " WHERE " + COLUMN_TODO_ID + " = " + todoId;
         db.execSQL(query);
     }
 }
