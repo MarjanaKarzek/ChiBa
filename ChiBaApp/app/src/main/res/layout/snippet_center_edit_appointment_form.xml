@@ -150,11 +150,12 @@
             tools:ignore="LabelFor" />
 
         <LinearLayout
+            android:id="@+id/editAppointmentListViewAssignedHashtag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/addAppointmentEditTextLocation"
-            android:orientation="vertical"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:orientation="vertical">
 
             <ListView
                 android:id="@+id/addAppointmentListViewAssignedHashtag"
@@ -167,7 +168,7 @@
             <TextView
                 android:id="@+id/addAppointmentListViewAssignedHashtagEmpty"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:gravity="center"
@@ -189,10 +190,10 @@
                 android:id="@+id/addAppointmentListViewHashtag"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="16dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginStart="20dp"
-                android:layout_weight="1"/>
+                android:layout_weight="1" />
             <TextView
                 android:id="@+id/addAppointmentListViewHashtagEmpty"
                 android:layout_width="match_parent"
@@ -200,10 +201,22 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:gravity="center"
-                android:textStyle="italic"
                 android:text="keine weiteren Hashtags verfügbar"
+                android:textStyle="italic"
                 android:visibility="gone"
                 android:layout_weight="1"/>
+            <Button
+                android:id="@+id/button"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_below="@+id/addAppointmentListViewHashtagEmpty"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_weight="0.25"
+                android:background="@color/colorDelete"
+                android:text="Termin löschen"
+                android:textSize="20sp" />
         </LinearLayout>
 
     </RelativeLayout>

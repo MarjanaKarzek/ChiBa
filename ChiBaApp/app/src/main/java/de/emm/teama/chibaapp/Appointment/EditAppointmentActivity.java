@@ -94,7 +94,7 @@ public class EditAppointmentActivity extends AppCompatActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_appointment);
+        setContentView(R.layout.activity_edit_appointment);
         Log.d(TAG, "onCreate: started");
         eventId = getIntent().getIntExtra("EXTRA_EVENT_ID",-1);
 
@@ -257,10 +257,10 @@ public class EditAppointmentActivity extends AppCompatActivity{
     }
 
     private void setupToolbar(){
-        Toolbar toolbar = (Toolbar) findViewById(R.id.addAppointmentToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.editAppointmentToolbar);
         setSupportActionBar(toolbar);
 
-        ImageView cancel = (ImageView) findViewById(R.id.addAppointmentCancel);
+        ImageView cancel = (ImageView) findViewById(R.id.editAppointmentCancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -270,7 +270,7 @@ public class EditAppointmentActivity extends AppCompatActivity{
             }
         });
         
-        ImageView check = (ImageView) findViewById(R.id.addAppointmentOption);
+        ImageView check = (ImageView) findViewById(R.id.editAppointmentOption);
         check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
