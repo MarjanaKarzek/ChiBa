@@ -16,6 +16,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -85,9 +86,6 @@ public class EditAppointmentActivity extends AppCompatActivity{
     private EditText searchfield;
     private AddHashtagListAdapter adapter;
     private RemoveHashtagListAdapter adapter2;
-
-    //Database Fields
-    //private DatabaseHelper database;
 
     //Remaining Form Fields Initialization
     private EditText title;
@@ -159,6 +157,39 @@ public class EditAppointmentActivity extends AppCompatActivity{
         for(String hashtag: currentAssignedHashtags){
             hashtags.remove(hashtag);
         }
+
+        //Delete Button
+        Button deleteButton = (Button) findViewById(R.id.editAppointmentDeleteButton);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog.Builder deleteDialogBuilder = new AlertDialog.Builder(context);
+                deleteDialogBuilder.setCancelable(true);
+                deleteDialogBuilder.setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                database.deleteEventByEventId(eventId);
+                                Intent intent = new Intent(context, MainActivity.class);
+                                context.startActivity(intent);
+                            }
+                        });
+                deleteDialogBuilder.setNegativeButton("Abbrechen",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Do nothing, just close the Dialog
+                            }
+                        });
+                deleteDialogBuilder.setTitle("Termin löschen");
+                deleteDialogBuilder.setMessage("Möchten Sie wirklich den Termin " + title.getText() + " löschen?");
+                AlertDialog cancleEditDialog = deleteDialogBuilder.create();
+                cancleEditDialog.show();
+
+
+
+            }
+        });
     }
 
     private void setupSearchField() {
@@ -266,26 +297,26 @@ public class EditAppointmentActivity extends AppCompatActivity{
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-                alertDialogBuilder.setCancelable(true);
-                alertDialogBuilder.setPositiveButton("OK",
+                final AlertDialog.Builder cancleEditDialogBuilder = new AlertDialog.Builder(context);
+                cancleEditDialogBuilder.setCancelable(true);
+                cancleEditDialogBuilder.setPositiveButton("OK",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 finish();
                             }
                         });
-                alertDialogBuilder.setNegativeButton("Abbrechen",
+                cancleEditDialogBuilder.setNegativeButton("Abbrechen",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //Do nothing, just close the Dialog
                             }
                         });
-                alertDialogBuilder.setTitle("Änderungen verwerfen");
-                alertDialogBuilder.setMessage("Möchten Sie wirklich die Änderungen verwerfen?");
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
+                cancleEditDialogBuilder.setTitle("Änderungen verwerfen");
+                cancleEditDialogBuilder.setMessage("Möchten Sie wirklich die Änderungen verwerfen?");
+                AlertDialog cancleEditDialog = cancleEditDialogBuilder.create();
+                cancleEditDialog.show();
             }
         });
         

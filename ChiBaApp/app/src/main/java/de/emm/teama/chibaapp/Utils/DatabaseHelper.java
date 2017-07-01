@@ -284,4 +284,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 " WHERE " + COLUMN_EVENTMATCHING_EVENT_ID + " = " + eventId;
         db.execSQL(query);
     }
+
+    public void deleteEventByEventId(int eventId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DELETE FROM " + TABLE_NAME_EVENTS +
+                " WHERE " + COLUMN_EVENTS_ID + " = " + eventId;
+        db.execSQL(query);
+    }
 }
