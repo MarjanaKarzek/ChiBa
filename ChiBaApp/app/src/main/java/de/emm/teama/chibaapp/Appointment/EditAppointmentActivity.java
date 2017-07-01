@@ -1,8 +1,10 @@
 package de.emm.teama.chibaapp.Appointment;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -264,9 +266,26 @@ public class EditAppointmentActivity extends AppCompatActivity{
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: cancel add appointment");
-                Intent intent = new Intent(context, MainActivity.class);
-                context.startActivity(intent);
+                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                alertDialogBuilder.setCancelable(true);
+                alertDialogBuilder.setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        });
+                alertDialogBuilder.setNegativeButton("Abbrechen",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Do nothing, just close the Dialog
+                            }
+                        });
+                alertDialogBuilder.setTitle("Änderungen verwerfen");
+                alertDialogBuilder.setMessage("Möchten Sie wirklich die Änderungen verwerfen?");
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
             }
         });
         
@@ -274,7 +293,7 @@ public class EditAppointmentActivity extends AppCompatActivity{
         check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: add appointment option selected");
+                Log.d(TAG, "onClick: save edits of appointment option selected");
 
                 String titleString = title.getText().toString();
                 boolean fulldayBoolean = fulldaySwitch.isChecked();
