@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,8 @@ public class ToDoListAdapter extends ArrayAdapter<Integer>{
     private int resource;
 
     private TextView todoText;
+    private String stateString;
+    private boolean state;
 
     public ToDoListAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull ArrayList<Integer> objects) {
         super(context, resource, objects);
@@ -42,13 +45,18 @@ public class ToDoListAdapter extends ArrayAdapter<Integer>{
 
         String titleString = database.getToDoTitleById(getItem(position));
         String durationString = database.getToDoDurationById(getItem(position));
-        String stateString = database.getToDoStateById(getItem(position));
-        boolean state = true;
-        if(stateString != "1"){
-            state = false;
-        }
-
         String toDoInformation = titleString + " (" + durationString + " Stunden)";
+
+        stateString = database.getToDoStateById(getItem(position));
+        state = false;
+        Log.d(TAG, "getView: stateString is of value " + stateString);
+        if(stateString.contains("true")){
+            state = true;
+        }
+        else
+            state = false;
+        Log.d(TAG, "getView: state is of value " + state);
+
 
         LayoutInflater inflater = LayoutInflater.from(context);
         convertView = inflater.inflate(resource, parent, false);
@@ -60,19 +68,29 @@ public class ToDoListAdapter extends ArrayAdapter<Integer>{
         if(checkBox.isChecked()){
             todoText.setPaintFlags(todoText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
-        else {
-            todoText.setPaintFlags(todoText.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
-        }
+
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
+                    Log.d(TAG, "onCheckedChanged: checking text");
                     todoText.setPaintFlags(todoText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                     database.setStateOfToDoByToDoId(getItem(position), true);
+                    stateString = "true";
+                    state = true;
+                    synchronized (todoText){
+                        todoText.notifyAll();
+                    }
                 }
                 else {
+                    Log.d(TAG, "onCheckedChanged: unchecking text");
                     todoText.setPaintFlags(todoText.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
                     database.setStateOfToDoByToDoId(getItem(position), false);
+                    stateString = "false";
+                    state = false;
+                    synchronized (todoText){
+                        todoText.notifyAll();
+                    }
                 }
             }
         });
