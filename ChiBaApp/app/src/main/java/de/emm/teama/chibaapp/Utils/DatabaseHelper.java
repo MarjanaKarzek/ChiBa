@@ -130,18 +130,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void addUserIfNotExist(){
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor data = db.rawQuery("SELECT MAX(" + COLUMN_USER_ID + ") FROM " + TABLE_NAME_USER, null);
-        if(data == null) {
-            //create User
-            ContentValues contentUserValues = new ContentValues();
-            contentUserValues.put(COLUMN_USER_NAME, "ChiBa");
-            contentUserValues.put(COLUMN_USER_BIRTHDATE, "01. Januar 1990");
-            contentUserValues.put(COLUMN_USER_HOMEADDRESS, "Beispieladresse 1, 10000 Beispielstadt");
-            contentUserValues.put(COLUMN_USER_AVATAR_USE, true);
-            contentUserValues.put(COLUMN_USER_NOTDISTURB, false);
-            contentUserValues.put(COLUMN_USER_NOTDISTURB_STARTTIME, "22:00");
-            contentUserValues.put(COLUMN_USER_NOTDISTURB_ENDTIME, "06:00");
-            db.insert(TABLE_NAME_USER, null, contentUserValues);
+        Cursor data = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_NAME_USER, null);
+        if(data != null && data.moveToNext()) {
+            if (data.getString(0).contains("0")) {
+                //create User
+                ContentValues contentUserValues = new ContentValues();
+                contentUserValues.put(COLUMN_USER_NAME, "ChiBa");
+                contentUserValues.put(COLUMN_USER_BIRTHDATE, "01. Januar 1990");
+                contentUserValues.put(COLUMN_USER_HOMEADDRESS, "Beispieladresse 1, 10000 Beispielstadt");
+                contentUserValues.put(COLUMN_USER_AVATAR_USE, true);
+                contentUserValues.put(COLUMN_USER_NOTDISTURB, false);
+                contentUserValues.put(COLUMN_USER_NOTDISTURB_STARTTIME, "22:00");
+                contentUserValues.put(COLUMN_USER_NOTDISTURB_ENDTIME, "06:00");
+                db.insert(TABLE_NAME_USER, null, contentUserValues);
+
+                Log.d(TAG, "addUserIfNotExist: user had to be created");
+            } else
+                Log.d(TAG, "addUserIfNotExist: user exist");
         }
     }
 
@@ -487,5 +492,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 " SET " + COLUMN_TODO_STATE + " = '" + state + "'" +
                 " WHERE " + COLUMN_TODO_ID + " = " + todoId;
         db.execSQL(query);
+    }
+
+    public Cursor showUser() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_USER, null);
+        return data;
     }
 }
