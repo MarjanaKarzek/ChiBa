@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import de.emm.teama.chibaapp.Appointment.EditAppointmentActivity;
 import de.emm.teama.chibaapp.R;
 
-import static de.emm.teama.chibaapp.Main.MainActivity.database;
+import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
 
 /**
  * Created by Marjana Karzek on 28.06.2017.

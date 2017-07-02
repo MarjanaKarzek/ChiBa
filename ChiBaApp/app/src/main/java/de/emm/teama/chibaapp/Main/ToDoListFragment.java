@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import de.emm.teama.chibaapp.R;
 import de.emm.teama.chibaapp.Utils.ToDoListAdapter;
 
-import static de.emm.teama.chibaapp.Main.MainActivity.database;
+import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
 
 /**
  * Created by Marjana Karzek on 18.06.2017.

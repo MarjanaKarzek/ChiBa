@@ -14,13 +14,13 @@ import de.emm.teama.chibaapp.Utils.BottomNavigationViewHelper;
 import de.emm.teama.chibaapp.R;
 import de.emm.teama.chibaapp.Utils.DatabaseHelper;
 
+import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private SectionsPagerAdapter adapter;
     private ViewPager viewPager;
 
-    //Database Initialization
-    public static DatabaseHelper database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(3).setIcon(R.drawable.ic_settings);
 
         setupBottomNavigationView();
-        database = new DatabaseHelper(this);
         database.checkHashtagTable();
     }
 
