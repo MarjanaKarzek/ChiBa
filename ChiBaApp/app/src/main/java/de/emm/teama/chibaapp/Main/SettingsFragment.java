@@ -57,7 +57,7 @@ public class SettingsFragment extends Fragment {
                 avatarUse.setChecked(true);
             else
                 avatarUse.setChecked(false);
-            if(data.getString(5).contains("1") || data.getString(4).contains("true"))
+            if(data.getString(5).contains("1") || data.getString(5).contains("true"))
                 doNotDisturb.setChecked(true);
             else
                 doNotDisturb.setChecked(false);
