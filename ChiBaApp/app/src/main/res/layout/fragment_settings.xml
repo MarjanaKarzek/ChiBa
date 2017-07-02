@@ -4,12 +4,183 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textViewSettings"
+        android:id="@+id/settingsTextViewProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Profil"
+        android:textSize="22sp" />
+
+    <LinearLayout
+        android:id="@+id/settingsName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/settingsTextViewProfile"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <TextView
+            android:id="@+id/settingsTextViewName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Name"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/settingsEditTextName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/settingsBirthdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/settingsName"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <TextView
+            android:id="@+id/settingsTextViewBirthdate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Geburtstag"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/settingsTextViewBirthdateSelection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/settingsAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/settingsBirthdate"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/settingsTextViewAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Heimadresse"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/settingsEditTextHomeaddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/settingsTextViewAvatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/settingsAddress"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Avatar"
+        android:textSize="22sp" />
+
+    <Switch
+        android:id="@+id/settingsSwitchAvatarUse"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/settingsTextViewAvatar"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:checked="true"
+        android:text="ChiBa verwenden"
         android:textSize="20sp"
-        android:text="Settings" />
+        android:layout_marginTop="16dp" />
+
+    <Switch
+        android:id="@+id/settingsSwitchDoNotDisturb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/settingsSwitchAvatarUse"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:checked="false"
+        android:text="Nicht Stören"
+        android:textSize="20sp"
+        android:layout_marginTop="16dp"/>
+
+    <ViewFlipper
+        android:id="@+id/settingsViewFlipperDoNotDisturbTime"
+        android:layout_below="@+id/settingsSwitchDoNotDisturb"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/settingsDoNotDisturbTimeSettings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/settingsDoNotDisturbTextViewStartTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12:00"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/settingsDoNotDisturbTextViewStart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:text="Start"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/settingsDoNotDisturbTextViewEndTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="14:00"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/settingsDoNotDisturbTextViewEnd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:text="Ende"
+                    android:textSize="20sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ViewFlipper>
+
 
 </RelativeLayout>
