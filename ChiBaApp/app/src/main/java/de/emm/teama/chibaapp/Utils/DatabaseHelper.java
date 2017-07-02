@@ -51,6 +51,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_TODOMATCHING_TODO_ID = "TODO_ID";
     private static final String COLUMN_TODOMATCHING_HASHTAG_ID = "HASHTAG_ID";
 
+    private static final String TABLE_NAME_USER = "user_table";
+    private static final String COLUMN_USER_ID = "ID";
+    private static final String COLUMN_USER_NAME = "NAME";
+    private static final String COLUMN_USER_BIRTHDATE = "BIRTHDATE";
+    private static final String COLUMN_USER_HOMEADDRESS = "HOMEADDRESS";
+    private static final String COLUMN_USER_AVATAR_USE = "AVATAR_USE";
+    private static final String COLUMN_USER_NOTDISTURB = "DO_NOT_DISTURB";
+    private static final String COLUMN_USER_NOTDISTURB_STARTTIME = "DO_NOT_DISTURB_STARTTIME";
+    private static final String COLUMN_USER_NOTDISTURB_ENDTIME = "DO_NOT_DISTURB_ENDTIME";
+
+
     private ArrayList<String> hashtags = new ArrayList<>(Arrays.asList("Ballsport", "Fitness", "Schwimmen",
                                                                         "Restaurant", "Brunch", "Business Launch",
                                                                         "Geburtstag", "Jahrestag", "Muttertag", "Vatertag", "Valentinstag",
@@ -100,11 +111,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_TODOMATCHING_TODO_ID + " INTEGER,"
                 + COLUMN_TODOMATCHING_HASHTAG_ID + " INTEGER)";
         db.execSQL(createTableToDoMatching);
+        String createTableUser = "CREATE TABLE " + TABLE_NAME_USER + "( "
+                + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+                + COLUMN_USER_NAME + " TEXT, "
+                + COLUMN_USER_BIRTHDATE + " DATE, "
+                + COLUMN_USER_HOMEADDRESS + " TEXT, "
+                + COLUMN_USER_AVATAR_USE + " BOOLEAN, "
+                + COLUMN_USER_NOTDISTURB + " BOOLEAN, "
+                + COLUMN_USER_NOTDISTURB_STARTTIME + " DATE, "
+                + COLUMN_USER_NOTDISTURB_ENDTIME + " DATE)";
+        db.execSQL(createTableUser);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+    }
+
+    public void addUserIfNotExist(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT MAX(" + COLUMN_USER_ID + ") FROM " + TABLE_NAME_USER, null);
+        if(data == null) {
+            //create User
+            ContentValues contentUserValues = new ContentValues();
+            contentUserValues.put(COLUMN_USER_NAME, "ChiBa");
+            contentUserValues.put(COLUMN_USER_BIRTHDATE, "01. Januar 1990");
+            contentUserValues.put(COLUMN_USER_HOMEADDRESS, "Beispieladresse 1, 10000 Beispielstadt");
+            contentUserValues.put(COLUMN_USER_AVATAR_USE, true);
+            contentUserValues.put(COLUMN_USER_NOTDISTURB, false);
+            contentUserValues.put(COLUMN_USER_NOTDISTURB_STARTTIME, "22:00");
+            contentUserValues.put(COLUMN_USER_NOTDISTURB_ENDTIME, "06:00");
+            db.insert(TABLE_NAME_USER, null, contentUserValues);
+        }
     }
 
     public boolean addEvent(String title, boolean fullday, String startdate, String enddate, String starttime, String endtime, String location, ArrayList<String> hashtags) {
