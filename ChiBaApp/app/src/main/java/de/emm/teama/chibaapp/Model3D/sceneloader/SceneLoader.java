@@ -1,23 +1,14 @@
 package de.emm.teama.chibaapp.Model3D.sceneloader;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.emm.teama.chibaapp.Main.MainFragment;
 import de.emm.teama.chibaapp.Model3D.model.Object3DBuilder;
-import de.emm.teama.chibaapp.Model3D.model.Object3DBuilder.Callback;
 import de.emm.teama.chibaapp.Model3D.model.Object3DData;
 
 import android.os.SystemClock;
-import android.util.Log;
-import android.widget.Toast;
 
-/**
- * This class loads a 3D scene as an example of what can be done with the app
- */
 public class SceneLoader
 {
 	/* Parent component */
@@ -42,7 +33,7 @@ public class SceneLoader
 	private boolean drawTextures = true;
 
 	/* Light toggle feature: we have 3 states: no light, light, light + rotation */
-	private boolean rotatingLight = true;
+	private boolean rotatingLight = false;
 
 	/* Light toggle feature: whether to draw using lights */
 	private boolean drawLighting = true;
@@ -61,35 +52,13 @@ public class SceneLoader
 		this.parent = main;
 	}
 
-	public void init() {
-
-		// Load object
-		if (parent.getParamFile() != null || parent.getParamAssetDir() != null) {
-
-			// Create asset url
-			final URL url;
-			try {
-				if (parent.getParamFile() != null) {
-					url = parent.getParamFile().toURI().toURL();
-				} else {
-					// TODO find the right path to assets
-					url = new URL("android://org.andresoviedo.dddmodel2/assets/" + parent.getParamAssetDir() + File.separator + parent.getParamAssetFilename());
-				}
-			} catch (MalformedURLException e) {
-				Log.e("SceneLoader", e.getMessage(), e);
-				throw new RuntimeException(e);
-			}
-
-		}
-	}
-
 	public Object3DData getLightBulb() {
 		return lightPoint;
 	}
 
 	/* Hook for animating the objects before the rendering; rotate the light source around object */
 	public void onDrawFrame(){
-//		animateLight();
+		animateLight();
 	}
 
 	private void animateLight() {

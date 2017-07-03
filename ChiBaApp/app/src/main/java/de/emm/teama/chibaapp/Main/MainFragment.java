@@ -51,14 +51,13 @@ public class MainFragment extends Fragment
             axis.setColor(new float[] { 1.0f, 0, 0, 1.0f });
             scene.addObject(axis);
 
-            // this has no color array
+            // 3D Object
             Object3DData android = Object3DBuilder.loadObj(this.getActivity().getAssets(), "models", "android.obj");
             android.setPosition(new float[] { 0f, 0f, 0f });
             android.setColor(new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
             scene.addObject(android);
         } catch (Exception ex) {}
 
-        scene.init();
 
         // TODO: Alert user when there is no multitouch support (2 fingers). He won't be able to rotate or zoom for
         Utils.printTouchCapabilities(this.getActivity().getPackageManager());

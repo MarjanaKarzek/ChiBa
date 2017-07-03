@@ -226,8 +226,8 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 						boundingBoxData = Object3DBuilder.buildBoundingBox(objData);
 						boundingBoxes.put(objData, boundingBoxData);
 					}
-					Object3D boundingBoxDrawer = drawer.getBoundingBoxDrawer();
-					boundingBoxDrawer.draw(boundingBoxData, modelProjectionMatrix, modelViewMatrix, -1, null);
+//					Object3D boundingBoxDrawer = drawer.getBoundingBoxDrawer();
+//					boundingBoxDrawer.draw(boundingBoxData, modelProjectionMatrix, modelViewMatrix, -1, null);
 				}
 
 				// Draw bounding box
