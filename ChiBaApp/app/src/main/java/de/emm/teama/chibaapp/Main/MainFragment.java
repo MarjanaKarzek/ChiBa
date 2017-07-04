@@ -47,12 +47,12 @@ public class MainFragment extends Fragment
         scene = new SceneLoader(this);
         try {
             // 3D Axis
-            Object3DData axis = Object3DBuilder.buildAxis().setId("axis");
-            axis.setColor(new float[] { 1.0f, 0, 0, 1.0f });
-            scene.addObject(axis);
+//            Object3DData axis = Object3DBuilder.buildAxis().setId("axis");
+//            axis.setColor(new float[] { 1.0f, 0, 0, 1.0f });
+//            scene.addObject(axis);
 
             // 3D Object
-            Object3DData android = Object3DBuilder.loadObj(this.getActivity().getAssets(), "models", "android.obj");
+            Object3DData android = Object3DBuilder.loadObj(this.getActivity().getAssets(), "models", "chiba.obj");
             android.setPosition(new float[] { 0f, 0f, 0f });
             android.setColor(new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
             scene.addObject(android);
