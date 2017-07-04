@@ -58,7 +58,6 @@ public class ToDoListFragment extends Fragment {
     }
 
     private void displayData() {
-        Log.d(TAG, "displayData: reading data from database");
         Cursor data = database.showToDos();
 
         if (data.getCount() != 0) {
@@ -66,6 +65,5 @@ public class ToDoListFragment extends Fragment {
                 currentToDos.add(Integer.valueOf(data.getString(0)));
             }
         }
-        Log.d(TAG, "displayData: amount of todos: data.getCount() " + data.getCount());
     }
 }

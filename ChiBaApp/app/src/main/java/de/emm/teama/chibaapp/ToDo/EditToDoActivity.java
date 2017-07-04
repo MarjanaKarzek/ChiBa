@@ -75,10 +75,11 @@ public class EditToDoActivity extends AppCompatActivity{
                 currentStartDate = data.getString(3);
                 currentStartTime = data.getString(4);
                 currentLocation= data.getString(5);
+                Log.d(TAG, "onCreate: got data from database ");
             }
         }
         data.close();
-        currentAssignedHashtags = database.showHashtagsByEventId(todoId);
+        currentAssignedHashtags = database.showHashtagsByToDoId(todoId);
         assignedHashtags = currentAssignedHashtags;
 
         hashtagListView = (ListView) findViewById(R.id.editToDoListViewHashtag);
@@ -96,7 +97,7 @@ public class EditToDoActivity extends AppCompatActivity{
         location = (EditText) findViewById(R.id.editToDoEditTextLocation);
         location.setText(currentLocation);
 
-        Button deleteButton = (Button) findViewById(R.id.editAppointmentDeleteButton);
+        Button deleteButton = (Button) findViewById(R.id.editToDoDeleteButton);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,6 +168,7 @@ public class EditToDoActivity extends AppCompatActivity{
                 String titleString = title.getText().toString();
                 String durationString = duration.getText().toString();
                 String locationString = location.getText().toString();
+                Log.d(TAG, "onClick: assignedHashtags " + assignedHashtags.toString());
 
                 boolean insertData = database.updateToDo(todoId, titleString, durationString,locationString,assignedHashtags);
                 int successState = 0;
@@ -244,6 +246,5 @@ public class EditToDoActivity extends AppCompatActivity{
             }
         }
         Collections.sort(hashtags);
-        Log.d(TAG, "initializeHashtags: hashtags:" + hashtags.toString());
     }
 }

@@ -307,6 +307,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return hashtags;
     }
 
+    public ArrayList<String> showHashtagsByToDoId(int todoId){
+        ArrayList<String> hashtagIds = new ArrayList<String>();
+        ArrayList<String> hashtags = new ArrayList<String>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT " + COLUMN_TODOMATCHING_HASHTAG_ID + " FROM " + TABLE_NAME_TODOMATCHING + " WHERE " + COLUMN_TODOMATCHING_TODO_ID + " = " + todoId, null);
+
+        if (data.getCount() != 0) {
+            while (data.moveToNext()) {
+                hashtagIds.add(data.getString(0));
+            }
+        }
+        data.close();
+
+        for(String id: hashtagIds){
+            hashtags.add(showHashtagNameById(id));
+        }
+
+        return hashtags;
+    }
+
     public String showHashtagNameById(String hashtagId){
         SQLiteDatabase db = this.getWritableDatabase();
         String hashtag = "";
@@ -371,6 +391,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public boolean updateToDo(int todoId, String title, String duration, String location, ArrayList<String> hashtags) {
+        Log.d(TAG, "updateToDo: hashtags to assign: " + hashtags.toString());
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "UPDATE " + TABLE_NAME_TODOS +
                 " SET " + COLUMN_TODO_TITLE + " = '" + title + "', " +
@@ -386,15 +407,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private boolean insertAssignedHashtagsOfToDo(int todoId, ArrayList<String> hashtags) {
         SQLiteDatabase db = this.getWritableDatabase();
         if(hashtags.size() > 0) {
-            ContentValues contentEventHashtagValues = new ContentValues();
+            ContentValues contentToDoHashtagValues = new ContentValues();
             for (String hashtag : hashtags) {
                 Log.d(TAG, "insertAssignedHashtags: hashtag name: " + hashtag);
                 int hashtagId = getHashtagIdByName(hashtag);
-                contentEventHashtagValues.put(COLUMN_TODOMATCHING_TODO_ID, todoId);
-                contentEventHashtagValues.put(COLUMN_TODOMATCHING_HASHTAG_ID, hashtagId);
+                contentToDoHashtagValues.put(COLUMN_TODOMATCHING_TODO_ID, todoId);
+                contentToDoHashtagValues.put(COLUMN_TODOMATCHING_HASHTAG_ID, hashtagId);
             }
 
-            long result = db.insert(TABLE_NAME_TODOMATCHING, null, contentEventHashtagValues);
+            long result = db.insert(TABLE_NAME_TODOMATCHING, null, contentToDoHashtagValues);
             if (result == -1)
                 return false;
             else
@@ -407,7 +428,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private void deleteAssignedHashtagsByToDoId(int todoId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "DELETE FROM " + TABLE_NAME_TODOMATCHING +
-                " WHERE " + COLUMN_TODOMATCHING_TODO_ID+ " = " + todoId;
+                " WHERE " + COLUMN_TODOMATCHING_TODO_ID + " = " + todoId;
         db.execSQL(query);
     }
 
