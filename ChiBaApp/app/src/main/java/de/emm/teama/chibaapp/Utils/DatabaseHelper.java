@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.Editable;
 import android.util.Log;
 
 import java.lang.reflect.Array;
@@ -511,5 +512,61 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_USER, null);
         return data;
+    }
+
+    public void updateUserName(String name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_NAME_USER +
+                " SET " + COLUMN_USER_NAME + " = '" + name + "'" +
+                " WHERE " + COLUMN_USER_ID + " = 1";
+        db.execSQL(query);
+    }
+
+    public void updateUserAddress(String address) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_NAME_USER +
+                " SET " + COLUMN_USER_HOMEADDRESS + " = '" + address + "'" +
+                " WHERE " + COLUMN_USER_ID + " = 1";
+        db.execSQL(query);
+    }
+
+    public void updateUserDoNotDisturb(boolean doNotDisturbValue) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_NAME_USER +
+                " SET " + COLUMN_USER_NOTDISTURB+ " = '" + doNotDisturbValue + "'" +
+                " WHERE " + COLUMN_USER_ID + " = 1";
+        db.execSQL(query);
+    }
+
+    public void updateUserAvatarUse(boolean avatarUse) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_NAME_USER +
+                " SET " + COLUMN_USER_AVATAR_USE + " = '" + avatarUse + "'" +
+                " WHERE " + COLUMN_USER_ID + " = 1";
+        db.execSQL(query);
+    }
+
+    public void updateUserBirthdate(String birhtdate) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_NAME_USER +
+                " SET " + COLUMN_USER_BIRTHDATE + " = '" + birhtdate + "'" +
+                " WHERE " + COLUMN_USER_ID + " = 1";
+        db.execSQL(query);
+    }
+
+    public void updateUserDoNotDisturbStartTime(String startTime) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_NAME_USER +
+                " SET " + COLUMN_USER_NOTDISTURB_STARTTIME+ " = '" + startTime + "'" +
+                " WHERE " + COLUMN_USER_ID + " = 1";
+        db.execSQL(query);
+    }
+
+    public void updateUserDoNotDisturbEndTime(String endTime) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_NAME_USER +
+                " SET " + COLUMN_USER_NOTDISTURB_ENDTIME+ " = '" + endTime + "'" +
+                " WHERE " + COLUMN_USER_ID + " = 1";
+        db.execSQL(query);
     }
 }
