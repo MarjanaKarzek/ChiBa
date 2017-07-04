@@ -130,7 +130,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void addUserIfNotExist(){
         SQLiteDatabase db = this.getWritableDatabase();
+        //Create Table if it not exists
+        String createTableUser = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_USER + "( "
+                + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+                + COLUMN_USER_NAME + " TEXT, "
+                + COLUMN_USER_BIRTHDATE + " DATE, "
+                + COLUMN_USER_HOMEADDRESS + " TEXT, "
+                + COLUMN_USER_AVATAR_USE + " BOOLEAN, "
+                + COLUMN_USER_NOTDISTURB + " BOOLEAN, "
+                + COLUMN_USER_NOTDISTURB_STARTTIME + " DATE, "
+                + COLUMN_USER_NOTDISTURB_ENDTIME + " DATE)";
+        db.execSQL(createTableUser);
+        //check if user exists
         Cursor data = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_NAME_USER, null);
+        //if not, create user
         if(data != null && data.moveToNext()) {
             if (data.getString(0).contains("0")) {
                 //create User
