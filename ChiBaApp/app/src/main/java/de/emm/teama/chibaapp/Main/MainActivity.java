@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private SectionsPagerAdapter adapter;
     private ViewPager viewPager;
+    private TabLayout tabLayout;
 
 
     @Override
@@ -41,12 +42,65 @@ public class MainActivity extends AppCompatActivity {
         adapter = new SectionsPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.container);
         setupViewPager(viewPager);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_home);
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_orange);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_calendar);
         tabLayout.getTabAt(2).setIcon(R.drawable.ic_todolist);
         tabLayout.getTabAt(3).setIcon(R.drawable.ic_settings);
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()){
+                    case 0:
+                        tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_orange);
+                        break;
+                    case 1:
+                        tabLayout.getTabAt(1).setIcon(R.drawable.ic_calendar_orange);
+                        break;
+                    case 2:
+                        tabLayout.getTabAt(2).setIcon(R.drawable.ic_todolist_orange);
+                        break;
+                    default:
+                        tabLayout.getTabAt(3).setIcon(R.drawable.ic_settings_orange);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                switch (tab.getPosition()){
+                    case 0:
+                        tabLayout.getTabAt(0).setIcon(R.drawable.ic_home);
+                        break;
+                    case 1:
+                        tabLayout.getTabAt(1).setIcon(R.drawable.ic_calendar);
+                        break;
+                    case 2:
+                        tabLayout.getTabAt(2).setIcon(R.drawable.ic_todolist);
+                        break;
+                    default:
+                        tabLayout.getTabAt(3).setIcon(R.drawable.ic_settings);
+                }
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                switch (tab.getPosition()){
+                    case 0:
+                        tabLayout.getTabAt(0).setIcon(R.drawable.ic_home);
+                        break;
+                    case 1:
+                        tabLayout.getTabAt(1).setIcon(R.drawable.ic_calendar);
+                        break;
+                    case 2:
+                        tabLayout.getTabAt(2).setIcon(R.drawable.ic_todolist);
+                        break;
+                    default:
+                        tabLayout.getTabAt(3).setIcon(R.drawable.ic_settings);
+                }
+            }
+        });
 
         setupBottomNavigationView();
         database.checkHashtagTable();
