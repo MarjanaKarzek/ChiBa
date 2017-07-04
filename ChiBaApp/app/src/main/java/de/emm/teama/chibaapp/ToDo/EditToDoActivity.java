@@ -64,7 +64,7 @@ public class EditToDoActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_todo);
         Log.d(TAG, "onCreate: started");
-        todoId = getIntent().getIntExtra("EXTRA_EVENT_ID",-1);
+        todoId = getIntent().getIntExtra("EXTRA_TODO_ID",-1);
 
         //Get Event Information
         Cursor data = database.showToDoByToDoId(todoId);

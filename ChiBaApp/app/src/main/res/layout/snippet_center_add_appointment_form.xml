@@ -25,6 +25,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
             android:text="Ganztägig"
+            android:textColor="@color/colorBlackish"
             android:textSize="20sp" />
 
         <LinearLayout
@@ -84,6 +85,7 @@
                             android:layout_marginEnd="16dp"
                             android:layout_marginStart="16dp"
                             android:text="Start"
+                            android:textColor="@color/colorBlackish"
                             android:textSize="20sp" />
                     </LinearLayout>
 
@@ -105,6 +107,7 @@
                             android:layout_marginEnd="16dp"
                             android:layout_marginStart="16dp"
                             android:text="Ende"
+                            android:textColor="@color/colorBlackish"
                             android:textSize="20sp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -122,6 +125,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
                         android:text="bis"
+                        android:textColor="@color/colorBlackish"
                         android:textSize="20sp" />
 
                     <TextView
@@ -174,7 +178,9 @@
                 android:text="keine Hashtags hinzugefügt"
                 android:textStyle="italic"
                 android:visibility="gone"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:textColor="@color/colorBlackish"
+                android:textSize="20sp"/>
 
             <EditText
                 android:id="@+id/addAppointmentEditTextSearchHashtag"
@@ -183,7 +189,8 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:hint="Search Hashtags"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:textColor="@color/colorBlackishSelectable"/>
 
             <ListView
                 android:id="@+id/addAppointmentListViewHashtag"
@@ -203,7 +210,9 @@
                 android:textStyle="italic"
                 android:text="keine weiteren Hashtags verfügbar"
                 android:visibility="gone"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:textSize="20sp"
+                android:textColor="@color/colorBlackish"/>
         </LinearLayout>
 
     </RelativeLayout>

@@ -1,5 +1,6 @@
 package de.emm.teama.chibaapp.Main;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,11 +9,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import de.emm.teama.chibaapp.Appointment.EditAppointmentActivity;
 import de.emm.teama.chibaapp.R;
+import de.emm.teama.chibaapp.ToDo.EditToDoActivity;
 import de.emm.teama.chibaapp.Utils.ToDoListAdapter;
 
 import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
@@ -40,6 +44,16 @@ public class ToDoListFragment extends Fragment {
         adapter = new ToDoListAdapter(inflater.getContext(), R.layout.layout_list_todo_adapter_view, currentToDos);
         todoList.setAdapter(adapter);
 
+        todoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "onItemClick: clicked");
+                Intent intent = new Intent(getActivity(), EditToDoActivity.class);
+                intent.putExtra("EXTRA_TODO_ID", currentToDos.get(position));
+                startActivity(intent);
+            }
+        });
+
         return view;
     }
 
@@ -52,6 +66,6 @@ public class ToDoListFragment extends Fragment {
                 currentToDos.add(Integer.valueOf(data.getString(0)));
             }
         }
-        Log.d(TAG, "displayData: data.getCount()" + data.getCount());
+        Log.d(TAG, "displayData: amount of todos: data.getCount() " + data.getCount());
     }
 }

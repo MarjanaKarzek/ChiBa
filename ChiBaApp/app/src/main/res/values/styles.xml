@@ -8,4 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="DateTextAppearanceLarge">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorBlackishSelectable</item>
+    </style>
+
 </resources>

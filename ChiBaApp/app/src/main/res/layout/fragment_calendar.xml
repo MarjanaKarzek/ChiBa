@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -7,7 +8,9 @@
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:dateTextAppearance="@style/DateTextAppearanceLarge"
+        />
     <TextView
         android:id="@+id/selectedDate"
         android:layout_width="match_parent"
@@ -15,7 +18,9 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_below="@+id/calendarView"/>
+        android:layout_below="@+id/calendarView"
+        android:textColor="@color/colorBlackish"
+        android:textSize="20sp"/>
     <ListView
         android:id="@+id/eventlist"
         android:layout_width="match_parent"
@@ -37,6 +42,8 @@
         android:gravity="center"
         android:textStyle="italic"
         android:text="keine Ereignisse"
-        android:visibility="gone" />
+        android:textColor="@color/colorBlackish"
+        android:visibility="gone"
+        android:textSize="20sp"/>
 
 </RelativeLayout>

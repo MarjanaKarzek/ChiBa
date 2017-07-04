@@ -101,7 +101,8 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginBottom="16dp"
                 android:layout_weight="0.25"
-                android:background="@color/colorDelete"
+                android:background="@color/colorWarning"
+                android:textColor="@color/colorWhite"
                 android:text="ToDo löschen"
                 android:textSize="20sp" />
         </LinearLayout>

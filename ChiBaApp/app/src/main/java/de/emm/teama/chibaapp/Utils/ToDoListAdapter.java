@@ -1,6 +1,8 @@
 package de.emm.teama.chibaapp.Utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import de.emm.teama.chibaapp.R;
+import de.emm.teama.chibaapp.ToDo.EditToDoActivity;
 
 import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
 
@@ -58,7 +61,7 @@ public class ToDoListAdapter extends ArrayAdapter<Integer>{
         Log.d(TAG, "getView: state is of value " + state);
 
 
-        LayoutInflater inflater = LayoutInflater.from(context);
+        final LayoutInflater inflater = LayoutInflater.from(context);
         convertView = inflater.inflate(resource, parent, false);
 
         todoText = (TextView) convertView.findViewById(R.id.textViewToDoList);
@@ -94,6 +97,17 @@ public class ToDoListAdapter extends ArrayAdapter<Integer>{
                 }
             }
         });
+
+        /*todoText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onItemClick: clicked");
+                Activity activity = (Activity) context;
+                Intent intent = new Intent(activity, EditToDoActivity.class);
+                intent.putExtra("EXTRA_TODO_ID", getItem(position));
+                activity.startActivity(intent);
+            }
+        });*/
 
         return convertView;
     }

@@ -60,6 +60,8 @@
                 android:layout_marginStart="16dp"
                 android:gravity="center"
                 android:text="keine Hashtags hinzugefügt"
+                android:textColor="@color/colorBlackish"
+                android:textSize="20sp"
                 android:textStyle="italic"
                 android:visibility="gone" />
             <EditText
