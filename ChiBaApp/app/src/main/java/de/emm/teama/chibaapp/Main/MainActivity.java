@@ -31,12 +31,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Success Toast for add Event
-        int successState = getIntent().getIntExtra("EXTRA_SUCCESS_STATE",3);
-        if(successState == 1)
+        int successState_addAppointment = getIntent().getIntExtra("EXTRA_SUCCESS_STATE_ADD_APPOINTMENT",3);
+        if(successState_addAppointment == 1)
             Toast.makeText(MainActivity.this,"Termin angelegt",Toast.LENGTH_LONG).show();
-        else if(successState == 0)
-            Toast.makeText(MainActivity.this,"Fehler beim anlegen des Termins",Toast.LENGTH_LONG).show();
-        Log.d(TAG, "onCreate: successState = " + successState);
+        else if(successState_addAppointment == 0)
+            Toast.makeText(MainActivity.this,"Fehler beim Anlegen des Termins",Toast.LENGTH_LONG).show();
 
         //Setup View Pager
         adapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -71,8 +70,5 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG,"setupBottomNavigationView: setting up BottomNavigationView");
         BottomNavigationView bottomNavigationView = (BottomNavigationView)findViewById(R.id.bottomNavViewBar);
         BottomNavigationViewHelper.enableNavigation(MainActivity.this, bottomNavigationView);
-       // Menu menu = bottomNavigationView.getMenu();
-        //MenuItem menuItem = menu.getItem(0);
-        //menuItem.setChecked(false);
     }
 }
