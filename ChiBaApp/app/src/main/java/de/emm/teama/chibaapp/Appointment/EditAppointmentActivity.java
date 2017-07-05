@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -44,7 +45,7 @@ import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
  * Created by Marjana Karzek on 18.06.2017.
  */
 
-public class EditAppointmentActivity extends AppCompatActivity{
+public class EditAppointmentActivity extends AppCompatActivity {
     private static final String TAG = "EditAppointmentActivity";
     private Context context = EditAppointmentActivity.this;
     private int eventId;
@@ -61,6 +62,10 @@ public class EditAppointmentActivity extends AppCompatActivity{
 
     //Calendar Fields
     private Calendar calendar = Calendar.getInstance();
+    private Calendar calendarStartDate = Calendar.getInstance();
+    private Calendar calendarEndDate = Calendar.getInstance();
+    private Calendar calendarStartTime = Calendar.getInstance();
+    private Calendar calendarEndTime = Calendar.getInstance();
     private TextView startDate;
     private TextView endDate;
     private TextView startTime;
@@ -91,12 +96,18 @@ public class EditAppointmentActivity extends AppCompatActivity{
     private EditText title;
     private EditText location;
 
+    private Drawable errorIcon;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_appointment);
         Log.d(TAG, "onCreate: started");
-        eventId = getIntent().getIntExtra("EXTRA_EVENT_ID",-1);
+
+        errorIcon = getDrawable(R.drawable.ic_error_message);
+        errorIcon.setBounds(0, 0,errorIcon.getIntrinsicWidth(), errorIcon.getIntrinsicHeight());
+
+        eventId = getIntent().getIntExtra("EXTRA_EVENT_ID", -1);
 
         //Get Event Information
         Cursor data = database.showEventByEventId(eventId);
@@ -108,7 +119,7 @@ public class EditAppointmentActivity extends AppCompatActivity{
                 currentEndDate = data.getString(4);
                 currentStartTime = data.getString(5);
                 currentEndTime = data.getString(6);
-                currentLocation= data.getString(7);
+                currentLocation = data.getString(7);
             }
         }
         data.close();
@@ -125,13 +136,12 @@ public class EditAppointmentActivity extends AppCompatActivity{
         endTime.setText(currentEndTime);
 
         //Switch Fields Initialization
-        viewFlipperFullDay = (ViewFlipper) findViewById( R.id.addAppointmentViewFlipperFullDay );
+        viewFlipperFullDay = (ViewFlipper) findViewById(R.id.addAppointmentViewFlipperFullDay);
         fulldaySwitch = (Switch) findViewById(R.id.addAppointmentSwitchFullday);
-        if(currentFullDayState != "0") {
+        if (currentFullDayState != "0") {
             fulldaySwitch.setChecked(true);
             viewFlipperFullDay.showNext();
-        }
-        else
+        } else
             fulldaySwitch.setChecked(false);
 
         //Hashtag List Fields Initialization
@@ -154,7 +164,7 @@ public class EditAppointmentActivity extends AppCompatActivity{
         title.setText(currentEventTitle);
         location = (EditText) findViewById(R.id.addAppointmentEditTextLocation);
         location.setText(currentLocation);
-        for(String hashtag: currentAssignedHashtags){
+        for (String hashtag : currentAssignedHashtags) {
             hashtags.remove(hashtag);
         }
 
@@ -212,10 +222,9 @@ public class EditAppointmentActivity extends AppCompatActivity{
         fulldaySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     viewFlipperFullDay.showNext();
-                }
-                else{
+                } else {
                     viewFlipperFullDay.showPrevious();
                 }
             }
@@ -240,7 +249,7 @@ public class EditAppointmentActivity extends AppCompatActivity{
                 adapter2.notifyDataSetChanged();
             }
         });
-        hashtagListView.setEmptyView( findViewById( R.id.addAppointmentListViewHashtagEmpty) );
+        hashtagListView.setEmptyView(findViewById(R.id.addAppointmentListViewHashtagEmpty));
         assignedHashtagListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -286,7 +295,7 @@ public class EditAppointmentActivity extends AppCompatActivity{
         });
     }
 
-    private void setupToolbar(){
+    private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.editAppointmentToolbar);
         setSupportActionBar(toolbar);
 
@@ -316,44 +325,59 @@ public class EditAppointmentActivity extends AppCompatActivity{
                 cancleEditDialog.show();
             }
         });
-        
+
         ImageView check = (ImageView) findViewById(R.id.editAppointmentOption);
         check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onClick: save edits of appointment option selected");
+                Log.d(TAG, "onClick: add appointment option selected");
+                if (title.getText().toString().length() == 0 || location.getText().toString().length() == 0) {
+                    if (title.getText().toString().length() == 0) {
 
-                String titleString = title.getText().toString();
-                boolean fulldayBoolean = fulldaySwitch.isChecked();
-                String locationString = location.getText().toString();
-                String startDateString = startDate.getText().toString();
-                String endDateString = endDate.getText().toString();
-                String startTimeString = startTime.getText().toString();
-                String endTimeString = endTime.getText().toString();
+                        title.setError("Eingabe eines Titels ist erforderlich", errorIcon);
+                    }
+                    if (location.getText().toString().length() == 0) {
+                        location.setError("Eingabe eines Orts ist erforderlich", errorIcon);
+                    }
+                } else {
+                    String titleString = title.getText().toString();
+                    boolean fulldayBoolean = fulldaySwitch.isChecked();
+                    String locationString = location.getText().toString();
+                    String startDateString = startDate.getText().toString();
+                    String endDateString = endDate.getText().toString();
+                    String startTimeString = startTime.getText().toString();
+                    String endTimeString = endTime.getText().toString();
 
-                boolean insertData = database.updateEvent(eventId, titleString,fulldayBoolean,startDateString,endDateString,startTimeString,endTimeString,locationString,assignedHashtags);
-                int successState = 0;
-                if(insertData)
-                    successState = 1;
+                    boolean insertData = database.updateEvent(eventId, titleString, fulldayBoolean, startDateString, endDateString, startTimeString, endTimeString, locationString, assignedHashtags);
+                    int successState = 0;
+                    if (insertData)
+                        successState = 1;
 
-                Intent intent = new Intent(context, MainActivity.class);
-                intent.putExtra("EXTRA_SUCCESS_STATE", successState);
-                context.startActivity(intent);
-
+                    Intent intent = new Intent(context, MainActivity.class);
+                    intent.putExtra("EXTRA_SUCCESS_STATE", successState);
+                    context.startActivity(intent);
+                }
             }
         });
     }
 
-    private void setupDateTimePickers(){
+    private void setupDateTimePickers() {
         startDatePicker = new DatePickerDialog.OnDateSetListener() {
 
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, monthOfYear);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                startDate.setText(simpleDateFormat.format(calendar.getTime()));
+                calendarStartDate.set(Calendar.YEAR, year);
+                calendarStartDate.set(Calendar.MONTH, monthOfYear);
+                calendarStartDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                startDate.setText(simpleDateFormat.format(calendarStartDate.getTime()));
+                if (calendarStartDate.after(calendarEndDate)) {
+                    calendarEndDate.set(Calendar.YEAR, year);
+                    calendarEndDate.set(Calendar.MONTH, monthOfYear);
+                    calendarEndDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    endDate.setText(simpleDateFormat.format(calendarEndDate.getTime()));
+                }
             }
         };
 
@@ -362,35 +386,54 @@ public class EditAppointmentActivity extends AppCompatActivity{
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, monthOfYear);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                endDate.setText(simpleDateFormat.format(calendar.getTime()));
+                calendarEndDate.set(Calendar.YEAR, year);
+                calendarEndDate.set(Calendar.MONTH, monthOfYear);
+                calendarEndDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                endDate.setText(simpleDateFormat.format(calendarEndDate.getTime()));
+                Log.d(TAG, "onDateSet: date selected " + simpleDateFormat.format(calendarEndDate.getTime()));
+                Log.d(TAG, "onDateSet: current startdate " + simpleDateFormat.format(calendarStartDate.getTime()));
+                if (calendarEndDate.before(calendarStartDate)) {
+                    calendarStartDate.set(Calendar.YEAR, year);
+                    calendarStartDate.set(Calendar.MONTH, monthOfYear);
+                    calendarStartDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    Log.d(TAG, "onDateSet: date to set " + simpleDateFormat.format(calendarStartDate.getTime()));
+                    startDate.setText(simpleDateFormat.format(calendarStartDate.getTime()));
+                }
             }
         };
 
         startTimePicker = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                calendar.set(Calendar.MINUTE, minute);
-                startTime.setText(simpleTimeFormat.format(calendar.getTime()));
+                calendarStartTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendarStartTime.set(Calendar.MINUTE, minute);
+                startTime.setText(simpleTimeFormat.format(calendarStartTime.getTime()));
+                if (calendarStartTime.after(calendarEndTime)) {
+                    calendarEndTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                    calendarEndTime.set(Calendar.MINUTE, minute);
+                    endTime.setText(simpleTimeFormat.format(calendarEndTime.getTime()));
+                }
             }
         };
 
         endTimePicker = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                calendar.set(Calendar.MINUTE, minute);
-                endTime.setText(simpleTimeFormat.format(calendar.getTime()));
+                calendarEndTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendarEndTime.set(Calendar.MINUTE, minute);
+                endTime.setText(simpleTimeFormat.format(calendarEndTime.getTime()));
+                if (calendarEndTime.before(calendarStartTime)) {
+                    calendarStartTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                    calendarStartTime.set(Calendar.MINUTE, minute);
+                    startTime.setText(simpleTimeFormat.format(calendarStartTime.getTime()));
+                }
             }
         };
     }
 
-    private void initializeHashtags(){
+    private void initializeHashtags() {
         Cursor data = database.showHashtags();
-        if(data.getCount() != 0) {
+        if (data.getCount() != 0) {
             String hashtag = "";
             while (data.moveToNext()) {
                 hashtag += data.getString(1);

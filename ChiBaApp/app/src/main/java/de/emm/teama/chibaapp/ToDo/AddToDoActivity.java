@@ -3,6 +3,7 @@ package de.emm.teama.chibaapp.ToDo;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -48,11 +49,16 @@ public class AddToDoActivity extends AppCompatActivity{
     private EditText duration;
     private EditText location;
 
+    private Drawable errorIcon;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_todo);
         Log.d(TAG, "onCreate: started");
+
+        errorIcon = getDrawable(R.drawable.ic_error_message);
+        errorIcon.setBounds(0, 0,errorIcon.getIntrinsicWidth(), errorIcon.getIntrinsicHeight());
 
         hashtagListView = (ListView) findViewById(R.id.addToDoListViewHashtag);
         assignedHashtagListView = (ListView) findViewById(R.id.addToDoListViewAssignedHashtag);
@@ -86,19 +92,27 @@ public class AddToDoActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onClick: add todo option selected");
+                if (title.getText().toString().length() == 0 || duration.getText().toString().length() == 0 || location.getText().toString().length() == 0) {
+                    if (title.getText().toString().length() == 0)
+                        title.setError("Eingabe eines Titels ist erforderlich",errorIcon);
+                    if (duration.getText().toString().length() == 0)
+                        duration.setError("Eingabe einer Dauer ist erforderlich",errorIcon);
+                    if (location.getText().toString().length() == 0)
+                        location.setError("Eingabe eines Orts ist erforderlich",errorIcon);
+                } else {
+                    String titleString = title.getText().toString();
+                    String durationString = duration.getText().toString();
+                    String locationString = location.getText().toString();
 
-                String titleString = title.getText().toString();
-                String durationString = duration.getText().toString();
-                String locationString = location.getText().toString();
+                    boolean insertData = database.addToDo(titleString, durationString, locationString, false, assignedHashtags);
+                    int successState = 0;
+                    if (insertData)
+                        successState = 1;
 
-                boolean insertData = database.addToDo(titleString,durationString,locationString,false,assignedHashtags);
-                int successState = 0;
-                if(insertData)
-                    successState = 1;
-
-                Intent intent = new Intent(context, MainActivity.class);
-                intent.putExtra("EXTRA_SUCCESS_STATE", successState);
-                context.startActivity(intent);
+                    Intent intent = new Intent(context, MainActivity.class);
+                    intent.putExtra("EXTRA_SUCCESS_STATE", successState);
+                    context.startActivity(intent);
+                }
             }
         });
     }

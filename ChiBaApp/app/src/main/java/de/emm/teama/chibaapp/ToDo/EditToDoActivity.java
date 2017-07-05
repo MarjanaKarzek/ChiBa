@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -33,7 +34,7 @@ import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
  * Created by Marjana Karzek on 18.06.2017.
  */
 
-public class EditToDoActivity extends AppCompatActivity{
+public class EditToDoActivity extends AppCompatActivity {
     private static final String TAG = "EditToDoActivity";
     private Context context = EditToDoActivity.this;
     private int todoId;
@@ -59,12 +60,18 @@ public class EditToDoActivity extends AppCompatActivity{
     private EditText duration;
     private EditText location;
 
+    private Drawable errorIcon;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_todo);
         Log.d(TAG, "onCreate: started");
-        todoId = getIntent().getIntExtra("EXTRA_TODO_ID",-1);
+
+        errorIcon = getDrawable(R.drawable.ic_error_message);
+        errorIcon.setBounds(0, 0,errorIcon.getIntrinsicWidth(), errorIcon.getIntrinsicHeight());
+
+        todoId = getIntent().getIntExtra("EXTRA_TODO_ID", -1);
 
         //Get Event Information
         Cursor data = database.showToDoByToDoId(todoId);
@@ -74,7 +81,7 @@ public class EditToDoActivity extends AppCompatActivity{
                 currentDuration = data.getString(2);
                 currentStartDate = data.getString(3);
                 currentStartTime = data.getString(4);
-                currentLocation= data.getString(5);
+                currentLocation = data.getString(5);
                 Log.d(TAG, "onCreate: got data from database ");
             }
         }
@@ -127,7 +134,7 @@ public class EditToDoActivity extends AppCompatActivity{
         });
     }
 
-    private void setupToolbar(){
+    private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.editToDoToolbar);
         setSupportActionBar(toolbar);
 
@@ -165,19 +172,29 @@ public class EditToDoActivity extends AppCompatActivity{
             public void onClick(View view) {
                 Log.d(TAG, "onClick: save edits of todo option selected");
 
-                String titleString = title.getText().toString();
-                String durationString = duration.getText().toString();
-                String locationString = location.getText().toString();
-                Log.d(TAG, "onClick: assignedHashtags " + assignedHashtags.toString());
+                if (title.getText().toString().length() == 0 || duration.getText().toString().length() == 0 || location.getText().toString().length() == 0) {
+                    if (title.getText().toString().length() == 0)
+                        title.setError("Eingabe eines Titels ist erforderlich", errorIcon);
+                    if (duration.getText().toString().length() == 0)
+                        duration.setError("Eingabe einer Dauer ist erforderlich", errorIcon);
+                    if (location.getText().toString().length() == 0)
+                        location.setError("Eingabe eines Orts ist erforderlich", errorIcon);
+                } else {
 
-                boolean insertData = database.updateToDo(todoId, titleString, durationString,locationString,assignedHashtags);
-                int successState = 0;
-                if(insertData)
-                    successState = 1;
+                    String titleString = title.getText().toString();
+                    String durationString = duration.getText().toString();
+                    String locationString = location.getText().toString();
+                    Log.d(TAG, "onClick: assignedHashtags " + assignedHashtags.toString());
 
-                Intent intent = new Intent(context, MainActivity.class);
-                intent.putExtra("EXTRA_SUCCESS_STATE", successState);
-                context.startActivity(intent);
+                    boolean insertData = database.updateToDo(todoId, titleString, durationString, locationString, assignedHashtags);
+                    int successState = 0;
+                    if (insertData)
+                        successState = 1;
+
+                    Intent intent = new Intent(context, MainActivity.class);
+                    intent.putExtra("EXTRA_SUCCESS_STATE", successState);
+                    context.startActivity(intent);
+                }
             }
         });
     }
@@ -219,7 +236,7 @@ public class EditToDoActivity extends AppCompatActivity{
                 adapter2.notifyDataSetChanged();
             }
         });
-        hashtagListView.setEmptyView( findViewById( R.id.editToDoListViewHashtagEmpty) );
+        hashtagListView.setEmptyView(findViewById(R.id.editToDoListViewHashtagEmpty));
         assignedHashtagListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -235,9 +252,9 @@ public class EditToDoActivity extends AppCompatActivity{
         assignedHashtagListView.setEmptyView(findViewById(R.id.editToDoListViewAssignedHashtagEmpty));
     }
 
-    private void initializeHashtags(){
+    private void initializeHashtags() {
         Cursor data = database.showHashtags();
-        if(data.getCount() != 0) {
+        if (data.getCount() != 0) {
             String hashtag = "";
             while (data.moveToNext()) {
                 hashtag += data.getString(1);

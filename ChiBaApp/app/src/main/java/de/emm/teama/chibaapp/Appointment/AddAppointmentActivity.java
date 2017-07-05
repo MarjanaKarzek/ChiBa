@@ -288,7 +288,9 @@ public class AddAppointmentActivity extends AppCompatActivity {
                 calendarStartDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 startDate.setText(simpleDateFormat.format(calendarStartDate.getTime()));
                 if (calendarStartDate.after(calendarEndDate)) {
-                    calendarEndDate = calendarStartDate;
+                    calendarEndDate.set(Calendar.YEAR, year);
+                    calendarEndDate.set(Calendar.MONTH, monthOfYear);
+                    calendarEndDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                     endDate.setText(simpleDateFormat.format(calendarEndDate.getTime()));
                 }
             }
@@ -304,7 +306,9 @@ public class AddAppointmentActivity extends AppCompatActivity {
                 calendarEndDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 endDate.setText(simpleDateFormat.format(calendarEndDate.getTime()));
                 if (calendarEndDate.before(calendarStartDate)) {
-                    calendarStartDate = calendarEndDate;
+                    calendarStartDate.set(Calendar.YEAR, year);
+                    calendarStartDate.set(Calendar.MONTH, monthOfYear);
+                    calendarStartDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                     startDate.setText(simpleDateFormat.format(calendarStartDate.getTime()));
                 }
 
@@ -318,7 +322,8 @@ public class AddAppointmentActivity extends AppCompatActivity {
                 calendarStartTime.set(Calendar.MINUTE, minute);
                 startTime.setText(simpleTimeFormat.format(calendarStartTime.getTime()));
                 if (calendarStartTime.after(calendarEndTime)) {
-                    calendarEndTime = calendarStartTime;
+                    calendarEndTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                    calendarEndTime.set(Calendar.MINUTE, minute);
                     endTime.setText(simpleTimeFormat.format(calendarEndTime.getTime()));
                 }
             }
@@ -331,7 +336,8 @@ public class AddAppointmentActivity extends AppCompatActivity {
                 calendarEndTime.set(Calendar.MINUTE, minute);
                 endTime.setText(simpleTimeFormat.format(calendarEndTime.getTime()));
                 if (calendarEndTime.before(calendarStartTime)) {
-                    calendarStartTime = calendarEndTime;
+                    calendarStartTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                    calendarStartTime.set(Calendar.MINUTE, minute);
                     startTime.setText(simpleTimeFormat.format(calendarStartTime.getTime()));
                 }
             }
