@@ -101,6 +101,8 @@ public class CalendarFragment extends Fragment {
 
     private void displayData() {
         Cursor data = database.showEventsByStartDate(selectedDate.getText().toString());
+        displayedEvents.clear();
+        currentEvents.clear();
 
         if (data.getCount() != 0) {
             String event = "";
