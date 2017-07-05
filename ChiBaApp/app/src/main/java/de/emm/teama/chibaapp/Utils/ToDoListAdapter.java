@@ -31,7 +31,6 @@ public class ToDoListAdapter extends ArrayAdapter<Integer> {
     private Context context;
     private int resource;
 
-    //private TextView todoText;
     private String stateString;
     private boolean state;
 
@@ -59,22 +58,19 @@ public class ToDoListAdapter extends ArrayAdapter<Integer> {
             viewHolder.todoText = (TextView) convertView.findViewById(R.id.textViewToDoList);
             viewHolder.checkBox = (CheckBox) convertView.findViewById(R.id.checkBoxToDoList);
 
-            viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            viewHolder.checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
+                public void onClick(View v) {
+                    if(viewHolder.checkBox.isChecked()){
                         Log.d(TAG, "onCheckedChanged: checking text");
                         viewHolder.todoText.setPaintFlags(viewHolder.todoText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                         database.setStateOfToDoByToDoId(getItem(position), true);
-                        stateString = "true";
-                        state = true;
-                    } else {
+                    }else{
                         Log.d(TAG, "onCheckedChanged: unchecking text");
                         viewHolder.todoText.setPaintFlags(viewHolder.todoText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                         database.setStateOfToDoByToDoId(getItem(position), false);
-                        stateString = "false";
-                        state = false;
                     }
+
                 }
             });
 
