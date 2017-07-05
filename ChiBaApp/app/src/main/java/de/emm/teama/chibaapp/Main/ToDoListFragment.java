@@ -59,6 +59,7 @@ public class ToDoListFragment extends Fragment {
 
     private void displayData() {
         Cursor data = database.showToDos();
+        currentToDos.clear();
 
         if (data.getCount() != 0) {
             while (data.moveToNext()) {
