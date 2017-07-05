@@ -30,13 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.d(TAG,"onCreate: starting.");
 
-
-        //Success Toast for add Event
-        int successState_addAppointment = getIntent().getIntExtra("EXTRA_SUCCESS_STATE_ADD_APPOINTMENT",3);
-        if(successState_addAppointment == 1)
-            Toast.makeText(MainActivity.this,"Termin angelegt",Toast.LENGTH_LONG).show();
-        else if(successState_addAppointment == 0)
-            Toast.makeText(MainActivity.this,"Fehler beim Anlegen des Termins",Toast.LENGTH_LONG).show();
+        tryToastOnSuccess();
 
         //Setup View Pager
         adapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -104,6 +98,36 @@ public class MainActivity extends AppCompatActivity {
 
         setupBottomNavigationView();
         database.checkHashtagTable();
+    }
+
+    private void tryToastOnSuccess() {
+        //Success Toast for add Appointment
+        int successState_addAppointment = getIntent().getIntExtra("EXTRA_SUCCESS_STATE_ADD_APPOINTMENT",3);
+        if(successState_addAppointment == 1)
+            Toast.makeText(MainActivity.this,"Termin angelegt",Toast.LENGTH_LONG).show();
+        else if(successState_addAppointment == 0)
+            Toast.makeText(MainActivity.this,"Fehler beim Anlegen des Termins",Toast.LENGTH_LONG).show();
+
+        //Success Toast for edit Appointment
+        int successState_editAppointment = getIntent().getIntExtra("EXTRA_SUCCESS_STATE_EDIT_APPOINTMENT",3);
+        if(successState_editAppointment == 1)
+            Toast.makeText(MainActivity.this,"Termin geändert",Toast.LENGTH_LONG).show();
+        else if(successState_editAppointment == 0)
+            Toast.makeText(MainActivity.this,"Fehler beim Ändern des Termins",Toast.LENGTH_LONG).show();
+
+        //Success Toast for add To Do
+        int successState_addToDo = getIntent().getIntExtra("EXTRA_SUCCESS_STATE_ADD_TODO",3);
+        if(successState_addToDo == 1)
+            Toast.makeText(MainActivity.this,"ToDo angelegt",Toast.LENGTH_LONG).show();
+        else if(successState_addToDo == 0)
+            Toast.makeText(MainActivity.this,"Fehler beim Anlegen des ToDos",Toast.LENGTH_LONG).show();
+
+        //Success Toast for edit To Do
+        int successState_editToDo = getIntent().getIntExtra("EXTRA_SUCCESS_STATE_EDIT_TODO",3);
+        if(successState_editToDo == 1)
+            Toast.makeText(MainActivity.this,"ToDo geändert",Toast.LENGTH_LONG).show();
+        else if(successState_editToDo == 0)
+            Toast.makeText(MainActivity.this,"Fehler beim Ändern des ToDos",Toast.LENGTH_LONG).show();
     }
 
     /**

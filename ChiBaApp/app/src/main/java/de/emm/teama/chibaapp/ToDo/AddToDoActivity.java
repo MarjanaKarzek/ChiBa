@@ -110,7 +110,7 @@ public class AddToDoActivity extends AppCompatActivity{
                         successState = 1;
 
                     Intent intent = new Intent(context, MainActivity.class);
-                    intent.putExtra("EXTRA_SUCCESS_STATE", successState);
+                    intent.putExtra("EXTRA_SUCCESS_STATE_ADD_TODO", successState);
                     context.startActivity(intent);
                 }
             }
