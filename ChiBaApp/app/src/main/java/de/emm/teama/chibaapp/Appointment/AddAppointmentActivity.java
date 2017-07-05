@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import java.text.SimpleDateFormat;
@@ -80,8 +82,7 @@ public class AddAppointmentActivity extends AppCompatActivity {
     private AddHashtagListAdapter adapter;
     private RemoveHashtagListAdapter adapter2;
 
-    //Database Fields
-    //private DatabaseHelper database;
+    private Drawable errorIcon;
 
     //Remaining Form Fields Initialization
     private EditText title;
@@ -92,6 +93,9 @@ public class AddAppointmentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_appointment);
         Log.d(TAG, "onCreate: started");
+
+        errorIcon = getDrawable(R.drawable.ic_error_message);
+        errorIcon.setBounds(0, 0,errorIcon.getIntrinsicWidth(), errorIcon.getIntrinsicHeight());
 
         //Calendar Fields Initialization
         startDate = (TextView) findViewById(R.id.addAppointmentTextViewStartDate);
@@ -243,10 +247,13 @@ public class AddAppointmentActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d(TAG, "onClick: add appointment option selected");
                 if (title.getText().toString().length() == 0 || location.getText().toString().length() == 0) {
-                    if (title.getText().toString().length() == 0)
-                        title.setError("Eingabe eines Titels ist erforderlich", getDrawable(R.drawable.ic_error_message));
-                    if (location.getText().toString().length() == 0)
-                        location.setError("Eingabe eines Orts ist erforderlich", getDrawable(R.drawable.ic_error_message));
+                    if (title.getText().toString().length() == 0) {
+
+                        title.setError("Eingabe eines Titels ist erforderlich",errorIcon);
+                    }
+                    if (location.getText().toString().length() == 0){
+                        location.setError("Eingabe eines Orts ist erforderlich",errorIcon);
+                    }
                 } else {
                     String titleString = title.getText().toString();
                     boolean fulldayBoolean = fulldaySwitch.isChecked();
