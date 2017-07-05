@@ -107,7 +107,7 @@ public class AppointmentDetailDialogFragment extends DialogFragment {
         TextView eventStartDateView = (TextView) view.findViewById(R.id.appointmentDetailTextViewStartDate);
         eventStartDateView.setText(eventStartDate);
         ViewFlipper viewFlipperFullDay = (ViewFlipper) view.findViewById( R.id.appointmentDetailViewFlipperFullDay);
-        if(eventFullDay != "0"){
+        if(eventFullDay.contains("1") || eventFullDay.contains("true")){
             viewFlipperFullDay.showNext();
             TextView eventEndDateView = (TextView) view.findViewById(R.id.appointmentDetailTextViewEndDate);
             eventEndDateView.setText(eventEndDate);
