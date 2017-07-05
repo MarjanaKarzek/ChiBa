@@ -12,7 +12,8 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:textSize="20sp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:textColor="@color/colorBlackish" />
 
         <LinearLayout
             android:id="@+id/addAppointmentDateSettings"
@@ -36,7 +37,8 @@
                     android:id="@+id/appointmentDetailTextViewStartDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textColor="@color/colorBlackish" />
 
             </LinearLayout>
             <ViewFlipper
@@ -56,7 +58,8 @@
                         android:id="@+id/appointmentDetailTextViewStartTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:textColor="@color/colorBlackish" />
 
                     <TextView
                         android:id="@+id/appointmentDetailTextViewUntilTime"
@@ -65,13 +68,15 @@
                         android:layout_marginEnd="16dp"
                         android:layout_marginStart="16dp"
                         android:text="-"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:textColor="@color/colorBlackish" />
 
                     <TextView
                         android:id="@+id/appointmentDetailTextViewEndTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:textColor="@color/colorBlackish" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -87,13 +92,15 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
                         android:text="bis"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:textColor="@color/colorBlackish" />
 
                     <TextView
                         android:id="@+id/appointmentDetailTextViewEndDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:textColor="@color/colorBlackish" />
 
                 </LinearLayout>
 

@@ -15,7 +15,8 @@
             android:layout_marginStart="16dp"
             android:hint="Titel"
             android:inputType="text"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textColor="@color/colorBlackishSelectable" />
 
         <Switch
             android:id="@+id/addAppointmentSwitchFullday"
@@ -25,7 +26,8 @@
             android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
             android:text="Ganztägig"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textColor="@color/colorBlackish" />
 
         <LinearLayout
             android:id="@+id/addAppointmentDateSettings"
@@ -50,7 +52,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="17. Mai 2017"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textColor="@color/colorBlackishSelectable" />
             </LinearLayout>
 
             <ViewFlipper
@@ -75,7 +78,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="12:00"
-                            android:textSize="20sp" />
+                            android:textSize="20sp"
+                            android:textColor="@color/colorBlackishSelectable" />
 
                         <TextView
                             android:id="@+id/addAppointmentTextViewStart"
@@ -84,7 +88,8 @@
                             android:layout_marginEnd="16dp"
                             android:layout_marginStart="16dp"
                             android:text="Start"
-                            android:textSize="20sp" />
+                            android:textSize="20sp"
+                            android:textColor="@color/colorBlackish" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -96,7 +101,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="14:00"
-                            android:textSize="20sp" />
+                            android:textSize="20sp"
+                            android:textColor="@color/colorBlackishSelectable" />
 
                         <TextView
                             android:id="@+id/addAppointmentTextViewEnd"
@@ -105,7 +111,8 @@
                             android:layout_marginEnd="16dp"
                             android:layout_marginStart="16dp"
                             android:text="Ende"
-                            android:textSize="20sp" />
+                            android:textSize="20sp"
+                            android:textColor="@color/colorBlackish" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -122,14 +129,16 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
                         android:text="bis"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:textColor="@color/colorBlackish" />
 
                     <TextView
                         android:id="@+id/addAppointmentTextViewEndDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="17. Mai 2017"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:textColor="@color/colorBlackishSelectable"/>
 
                 </LinearLayout>
 
@@ -147,7 +156,8 @@
             android:hint="Ort"
             android:inputType="text"
             android:textSize="20sp"
-            tools:ignore="LabelFor" />
+            tools:ignore="LabelFor"
+            android:textColor="@color/colorBlackishSelectable"/>
 
         <LinearLayout
             android:id="@+id/editAppointmentListViewAssignedHashtag"
@@ -175,7 +185,9 @@
                 android:text="keine Hashtags hinzugefügt"
                 android:textStyle="italic"
                 android:visibility="gone"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:textColor="@color/colorBlackish"
+                android:textSize="20sp"/>
 
             <EditText
                 android:id="@+id/addAppointmentEditTextSearchHashtag"
@@ -184,7 +196,8 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:hint="Search Hashtags"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:textColor="@color/colorBlackishSelectable"/>
 
             <ListView
                 android:id="@+id/addAppointmentListViewHashtag"
@@ -204,7 +217,9 @@
                 android:text="keine weiteren Hashtags verfügbar"
                 android:textStyle="italic"
                 android:visibility="gone"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:textSize="20sp"
+                android:textColor="@color/colorBlackish"/>
             <Button
                 android:id="@+id/editAppointmentDeleteButton"
                 android:layout_width="match_parent"
