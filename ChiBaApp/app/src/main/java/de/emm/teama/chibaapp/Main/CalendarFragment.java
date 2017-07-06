@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,7 +86,6 @@ public class CalendarFragment extends Fragment {
         adapter = new DisplayEventListAdapter(inflater.getContext(), R.layout.layout_list_events_adapter_view, currentEvents);
         eventlist.setAdapter(adapter);
 
-
         return view;
     }
 
@@ -100,7 +100,7 @@ public class CalendarFragment extends Fragment {
     }
 
     private void displayData() {
-        Cursor data = database.showEventsByStartDate(selectedDate.getText().toString());
+        Cursor data = database.showEventsByStartDateWithoutFullDay(selectedDate.getText().toString());
         displayedEvents.clear();
         currentEvents.clear();
 
@@ -114,5 +114,20 @@ public class CalendarFragment extends Fragment {
                 event = "";
             }
         }
+
+        Cursor dataFullday = database.showEventIdsByStartDateThatAreFullDay(selectedDate.getText().toString());
+
+        if (dataFullday.getCount() != 0) {
+            String event;
+            while (dataFullday.moveToNext()) {
+                Cursor currentFulldayEvent = database.showEventByEventId(Integer.valueOf(dataFullday.getString(0)));
+                if(currentFulldayEvent.getCount() != 0 && currentFulldayEvent.moveToNext()){
+                    event = currentFulldayEvent.getString(1);
+                    displayedEvents.add(Integer.valueOf(currentFulldayEvent.getString(0)));
+                    currentEvents.add(event);
+                }
+            }
+        }
+
     }
 }

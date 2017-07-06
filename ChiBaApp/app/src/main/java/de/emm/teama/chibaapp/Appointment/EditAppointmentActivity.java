@@ -354,6 +354,18 @@ public class EditAppointmentActivity extends AppCompatActivity {
                     if (insertData)
                         successState = 1;
 
+                    if(fulldayBoolean == true){
+                        database.deleteFulldayMatchingByEventId(eventId);
+                        //insert new date
+                        String currentDateString;
+                        do{
+                            currentDateString = simpleDateFormat.format(calendarStartDate.getTime());
+                            Log.d(TAG, "onClick: current Date to be added to fullday matching: " + currentDateString);
+                            database.insertFullDayEvent(currentDateString, eventId);
+                            calendarStartDate.add(Calendar.DAY_OF_MONTH,1);
+                        }while(!currentDateString.contentEquals(endDateString));
+                    }
+
                     Intent intent = new Intent(context, MainActivity.class);
                     intent.putExtra("EXTRA_SUCCESS_STATE_EDIT_APPOINTMENT", successState);
                     context.startActivity(intent);

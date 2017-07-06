@@ -62,6 +62,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_USER_NOTDISTURB_STARTTIME = "DO_NOT_DISTURB_STARTTIME";
     private static final String COLUMN_USER_NOTDISTURB_ENDTIME = "DO_NOT_DISTURB_ENDTIME";
 
+    private static final String TABLE_NAME_FULLDAYMATCHING = "fulldaymatching_table";
+    private static final String COLUMN_FULLDAYMATCHING_ID = "ID";
+    private static final String COLUMN_FULLDAYMATCHING_DATE = "DATE";
+    private static final String COLUMN_FULLDAYMATCHING_EVENT_ID = "EVENT_ID";
+
 
     private ArrayList<String> hashtags = new ArrayList<>(Arrays.asList("Ballsport", "Fitness", "Schwimmen",
                                                                         "Restaurant", "Brunch", "Business Launch",
@@ -122,6 +127,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_USER_NOTDISTURB_STARTTIME + " DATE, "
                 + COLUMN_USER_NOTDISTURB_ENDTIME + " DATE)";
         db.execSQL(createTableUser);
+        String createTableFullDayMatching = "CREATE TABLE " + TABLE_NAME_FULLDAYMATCHING + "( "
+                + COLUMN_FULLDAYMATCHING_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+                + COLUMN_FULLDAYMATCHING_DATE + " DATE, "
+                + COLUMN_FULLDAYMATCHING_EVENT_ID + " INTEGER)";
+        db.execSQL(createTableFullDayMatching);
     }
 
     @Override
@@ -199,7 +209,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
     }
 
-    private int getEventIdByLastEvent() {
+    public int getEventIdByLastEvent() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT MAX(" + COLUMN_EVENTS_ID + ") FROM " + TABLE_NAME_EVENTS, null);
         String id = "";
@@ -227,9 +237,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return data;
     }
 
+    public Cursor showEventsOfFulldayMatching(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_FULLDAYMATCHING, null);
+        return data;
+    }
+
     public Cursor showEventsByStartDate(String startDate){
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_EVENTS + " WHERE " + COLUMN_EVENTS_STARTDATE + " = '" + startDate + "'", null);
+        Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_EVENTS + " WHERE " + COLUMN_EVENTS_STARTDATE + " = '" + startDate + "' "
+                                    + "ORDER BY " + COLUMN_EVENTS_STARTTIME, null);
+        return data;
+    }
+
+    public Cursor showEventsByStartDateWithoutFullDay(String startDate){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_EVENTS + " WHERE " + COLUMN_EVENTS_STARTDATE + " = '" + startDate + "' "
+                + "AND (" + COLUMN_EVENTS_FULLDAY + " != '1' AND "+ COLUMN_EVENTS_FULLDAY + " != 'true') "
+                + "ORDER BY " + COLUMN_EVENTS_STARTTIME, null);
+        return data;
+    }
+
+    public Cursor showEventIdsByStartDateThatAreFullDay(String startDate) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT " + COLUMN_FULLDAYMATCHING_EVENT_ID + " FROM " + TABLE_NAME_FULLDAYMATCHING + " WHERE " + COLUMN_FULLDAYMATCHING_DATE + " = '" + startDate + "'", null);
         return data;
     }
 
@@ -588,6 +619,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String query = "UPDATE " + TABLE_NAME_USER +
                 " SET " + COLUMN_USER_NOTDISTURB_ENDTIME+ " = '" + endTime + "'" +
                 " WHERE " + COLUMN_USER_ID + " = 1";
+        db.execSQL(query);
+    }
+
+    public void insertFullDayEvent(String currentDateString, int eventId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentFullDayMatchingValues = new ContentValues();
+        contentFullDayMatchingValues.put(COLUMN_FULLDAYMATCHING_DATE, currentDateString);
+        contentFullDayMatchingValues.put(COLUMN_FULLDAYMATCHING_EVENT_ID, eventId);
+        db.insert(TABLE_NAME_FULLDAYMATCHING, null, contentFullDayMatchingValues);
+    }
+
+    public void deleteFulldayMatchingByEventId(int eventId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DELETE FROM " + TABLE_NAME_FULLDAYMATCHING +
+                " WHERE " + COLUMN_FULLDAYMATCHING_EVENT_ID + " = " + eventId;
         db.execSQL(query);
     }
 }
