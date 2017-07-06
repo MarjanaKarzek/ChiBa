@@ -1,5 +1,6 @@
 package de.emm.teama.chibaapp.Main;
 
+import android.database.Cursor;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,14 +8,26 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 import de.emm.teama.chibaapp.Model3D.model.Object3DBuilder;
 import de.emm.teama.chibaapp.Model3D.model.Object3DData;
 import de.emm.teama.chibaapp.Model3D.sceneloader.SceneLoader;
 import de.emm.teama.chibaapp.Model3D.util.Utils;
 import de.emm.teama.chibaapp.Model3D.view.ModelSurfaceView;
+import de.emm.teama.chibaapp.R;
+import de.emm.teama.chibaapp.Utils.DisplayEventListAdapter;
+
+import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
 
 
 public class MainFragment extends Fragment
@@ -36,33 +49,93 @@ public class MainFragment extends Fragment
 
     private SceneLoader scene;
 
+    private View fragmentHome;
+    private String dateFormat = "d. MMMM yyyy";
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.GERMANY);
+    private String selectedDate;
+    private Calendar calendar = Calendar.getInstance();
+    private ArrayList<String> currentEvents = new ArrayList<String>();
+    private ListView eventlist;
+    private DisplayEventListAdapter adapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        gLView = new ModelSurfaceView(this);
+        LinearLayout linearLayoutRoot = new LinearLayout(this.getContext());
+        linearLayoutRoot.setOrientation(LinearLayout.VERTICAL);
+        linearLayoutRoot.setWeightSum(2f);
+        LinearLayout.LayoutParams rlpRoot = new LinearLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT);
+        linearLayoutRoot.setLayoutParams(rlpRoot);
 
+
+        gLView = new ModelSurfaceView(this);
         // Create our 3D scenario
         scene = new SceneLoader(this);
         try {
-            // 3D Axis
-//            Object3DData axis = Object3DBuilder.buildAxis().setId("axis");
-//            axis.setColor(new float[] { 1.0f, 0, 0, 1.0f });
-//            scene.addObject(axis);
-
-            // 3D Object
             Object3DData android = Object3DBuilder.loadObj(this.getActivity().getAssets(), "models", "chiba.obj");
             android.setPosition(new float[] { 0f, 0f, 0f });
             android.setColor(new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
             scene.addObject(android);
         } catch (Exception ex) {}
-
-
         // TODO: Alert user when there is no multitouch support (2 fingers). He won't be able to rotate or zoom for
         Utils.printTouchCapabilities(this.getActivity().getPackageManager());
 
-        return gLView;
+        gLView.setId(new Integer(1234567));
+        LinearLayout.LayoutParams rlpGLView = new LinearLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                1200);
+        gLView.setLayoutParams(rlpGLView);
+
+        View eventListLayout = inflater.inflate(R.layout.fragment_home, container, false);
+        RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        p.addRule(RelativeLayout.BELOW, 1234567);
+        eventListLayout.setLayoutParams(p);
+        //Setup ListView
+        eventlist = (ListView) eventListLayout.findViewById(R.id.eventlistHome);
+        eventlist.setEmptyView(eventListLayout.findViewById(R.id.textViewEventsHomeEmpty));
+        getCurrentEventData();
+        adapter = new DisplayEventListAdapter(inflater.getContext(), R.layout.layout_list_events_adapter_view, currentEvents);
+        eventlist.setAdapter(adapter);
+
+        linearLayoutRoot.addView(gLView);
+        linearLayoutRoot.addView(eventListLayout);
+        fragmentHome = linearLayoutRoot;
+        return fragmentHome;
+    }
+
+    private void getCurrentEventData() {
+        //set currentDate
+        selectedDate = simpleDateFormat.format(calendar.getTime());
+        Cursor data = database.showEventsByStartDateWithoutFullDay(selectedDate);
+        currentEvents.clear();
+
+        if (data.getCount() != 0) {
+            String event = "";
+            while (data.moveToNext()) {
+                event += data.getString(5) + " ";
+                event += data.getString(1);
+                currentEvents.add(event);
+                event = "";
+            }
+        }
+
+        Cursor dataFullday = database.showEventIdsByStartDateThatAreFullDay(selectedDate);
+
+        if (dataFullday.getCount() != 0) {
+            String event;
+            while (dataFullday.moveToNext()) {
+                Cursor currentFulldayEvent = database.showEventByEventId(Integer.valueOf(dataFullday.getString(0)));
+                if(currentFulldayEvent.getCount() != 0 && currentFulldayEvent.moveToNext()){
+                    event = currentFulldayEvent.getString(1);
+                    currentEvents.add(event);
+                }
+            }
+        }
     }
 
 
