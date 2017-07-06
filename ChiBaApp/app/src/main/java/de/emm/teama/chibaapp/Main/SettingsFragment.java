@@ -48,7 +48,10 @@ public class SettingsFragment extends Fragment {
     private TextView notDisturbEndTime;
 
     private ViewFlipper viewFlipper;
-    private Calendar calendar = Calendar.getInstance();
+    private Calendar calendarOfToday = Calendar.getInstance();
+    private Calendar birthdayCalendar = Calendar.getInstance();
+    private Calendar startTimeCalendar = Calendar.getInstance();
+    private Calendar endTimeCalendar = Calendar.getInstance();
     private DatePickerDialog.OnDateSetListener birthDatePicker;
     private TimePickerDialog.OnTimeSetListener notDisturbStartTimePicker;
     private TimePickerDialog.OnTimeSetListener notDisturbEndTimePicker;
@@ -92,25 +95,34 @@ public class SettingsFragment extends Fragment {
             notDisturbEndTime.setText(data.getString(7));
         }
 
+        birthdayCalendar.set(Calendar.YEAR, 1990);
+        birthdayCalendar.set(Calendar.MONTH, 0);
+        birthdayCalendar.set(Calendar.DAY_OF_MONTH, 1);
+
         birthDatePicker = new DatePickerDialog.OnDateSetListener() {
 
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, monthOfYear);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                birthdate.setText(simpleDateFormat.format(calendar.getTime()));
+                birthdayCalendar.set(Calendar.YEAR, year);
+                birthdayCalendar.set(Calendar.MONTH, monthOfYear);
+                birthdayCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                if(birthdayCalendar.after(calendarOfToday))
+                    birthdayCalendar = Calendar.getInstance();
+                birthdate.setText(simpleDateFormat.format(birthdayCalendar.getTime()));
                 database.updateUserBirthdate(birthdate.getText().toString());
             }
         };
 
+        startTimeCalendar.set(Calendar.MINUTE,0);
+        endTimeCalendar.set(Calendar.MINUTE,0);
+
         notDisturbStartTimePicker = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                calendar.set(Calendar.MINUTE, minute);
-                notDisturbStartTime.setText(simpleTimeFormat.format(calendar.getTime()));
+                startTimeCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                startTimeCalendar.set(Calendar.MINUTE, minute);
+                notDisturbStartTime.setText(simpleTimeFormat.format(startTimeCalendar.getTime()));
                 database.updateUserDoNotDisturbStartTime(notDisturbStartTime.getText().toString());
             }
         };
@@ -118,9 +130,9 @@ public class SettingsFragment extends Fragment {
         notDisturbEndTimePicker = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                calendar.set(Calendar.MINUTE, minute);
-                notDisturbEndTime.setText(simpleTimeFormat.format(calendar.getTime()));
+                startTimeCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                endTimeCalendar.set(Calendar.MINUTE, minute);
+                notDisturbEndTime.setText(simpleTimeFormat.format(endTimeCalendar.getTime()));
                 database.updateUserDoNotDisturbEndTime(notDisturbEndTime.getText().toString());
             }
         };
@@ -136,14 +148,14 @@ public class SettingsFragment extends Fragment {
         notDisturbStartTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(getContext(), notDisturbStartTimePicker, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
+                new TimePickerDialog(getContext(), notDisturbStartTimePicker, startTimeCalendar.get(Calendar.HOUR_OF_DAY), startTimeCalendar.get(Calendar.MINUTE), true).show();
             }
         });
 
         notDisturbEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(getContext(), notDisturbEndTimePicker, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
+                new TimePickerDialog(getContext(), notDisturbEndTimePicker, startTimeCalendar.get(Calendar.HOUR_OF_DAY), startTimeCalendar.get(Calendar.MINUTE), true).show();
             }
         });
 
@@ -154,7 +166,7 @@ public class SettingsFragment extends Fragment {
         birthdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(getContext(), birthDatePicker, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+                new DatePickerDialog(getContext(), birthDatePicker, birthdayCalendar.get(Calendar.YEAR), birthdayCalendar.get(Calendar.MONTH), birthdayCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 

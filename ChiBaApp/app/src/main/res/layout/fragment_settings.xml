@@ -103,7 +103,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/settingsAddress"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="50dp"
         android:text="Avatar"
         android:textSize="22sp"
         android:textColor="@color/colorBlackish" />
