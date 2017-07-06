@@ -1,5 +1,6 @@
 package de.emm.teama.chibaapp.Main;
 
+import android.database.Cursor;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -10,6 +11,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Set;
 
 import de.emm.teama.chibaapp.Utils.BottomNavigationViewHelper;
 import de.emm.teama.chibaapp.R;
@@ -23,6 +30,10 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private TabLayout tabLayout;
 
+    private HashMap<Integer,Boolean> currentFreeTimeSlots;
+    private Calendar currentDate = Calendar.getInstance();
+    private String dateFormat = "d. MMMM yyyy";
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.GERMANY);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG,"onCreate: starting.");
 
         tryToastOnSuccess();
+        getFreeTimeSlots();
 
         //Setup View Pager
         adapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -98,6 +110,64 @@ public class MainActivity extends AppCompatActivity {
 
         setupBottomNavigationView();
         database.checkHashtagTable();
+    }
+
+    private void getFreeTimeSlots() {
+        if(currentFreeTimeSlots != null)
+            currentFreeTimeSlots.clear();
+        else
+            currentFreeTimeSlots = new HashMap<Integer, Boolean>();
+        currentFreeTimeSlots.put(8, true);
+        currentFreeTimeSlots.put(9, true);
+        currentFreeTimeSlots.put(10, true);
+        currentFreeTimeSlots.put(11, true);
+        currentFreeTimeSlots.put(12, true);
+        currentFreeTimeSlots.put(13, true);
+        currentFreeTimeSlots.put(14, true);
+        currentFreeTimeSlots.put(15, true);
+        currentFreeTimeSlots.put(16, true);
+        currentFreeTimeSlots.put(17, true);
+        currentFreeTimeSlots.put(18, true);
+        currentFreeTimeSlots.put(19, true);
+        currentFreeTimeSlots.put(20, true);
+        currentFreeTimeSlots.put(21, true);
+        Cursor dataFullDay = database.showEventIdsByStartDateThatAreFullDay(simpleDateFormat.format(currentDate.getTime()));
+        //if there is a fullday event, the complete day is blocked
+        if(dataFullDay.getCount() != 0){
+            Set<Integer> keySet = currentFreeTimeSlots.keySet();
+            currentFreeTimeSlots.clear();
+            for(Integer key: keySet){
+                currentFreeTimeSlots.put(key, false);
+            }
+        }
+        else{
+            //0 COLUMN_EVENTS_ID
+            //1 COLUMN_EVENTS_TITLE
+            //2 COLUMN_EVENTS_FULLDAY
+            //3 COLUMN_EVENTS_STARTDATE
+            //4 COLUMN_EVENTS_ENDDATE
+            //5 COLUMN_EVENTS_STARTTIME
+            //6 COLUMN_EVENTS_ENDTIME
+            //7 COLUMN_EVENTS_LOCATION
+            Cursor data = database.showEventsByStartDateWithoutFullDay(simpleDateFormat.format(currentDate.getTime()));
+            if (data.getCount() != 0) {
+                while (data.moveToNext()) {
+                    //set blocks to false if blocked
+                    String[] starttime = data.getString(5).split(":");
+                    int starthour = Integer.valueOf(starttime[0]);
+
+                    String[] endtime = data.getString(6).split(":");
+                    int endhour = Integer.valueOf(endtime[0]);
+
+                    do{
+                        currentFreeTimeSlots.remove(starthour);
+                        currentFreeTimeSlots.put(starthour,false);
+                        starthour++;
+                    }while(starthour < endhour);
+                }
+            }
+            Log.d(TAG, "getFreeTimeSlots: currentTimeSlots " + currentFreeTimeSlots.toString());
+        }
     }
 
     private void tryToastOnSuccess() {
