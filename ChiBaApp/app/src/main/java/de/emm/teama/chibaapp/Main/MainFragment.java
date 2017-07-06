@@ -5,6 +5,7 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import android.widget.CalendarView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextClock;
+import android.widget.TextView;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -64,13 +67,19 @@ public class MainFragment extends Fragment
     {
         LinearLayout linearLayoutRoot = new LinearLayout(this.getContext());
         linearLayoutRoot.setOrientation(LinearLayout.VERTICAL);
-        linearLayoutRoot.setWeightSum(2f);
+        //linearLayoutRoot.setWeightSum(2f);
         LinearLayout.LayoutParams rlpRoot = new LinearLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.MATCH_PARENT);
         linearLayoutRoot.setLayoutParams(rlpRoot);
 
+        RelativeLayout relativeLayoutAvatarArea = new RelativeLayout(this.getContext());
+        RelativeLayout.LayoutParams rlpAvatarArea = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                1200);
+        relativeLayoutAvatarArea.setLayoutParams(rlpAvatarArea);
 
+        //Create Views for Realative Layout
         gLView = new ModelSurfaceView(this);
         // Create our 3D scenario
         scene = new SceneLoader(this);
@@ -83,12 +92,40 @@ public class MainFragment extends Fragment
         // TODO: Alert user when there is no multitouch support (2 fingers). He won't be able to rotate or zoom for
         Utils.printTouchCapabilities(this.getActivity().getPackageManager());
 
-        gLView.setId(new Integer(1234567));
+        gLView.setId(new Integer(100000));
         LinearLayout.LayoutParams rlpGLView = new LinearLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 1200);
         gLView.setLayoutParams(rlpGLView);
 
+        //Clock
+        TextClock textClock = new TextClock(this.getContext());
+        RelativeLayout.LayoutParams rlpTextClock = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        rlpTextClock.topMargin = 20;
+        rlpTextClock.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        textClock.setId(new Integer(1000001));
+        textClock.setLayoutParams(rlpTextClock);
+        textClock.setTextSize(70);
+        textClock.setTextColor(getContext().getColor(R.color.colorBlackish));
+
+        //Date
+        TextView textDate = new TextView(this.getContext());
+        RelativeLayout.LayoutParams rlpTextDate = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        rlpTextDate.topMargin = 10;
+        rlpTextDate.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        rlpTextDate.addRule(RelativeLayout.BELOW, 1000001);
+        textDate.setLayoutParams(rlpTextDate);
+        textDate.setTextSize(16);
+        textDate.setTextColor(getContext().getColor(R.color.colorBlackish));
+        textDate.setText(simpleDateFormat.format(calendar.getTime()));
+
+
+
+
+
+        //List Area
         View eventListLayout = inflater.inflate(R.layout.fragment_home, container, false);
         RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -102,7 +139,13 @@ public class MainFragment extends Fragment
         adapter = new DisplayEventListAdapter(inflater.getContext(), R.layout.layout_list_events_adapter_view, currentEvents);
         eventlist.setAdapter(adapter);
 
-        linearLayoutRoot.addView(gLView);
+
+
+        //Add Views to Layouts
+        relativeLayoutAvatarArea.addView(gLView);
+        relativeLayoutAvatarArea.addView(textClock);
+        relativeLayoutAvatarArea.addView(textDate);
+        linearLayoutRoot.addView(relativeLayoutAvatarArea);
         linearLayoutRoot.addView(eventListLayout);
         fragmentHome = linearLayoutRoot;
         return fragmentHome;
