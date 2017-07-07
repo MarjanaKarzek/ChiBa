@@ -174,11 +174,12 @@ public class AddAppointmentActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "onItemClick: clicked " + hashtagListView.getAdapter().getItem(position).toString());
                 String currentItem = hashtagListView.getAdapter().getItem(position).toString();
-                hashtags.remove(hashtags.indexOf(currentItem));
-
-                assignedHashtags.add(currentItem);
-                Collections.sort(assignedHashtags);
-                adapter.notifyDataSetChanged();
+                if(!assignedHashtags.contains(currentItem)) {
+                    assignedHashtags.add(currentItem);
+                    Collections.sort(assignedHashtags);
+                }
+                else
+                    Toast.makeText(AddAppointmentActivity.this,"Hashtag bereits hinzugefügt",Toast.LENGTH_LONG).show();
                 adapter2.notifyDataSetChanged();
             }
         });
@@ -189,10 +190,6 @@ public class AddAppointmentActivity extends AppCompatActivity {
                 Log.d(TAG, "onItemClick: clicked " + assignedHashtagListView.getAdapter().getItem(position).toString());
                 String currentItem = assignedHashtagListView.getAdapter().getItem(position).toString();
                 assignedHashtags.remove(assignedHashtags.indexOf(currentItem));
-
-                hashtags.add(currentItem);
-                Collections.sort(hashtags);
-                adapter.notifyDataSetChanged();
                 adapter2.notifyDataSetChanged();
             }
         });

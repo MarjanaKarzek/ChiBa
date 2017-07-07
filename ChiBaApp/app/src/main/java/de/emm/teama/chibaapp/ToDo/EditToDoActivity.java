@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -227,12 +228,14 @@ public class EditToDoActivity extends AppCompatActivity {
         hashtagListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "onItemClick: clicked " + hashtags.get(position));
-                String currentItem = hashtags.get(position);
-                hashtags.remove(position);
-                assignedHashtags.add(currentItem);
-                Collections.sort(assignedHashtags);
-                adapter.notifyDataSetChanged();
+                Log.d(TAG, "onItemClick: clicked " + hashtagListView.getAdapter().getItem(position).toString());
+                String currentItem = hashtagListView.getAdapter().getItem(position).toString();
+                if(!assignedHashtags.contains(currentItem)) {
+                    assignedHashtags.add(currentItem);
+                    Collections.sort(assignedHashtags);
+                }
+                else
+                    Toast.makeText(EditToDoActivity.this,"Hashtag bereits hinzugefügt",Toast.LENGTH_LONG).show();
                 adapter2.notifyDataSetChanged();
             }
         });
@@ -240,12 +243,9 @@ public class EditToDoActivity extends AppCompatActivity {
         assignedHashtagListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "onItemClick: clicked " + assignedHashtags.get(position));
-                String currentItem = assignedHashtags.get(position);
-                assignedHashtags.remove(position);
-                hashtags.add(currentItem);
-                Collections.sort(hashtags);
-                adapter.notifyDataSetChanged();
+                Log.d(TAG, "onItemClick: clicked " + assignedHashtagListView.getAdapter().getItem(position).toString());
+                String currentItem = assignedHashtagListView.getAdapter().getItem(position).toString();
+                assignedHashtags.remove(assignedHashtags.indexOf(currentItem));
                 adapter2.notifyDataSetChanged();
             }
         });
