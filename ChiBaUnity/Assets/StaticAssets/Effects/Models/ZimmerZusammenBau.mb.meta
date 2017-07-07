@@ -1,0 +1,254 @@
+fileFormatVersion: 2
+guid: b93989abd2ae58a4d9b7fedf89e3b782
+timeCreated: 1499001581
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Fenster:Fensterrahmen
+    100002: Fenster:FensterRahmenCom
+    100004: Fenster:Fensterscheibe
+    100006: Fenster:Rahmen
+    100008: Fenster:Sprosse1
+    100010: Fenster:Sprosse2
+    100012: Fenster:Sprosse2H
+    100014: Fenster:Sprosse2H1
+    100016: Fenster:transform1
+    100018: Fenster:transform2
+    100020: Fenster:transform3
+    100022: Fenster:transform4
+    100024: Fenster:transform5
+    100026: FensterRahmenCom
+    100028: Fensterscheibe
+    100030: "Hundek\xF6rpchen:back"
+    100032: "Hundek\xF6rpchen:left"
+    100034: "Hundek\xF6rpchen:pCylinder1"
+    100036: "Hundek\xF6rpchen:pCylinder2"
+    100038: "Hundek\xF6rpchen:pCylinder3"
+    100040: "Hundek\xF6rpchen:pSphere1"
+    100042: Raum
+    100044: SofaFertig1
+    100046: SofaFertig:back
+    100048: SofaFertig:bottom
+    100050: SofaFertig:pCube2
+    100052: SofaFertig:pCube3
+    100054: SofaFertig:pCube4
+    100056: SofaFertig:pCube5
+    100058: SofaFertig:pCube6
+    100060: SofaFertig:pCube7
+    100062: SofaFertig:pCube8
+    100064: SofaFertig:pCube9
+    100066: SofaFertig:transform1
+    100068: SofaFertig:transform2
+    100070: SofaFertig:transform3
+    100072: SofaFertig:transform4
+    100074: SofaFertig:transform5
+    100076: SofaFertig:transform6
+    100078: SofaFertig:transform7
+    100080: SofaFertig:transform8
+    100082: Teppich
+    100084: YimmerPflanye:back
+    100086: YimmerPflanye:pasted__pCube1
+    100088: YimmerPflanye:pasted__pCube1 1
+    100090: YimmerPflanye:pasted__pCube2
+    100092: YimmerPflanye:pasted__pCube3
+    100094: YimmerPflanye:pasted__pCube4
+    100096: YimmerPflanye:pasted__pCube5
+    100098: YimmerPflanye:pasted__pCube6
+    100100: YimmerPflanye:pasted__pCube7
+    100102: YimmerPflanye:pasted__pCube8
+    100104: YimmerPflanye:pasted__pCube9
+    100106: YimmerPflanye:pasted__transform1
+    100108: YimmerPflanye:pasted__transform2
+    100110: YimmerPflanye:pasted__transform3
+    100112: YimmerPflanye:pasted__transform4
+    100114: YimmerPflanye:pasted__transform5
+    100116: YimmerPflanye:pasted__transform6
+    100118: YimmerPflanye:pasted__transform7
+    100120: YimmerPflanye:pasted__transform8
+    100122: YimmerPflanye:pasted__transform9
+    100124: YimmerPflanye:pasted__TwistedBaum1
+    100126: YimmerPflanye:pCylinder1
+    100128: YimmerPflanye:Topf
+    100130: YimmerPflanye:Topfpflanze
+    100132: //RootNode
+    400000: Fenster:Fensterrahmen
+    400002: Fenster:FensterRahmenCom
+    400004: Fenster:Fensterscheibe
+    400006: Fenster:Rahmen
+    400008: Fenster:Sprosse1
+    400010: Fenster:Sprosse2
+    400012: Fenster:Sprosse2H
+    400014: Fenster:Sprosse2H1
+    400016: Fenster:transform1
+    400018: Fenster:transform2
+    400020: Fenster:transform3
+    400022: Fenster:transform4
+    400024: Fenster:transform5
+    400026: FensterRahmenCom
+    400028: Fensterscheibe
+    400030: "Hundek\xF6rpchen:back"
+    400032: "Hundek\xF6rpchen:left"
+    400034: "Hundek\xF6rpchen:pCylinder1"
+    400036: "Hundek\xF6rpchen:pCylinder2"
+    400038: "Hundek\xF6rpchen:pCylinder3"
+    400040: "Hundek\xF6rpchen:pSphere1"
+    400042: Raum
+    400044: SofaFertig1
+    400046: SofaFertig:back
+    400048: SofaFertig:bottom
+    400050: SofaFertig:pCube2
+    400052: SofaFertig:pCube3
+    400054: SofaFertig:pCube4
+    400056: SofaFertig:pCube5
+    400058: SofaFertig:pCube6
+    400060: SofaFertig:pCube7
+    400062: SofaFertig:pCube8
+    400064: SofaFertig:pCube9
+    400066: SofaFertig:transform1
+    400068: SofaFertig:transform2
+    400070: SofaFertig:transform3
+    400072: SofaFertig:transform4
+    400074: SofaFertig:transform5
+    400076: SofaFertig:transform6
+    400078: SofaFertig:transform7
+    400080: SofaFertig:transform8
+    400082: Teppich
+    400084: YimmerPflanye:back
+    400086: YimmerPflanye:pasted__pCube1
+    400088: YimmerPflanye:pasted__pCube1 1
+    400090: YimmerPflanye:pasted__pCube2
+    400092: YimmerPflanye:pasted__pCube3
+    400094: YimmerPflanye:pasted__pCube4
+    400096: YimmerPflanye:pasted__pCube5
+    400098: YimmerPflanye:pasted__pCube6
+    400100: YimmerPflanye:pasted__pCube7
+    400102: YimmerPflanye:pasted__pCube8
+    400104: YimmerPflanye:pasted__pCube9
+    400106: YimmerPflanye:pasted__transform1
+    400108: YimmerPflanye:pasted__transform2
+    400110: YimmerPflanye:pasted__transform3
+    400112: YimmerPflanye:pasted__transform4
+    400114: YimmerPflanye:pasted__transform5
+    400116: YimmerPflanye:pasted__transform6
+    400118: YimmerPflanye:pasted__transform7
+    400120: YimmerPflanye:pasted__transform8
+    400122: YimmerPflanye:pasted__transform9
+    400124: YimmerPflanye:pasted__TwistedBaum1
+    400126: YimmerPflanye:pCylinder1
+    400128: YimmerPflanye:Topf
+    400130: YimmerPflanye:Topfpflanze
+    400132: //RootNode
+    2300000: Fenster:FensterRahmenCom
+    2300002: Fenster:Fensterscheibe
+    2300004: FensterRahmenCom
+    2300006: Fensterscheibe
+    2300008: "Hundek\xF6rpchen:pCylinder1"
+    2300010: "Hundek\xF6rpchen:pCylinder2"
+    2300012: "Hundek\xF6rpchen:pCylinder3"
+    2300014: "Hundek\xF6rpchen:pSphere1"
+    2300016: Raum
+    2300018: SofaFertig:pCube9
+    2300020: Teppich
+    2300022: YimmerPflanye:pasted__pCube1
+    2300024: YimmerPflanye:pCylinder1
+    2300026: YimmerPflanye:Topf
+    3300000: Fenster:FensterRahmenCom
+    3300002: Fenster:Fensterscheibe
+    3300004: FensterRahmenCom
+    3300006: Fensterscheibe
+    3300008: "Hundek\xF6rpchen:pCylinder1"
+    3300010: "Hundek\xF6rpchen:pCylinder2"
+    3300012: "Hundek\xF6rpchen:pCylinder3"
+    3300014: "Hundek\xF6rpchen:pSphere1"
+    3300016: Raum
+    3300018: SofaFertig:pCube9
+    3300020: Teppich
+    3300022: YimmerPflanye:pasted__pCube1
+    3300024: YimmerPflanye:pCylinder1
+    3300026: YimmerPflanye:Topf
+    4300000: Raum
+    4300002: Teppich
+    4300004: Fenster:Fensterscheibe
+    4300006: Fenster:FensterRahmenCom
+    4300008: FensterRahmenCom
+    4300010: Fensterscheibe
+    4300012: SofaFertig:pCube9
+    4300014: YimmerPflanye:pCylinder1
+    4300016: YimmerPflanye:pasted__pCube1
+    4300018: YimmerPflanye:Topf
+    4300020: "Hundek\xF6rpchen:pCylinder1"
+    4300022: "Hundek\xF6rpchen:pCylinder2"
+    4300024: "Hundek\xF6rpchen:pCylinder3"
+    4300026: "Hundek\xF6rpchen:pSphere1"
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

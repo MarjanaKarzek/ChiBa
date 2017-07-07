@@ -10,7 +10,7 @@ public class FadeMainScene : MonoBehaviour {
     private void Start()
     {
         // Grab the only CanvasGroup in the scene
-        fadeGroup = FindObjectOfType<CanvasGroup>();
+        fadeGroup = GetComponent<CanvasGroup>();
 
         // Start with a white screen;
         fadeGroup.alpha = 1;

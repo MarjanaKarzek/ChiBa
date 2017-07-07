@@ -1,0 +1,279 @@
+fileFormatVersion: 2
+guid: b560abd514cf84a4a9a2d8fd1822ccdb
+timeCreated: 1499169850
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: aiSkyDomeLight1
+    100002: //RootNode
+    100004: polySurface1
+    100006: polySurface1 1
+    100008: polySurface2
+    100010: polySurface3
+    100012: polySurface4
+    100014: polySurface4 1
+    100016: polySurface5
+    100018: polySurface6
+    100020: polySurface7
+    100022: polySurface8
+    100024: polySurface8 1
+    100026: pPlane1
+    100028: RoomDoor:Fenster:Fensterrahmen
+    100030: RoomDoor:Fenster:FensterRahmenCom
+    100032: RoomDoor:Fenster:Fensterscheibe
+    100034: RoomDoor:Fenster:Fensterscheibe1
+    100036: RoomDoor:Fenster:Rahmen
+    100038: RoomDoor:Fenster:Sprosse1
+    100040: RoomDoor:Fenster:Sprosse2
+    100042: RoomDoor:Fenster:Sprosse2H
+    100044: RoomDoor:Fenster:Sprosse2H1
+    100046: RoomDoor:Fenster:transform1
+    100048: RoomDoor:Fenster:transform2
+    100050: RoomDoor:Fenster:transform3
+    100052: RoomDoor:Fenster:transform4
+    100054: RoomDoor:Fenster:transform5
+    100056: RoomDoor:Fenster:transform6
+    100058: RoomDoor:Fenster:transform7
+    100060: RoomDoor:FensterRahmenCom
+    100062: RoomDoor:FensterRahmenCom1
+    100064: RoomDoor:Fensterscheibe
+    100066: "RoomDoor:Hundek\xF6rpchen:back"
+    100068: "RoomDoor:Hundek\xF6rpchen:left"
+    100070: RoomDoor:left
+    100072: RoomDoor:pCylinder1
+    100074: RoomDoor:pCylinder2
+    100076: RoomDoor:Raum
+    100078: RoomDoor:SofaFertig1
+    100080: RoomDoor:SofaFertig:back
+    100082: RoomDoor:SofaFertig:bottom
+    100084: RoomDoor:SofaFertig:pCube2
+    100086: RoomDoor:SofaFertig:pCube3
+    100088: RoomDoor:SofaFertig:pCube4
+    100090: RoomDoor:SofaFertig:pCube5
+    100092: RoomDoor:SofaFertig:pCube6
+    100094: RoomDoor:SofaFertig:pCube7
+    100096: RoomDoor:SofaFertig:pCube8
+    100098: RoomDoor:SofaFertig:transform1
+    100100: RoomDoor:SofaFertig:transform2
+    100102: RoomDoor:SofaFertig:transform3
+    100104: RoomDoor:SofaFertig:transform4
+    100106: RoomDoor:SofaFertig:transform5
+    100108: RoomDoor:SofaFertig:transform6
+    100110: RoomDoor:SofaFertig:transform7
+    100112: RoomDoor:SofaFertig:transform8
+    100114: RoomDoor:Teppich
+    100116: RoomDoor:transform1
+    100118: RoomDoor:transform2
+    100120: RoomDoor:transform3
+    100122: RoomDoor:transform4
+    100124: "RoomDoor:T\xFCr1"
+    100126: "RoomDoor:T\xFCr2:pCube1"
+    100128: "RoomDoor:T\xFCr2:transform1"
+    100130: "RoomDoor:T\xFCr2:transform2"
+    100132: "RoomDoor:T\xFCr2:transform3"
+    100134: "RoomDoor:T\xFCr:left"
+    100136: "RoomDoor:T\xFCr:pCube1"
+    100138: "RoomDoor:T\xFCr:pCube1 1"
+    100140: "RoomDoor:T\xFCr:pCube2"
+    100142: "RoomDoor:T\xFCr:pSphere1"
+    100144: "RoomDoor:T\xFCr:transform1"
+    100146: "RoomDoor:T\xFCr:transform2"
+    100148: "RoomDoor:T\xFCr:transform3"
+    100150: "RoomDoor:T\xFCrgelenk"
+    100152: "RoomDoor:T\xFCrgelenk1"
+    100154: "RoomDoor:T\xFCrgelenk2"
+    100156: RoomDoor:YimmerPflanye:back
+    100158: transform1
+    100160: transform2
+    100162: transform3
+    100164: transform4
+    100166: transform5
+    100168: transform6
+    100170: transform7
+    100172: transform8
+    100174: transform9
+    400000: aiSkyDomeLight1
+    400002: //RootNode
+    400004: polySurface1
+    400006: polySurface1 1
+    400008: polySurface2
+    400010: polySurface3
+    400012: polySurface4
+    400014: polySurface4 1
+    400016: polySurface5
+    400018: polySurface6
+    400020: polySurface7
+    400022: polySurface8
+    400024: polySurface8 1
+    400026: pPlane1
+    400028: RoomDoor:Fenster:Fensterrahmen
+    400030: RoomDoor:Fenster:FensterRahmenCom
+    400032: RoomDoor:Fenster:Fensterscheibe
+    400034: RoomDoor:Fenster:Fensterscheibe1
+    400036: RoomDoor:Fenster:Rahmen
+    400038: RoomDoor:Fenster:Sprosse1
+    400040: RoomDoor:Fenster:Sprosse2
+    400042: RoomDoor:Fenster:Sprosse2H
+    400044: RoomDoor:Fenster:Sprosse2H1
+    400046: RoomDoor:Fenster:transform1
+    400048: RoomDoor:Fenster:transform2
+    400050: RoomDoor:Fenster:transform3
+    400052: RoomDoor:Fenster:transform4
+    400054: RoomDoor:Fenster:transform5
+    400056: RoomDoor:Fenster:transform6
+    400058: RoomDoor:Fenster:transform7
+    400060: RoomDoor:FensterRahmenCom
+    400062: RoomDoor:FensterRahmenCom1
+    400064: RoomDoor:Fensterscheibe
+    400066: "RoomDoor:Hundek\xF6rpchen:back"
+    400068: "RoomDoor:Hundek\xF6rpchen:left"
+    400070: RoomDoor:left
+    400072: RoomDoor:pCylinder1
+    400074: RoomDoor:pCylinder2
+    400076: RoomDoor:Raum
+    400078: RoomDoor:SofaFertig1
+    400080: RoomDoor:SofaFertig:back
+    400082: RoomDoor:SofaFertig:bottom
+    400084: RoomDoor:SofaFertig:pCube2
+    400086: RoomDoor:SofaFertig:pCube3
+    400088: RoomDoor:SofaFertig:pCube4
+    400090: RoomDoor:SofaFertig:pCube5
+    400092: RoomDoor:SofaFertig:pCube6
+    400094: RoomDoor:SofaFertig:pCube7
+    400096: RoomDoor:SofaFertig:pCube8
+    400098: RoomDoor:SofaFertig:transform1
+    400100: RoomDoor:SofaFertig:transform2
+    400102: RoomDoor:SofaFertig:transform3
+    400104: RoomDoor:SofaFertig:transform4
+    400106: RoomDoor:SofaFertig:transform5
+    400108: RoomDoor:SofaFertig:transform6
+    400110: RoomDoor:SofaFertig:transform7
+    400112: RoomDoor:SofaFertig:transform8
+    400114: RoomDoor:Teppich
+    400116: RoomDoor:transform1
+    400118: RoomDoor:transform2
+    400120: RoomDoor:transform3
+    400122: RoomDoor:transform4
+    400124: "RoomDoor:T\xFCr1"
+    400126: "RoomDoor:T\xFCr2:pCube1"
+    400128: "RoomDoor:T\xFCr2:transform1"
+    400130: "RoomDoor:T\xFCr2:transform2"
+    400132: "RoomDoor:T\xFCr2:transform3"
+    400134: "RoomDoor:T\xFCr:left"
+    400136: "RoomDoor:T\xFCr:pCube1"
+    400138: "RoomDoor:T\xFCr:pCube1 1"
+    400140: "RoomDoor:T\xFCr:pCube2"
+    400142: "RoomDoor:T\xFCr:pSphere1"
+    400144: "RoomDoor:T\xFCr:transform1"
+    400146: "RoomDoor:T\xFCr:transform2"
+    400148: "RoomDoor:T\xFCr:transform3"
+    400150: "RoomDoor:T\xFCrgelenk"
+    400152: "RoomDoor:T\xFCrgelenk1"
+    400154: "RoomDoor:T\xFCrgelenk2"
+    400156: RoomDoor:YimmerPflanye:back
+    400158: transform1
+    400160: transform2
+    400162: transform3
+    400164: transform4
+    400166: transform5
+    400168: transform6
+    400170: transform7
+    400172: transform8
+    400174: transform9
+    2300000: polySurface1
+    2300002: polySurface4
+    2300004: polySurface8
+    2300006: pPlane1
+    2300008: RoomDoor:Fenster:Fensterscheibe1
+    2300010: RoomDoor:FensterRahmenCom1
+    2300012: RoomDoor:Raum
+    2300014: RoomDoor:Teppich
+    3300000: polySurface1
+    3300002: polySurface4
+    3300004: polySurface8
+    3300006: pPlane1
+    3300008: RoomDoor:Fenster:Fensterscheibe1
+    3300010: RoomDoor:FensterRahmenCom1
+    3300012: RoomDoor:Raum
+    3300014: RoomDoor:Teppich
+    4300000: RoomDoor:Raum
+    4300002: RoomDoor:Teppich
+    4300004: RoomDoor:Fenster:Fensterscheibe1
+    4300006: RoomDoor:FensterRahmenCom1
+    4300008: polySurface1
+    4300010: polySurface4
+    4300012: polySurface8
+    4300014: pPlane1
+    7400000: Take 001
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
