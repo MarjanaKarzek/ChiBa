@@ -1,26 +1,29 @@
 package de.emm.teama.chibaapp.Main;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.database.Cursor;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import de.emm.teama.chibaapp.Utils.BottomNavigationViewHelper;
 import de.emm.teama.chibaapp.R;
-import de.emm.teama.chibaapp.Utils.DatabaseHelper;
 
 import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
 
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
         tryToastOnSuccess();
         getFreeTimeSlots();
+        setUpTimerForToDos();
 
         //Setup View Pager
         adapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -218,5 +222,73 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG,"setupBottomNavigationView: setting up BottomNavigationView");
         BottomNavigationView bottomNavigationView = (BottomNavigationView)findViewById(R.id.bottomNavViewBar);
         BottomNavigationViewHelper.enableNavigation(MainActivity.this, bottomNavigationView);
+    }
+
+    private void setUpTimerForToDos() {
+        Timer timer = new Timer();
+        Calendar currentTime = Calendar.getInstance();
+        currentTime.set(Calendar.MINUTE,0);
+        Date date = currentTime.getTime();
+        long period = 3600000;
+
+        timer.schedule(new ScheduledToDoNotification(currentFreeTimeSlots, this, (NotificationManager)getSystemService(NOTIFICATION_SERVICE)), date, period);
+    }
+
+    private static class ScheduledToDoNotification extends TimerTask {
+        private HashMap<Integer,Boolean> currentFreeTimeSlots;
+        private Random random = new Random();
+        private Context context;
+        private NotificationManager notifyMgr;
+
+        public ScheduledToDoNotification(HashMap<Integer,Boolean> currentFreeTimeSlots, Context context, NotificationManager notifyMgr){
+            this.currentFreeTimeSlots = currentFreeTimeSlots;
+            this.context = context;
+            this.notifyMgr = notifyMgr;
+        }
+
+        public void run()
+        {
+            //write your code here
+            Log.d(TAG, "run: scheduled notification");
+            Calendar currentTime = Calendar.getInstance();
+            //get current timeslot length
+            int timeslotlength = 0;
+            int currentHour = currentTime.get(Calendar.HOUR);
+            int followingHour = currentTime.get(Calendar.HOUR);
+
+            if(currentTime.get(Calendar.MINUTE) < 10){
+                if(currentFreeTimeSlots.get(currentHour)){
+                    do {
+                        timeslotlength++;
+                        followingHour++;
+                    }while(currentFreeTimeSlots.get(followingHour));
+                }
+                Log.d(TAG, "run: current hour: " + currentHour);
+                Log.d(TAG, "run: hour state " + currentFreeTimeSlots.get(currentHour));
+                Log.d(TAG, "run: timeslot: " + timeslotlength);
+                Cursor data = database.showToDosByMaxDuration(timeslotlength);
+                if(data.getCount() != 0){
+                    int randomIndex = random.nextInt(data.getCount()-1);
+                    String selectedToDo = "";
+                    data.moveToPosition(randomIndex);
+                    selectedToDo = data.getString(1);
+                    Log.d(TAG, "run: selected ToDo " + selectedToDo);
+                    createPushNotification(selectedToDo);
+                }
+            }
+            else
+                Log.d(TAG, "run: not scheduled yet");
+        }
+
+        public void createPushNotification(String selectedToDo){
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(context)
+                            .setSmallIcon(R.drawable.ic_home)
+                            .setContentTitle("ToDo Erinnerung")
+                            .setContentText("Möchtest du dich um folgendes ToDo kümmern: " + selectedToDo);
+            int mNotificationId = 001;
+            // Builds the notification and issues it.
+            notifyMgr.notify(mNotificationId, mBuilder.build());
+        }
     }
 }

@@ -138,7 +138,7 @@ public class EditAppointmentActivity extends AppCompatActivity {
         //Switch Fields Initialization
         viewFlipperFullDay = (ViewFlipper) findViewById(R.id.addAppointmentViewFlipperFullDay);
         fulldaySwitch = (Switch) findViewById(R.id.addAppointmentSwitchFullday);
-        if (currentFullDayState != "0") {
+        if (currentFullDayState.contains("1") || currentFullDayState.contains("true")) {
             fulldaySwitch.setChecked(true);
             viewFlipperFullDay.showNext();
         } else

@@ -636,4 +636,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 " WHERE " + COLUMN_FULLDAYMATCHING_EVENT_ID + " = " + eventId;
         db.execSQL(query);
     }
+
+    public Cursor showToDosByMaxDuration(int timeslotlength) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_TODOS +
+                " WHERE (" + COLUMN_TODO_STATE + " = '0' OR " + COLUMN_TODO_STATE + " = 'false') AND " + COLUMN_TODO_DURATION + " <= " + timeslotlength, null);
+        return data;
+    }
 }
