@@ -164,12 +164,18 @@ public class MainActivity extends AppCompatActivity {
 
                     String[] endtime = data.getString(6).split(":");
                     int endhour = Integer.valueOf(endtime[0]);
+                    int endminute = Integer.valueOf(endtime[1]);
 
                     do{
                         currentFreeTimeSlots.remove(starthour);
                         currentFreeTimeSlots.put(starthour,false);
                         starthour++;
                     }while(starthour < endhour);
+
+                    if(endminute > 0){
+                        currentFreeTimeSlots.remove(endhour);
+                        currentFreeTimeSlots.put(endhour,false);
+                    }
                 }
             }
             Log.d(TAG, "getFreeTimeSlots: currentTimeSlots " + currentFreeTimeSlots.toString());
