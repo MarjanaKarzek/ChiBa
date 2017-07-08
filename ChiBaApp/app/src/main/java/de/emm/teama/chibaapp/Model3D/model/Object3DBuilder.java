@@ -6,7 +6,7 @@ import android.util.Log;
 
 import de.emm.teama.chibaapp.Model3D.sceneloader.WavefrontLoader;
 import de.emm.teama.chibaapp.Model3D.sceneloader.WavefrontLoader.*;
-import de.emm.teama.chibaapp.Model3D.util.math.*;
+import de.emm.teama.chibaapp.Model3D.util.Math3DUtils;
 
 import org.apache.commons.io.IOUtils;
 
@@ -21,7 +21,6 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
-import java.util.List;
 
 public final class Object3DBuilder {
 
@@ -40,7 +39,6 @@ public final class Object3DBuilder {
 	private Object3DV0 object3dv0;
 	private Object3DV1 object3dv1;
     private Object3DV6 object3dv6;
-    private Object3DV7 object3dv7;
 
 	public static Object3DData buildPoint(float[] point) {
 		return new Object3DData(createNativeByteBuffer(point.length * 4).asFloatBuffer().put(point))
@@ -81,7 +79,6 @@ public final class Object3DBuilder {
 		if (object3dv1 == null) {
 			object3dv1 = new Object3DV1();
             object3dv6 = new Object3DV6();
-            object3dv7 = new Object3DV7();
 		}
 
         if (usingTextures && usingLights
@@ -91,10 +88,6 @@ public final class Object3DBuilder {
                 && obj.getVertexNormalsArrayBuffer() != null
                 && obj.getVertexNormalsArrayBuffer() != null) {
             return object3dv6;
-
-        } else if (usingLights && obj.getVertexNormalsArrayBuffer() != null) {
-            return object3dv7;
-
 		} else {
 			return object3dv1;
 		}
@@ -315,17 +308,6 @@ public final class Object3DBuilder {
 		return object3dv0;
 	}
 
-	public static Object3DData buildBoundingBox(Object3DData obj) {
-		BoundingBox boundingBox = new BoundingBox(
-				obj.getVertexArrayBuffer() != null ? obj.getVertexArrayBuffer() : obj.getVertexBuffer(),
-				obj.getColor());
-		return new Object3DData(boundingBox.getVertices()).setDrawModeList(boundingBox.getDrawModeList())
-				.setVertexColorsArrayBuffer(boundingBox.getColors()).setDrawOrder(boundingBox.getDrawOrder())
-				.setDrawMode(boundingBox.getDrawMode())
-				.setPosition(obj.getPosition()).setRotation(obj.getRotation()).setScale(obj.getScale())
-				.setColor(obj.getColor()).setId(obj.getId() + "_boundingBox");
-	}
-
 	/**
 	 * Builds a wireframe of the model by drawing all lines (3) of the triangles. This method uses
 	 * the drawOrder buffer.
@@ -449,216 +431,6 @@ public final class Object3DBuilder {
 		// use the device hardware's native byte order
 		bb.order(ByteOrder.nativeOrder());
 		return bb;
-	}
-
-}
-
-
-class BoundingBox {
-
-	// number of coordinates per vertex in this array
-	protected static final int COORDS_PER_VERTEX = 3;
-	protected static final int COORDS_PER_COLOR = 4;
-
-	public FloatBuffer vertices;
-	public FloatBuffer vertexArray;
-	public FloatBuffer colors;
-	public IntBuffer drawOrder;
-
-	public float xMin = Float.MAX_VALUE;
-	public float xMax = Float.MIN_VALUE;
-	public float yMin = Float.MAX_VALUE;
-	public float yMax = Float.MIN_VALUE;
-	public float zMin = Float.MAX_VALUE;
-	public float zMax = Float.MIN_VALUE;
-
-	public float[] center;
-	public float[] sizes;
-	public float radius;
-
-	/**
-	 * Build a bounding box for the specified 3D object vertex buffer.
-	 *
-	 * @param vertexBuffer the 3D object vertex buffer
-	 * @param color        the color of the bounding box
-	 */
-	public BoundingBox(FloatBuffer vertexBuffer, float[] color) {
-		// initialize vertex byte buffer for shape coordinates
-		ByteBuffer bb = ByteBuffer.allocateDirect(
-				// (number of coordinate values * 4 bytes per float)
-				8 * COORDS_PER_VERTEX * 4);
-		// use the device hardware's native byte order
-		bb.order(ByteOrder.nativeOrder());
-		vertices = bb.asFloatBuffer();
-
-		ByteBuffer bb2 = ByteBuffer.allocateDirect(
-				// (number of coordinate values * 4 bytes per int)
-				(6 * 4) * 4);
-		// use the device hardware's native byte order
-		bb2.order(ByteOrder.nativeOrder());
-		drawOrder = bb2.asIntBuffer();
-
-		// vertex colors
-		ByteBuffer bb3 = ByteBuffer.allocateDirect(24 * COORDS_PER_COLOR * 4);
-		// use the device hardware's native byte order
-		bb3.order(ByteOrder.nativeOrder());
-		colors = bb3.asFloatBuffer();
-
-		for (int i = 0; i < colors.capacity() / 4; i++) {
-			if (color != null && color.length == 4) {
-				colors.put(color);
-			} else {
-				colors.put(1.0f).put(0.0f).put(1.0f).put(1.0f);
-			}
-		}
-
-		// back-face
-		drawOrder.put( 0);
-		drawOrder.put( 1);
-		drawOrder.put( 2);
-		drawOrder.put( 3);
-
-		// front-face
-		drawOrder.put( 4);
-		drawOrder.put( 5);
-		drawOrder.put( 6);
-		drawOrder.put( 7);
-
-		// left-face
-		drawOrder.put( 4);
-		drawOrder.put( 5);
-		drawOrder.put( 1);
-		drawOrder.put( 0);
-
-		// right-face
-		drawOrder.put( 3);
-		drawOrder.put( 2);
-		drawOrder.put( 6);
-		drawOrder.put( 7);
-
-		// top-face
-		drawOrder.put( 1);
-		drawOrder.put( 2);
-		drawOrder.put( 6);
-		drawOrder.put( 5);
-
-		// bottom-face
-		drawOrder.put( 0);
-		drawOrder.put( 3);
-		drawOrder.put( 7);
-		drawOrder.put( 4);
-
-		recalculate(vertexBuffer);
-	}
-
-	public IntBuffer getDrawOrder() {
-		return drawOrder;
-	}
-
-	public FloatBuffer getColors() {
-		return colors;
-	}
-
-	public int getDrawMode() {
-		return GLES20.GL_LINE_LOOP;
-	}
-
-	public List<int[]> getDrawModeList() {
-		List<int[]> ret = new ArrayList<int[]>();
-		int drawOrderPos = 0;
-		for (int i = 0; i < drawOrder.capacity(); i += 4) {
-			ret.add(new int[]{GLES20.GL_LINE_LOOP, drawOrderPos, 4});
-			drawOrderPos += 4;
-		}
-		return ret;
-	}
-
-	public void recalculate(FloatBuffer vertexBuffer) {
-
-		calculateMins(vertexBuffer);
-		calculateVertex();
-		calculateOther(vertexBuffer);
-	}
-
-	/**
-	 * This works only when COORDS_PER_VERTEX = 3
-	 *
-	 * @param vertexBuffer
-	 */
-	private void calculateMins(FloatBuffer vertexBuffer) {
-		vertexBuffer.position(0);
-		while (vertexBuffer.hasRemaining()) {
-			float vertexx = vertexBuffer.get();
-			float vertexy = vertexBuffer.get();
-			float vertexz = vertexBuffer.get();
-			if (vertexx < xMin) {
-				xMin = vertexx;
-			}
-			if (vertexx > xMax) {
-				xMax = vertexx;
-			}
-			if (vertexy < yMin) {
-				yMin = vertexy;
-			}
-			if (vertexy > yMax) {
-				yMax = vertexy;
-			}
-			if (vertexz < zMin) {
-				zMin = vertexz;
-			}
-			if (vertexz > zMax) {
-				zMax = vertexz;
-			}
-		}
-	}
-
-	private void calculateVertex() {
-		vertices.position(0);
-		//@formatter:off
-		vertices.put(xMin).put(yMin).put(zMin);  // down-left (far)
-		vertices.put(xMin).put(yMax).put(zMin);  // up-left (far)
-		vertices.put(xMax).put(yMax).put(zMin);  // up-right (far)
-		vertices.put(xMax).put(yMin).put(zMin);  // down-right  (far)
-		vertices.put(xMin).put(yMin).put(zMax);  // down-left (near)
-		vertices.put(xMin).put(yMax).put(zMax);  // up-left (near)
-		vertices.put(xMax).put(yMax).put(zMax);  // up-right (near)
-		vertices.put(xMax).put(yMin).put(zMax);  // down-right (near)
-		//@formatter:on
-	}
-
-	private void calculateOther(FloatBuffer vertexBuffer) {
-		center = new float[]{(xMax + xMin) / 2, (yMax + yMin) / 2, (zMax + zMin) / 2};
-		sizes = new float[]{xMax - xMin, yMax - yMin, zMax - zMin};
-
-		vertexBuffer.position(0);
-
-		// calculated bounding sphere
-		double radius = 0;
-		double radiusTemp;
-		vertexBuffer.position(0);
-		while (vertexBuffer.hasRemaining()) {
-			float vertexx = vertexBuffer.get();
-			float vertexy = vertexBuffer.get();
-			float vertexz = vertexBuffer.get();
-			radiusTemp = Math.sqrt(Math.pow(vertexx - center[0], 2) + Math.pow(vertexy - center[1], 2)
-					+ Math.pow(vertexz - center[2], 2));
-			if (radiusTemp > radius) {
-				radius = radiusTemp;
-			}
-		}
-		this.radius = (float) radius;
-	}
-
-	public FloatBuffer getVertices() {
-		return vertices;
-	}
-
-	public float[] getCenter() {
-		return center;
-	}
-
-	public void setCenter(float[] center) {
-		this.center = center;
 	}
 
 }

@@ -128,10 +128,10 @@ public class MainFragment extends Fragment {
                 chiba.setColor(new float[] { 1.0f, 1.0f, 1f, 1.0f });
                 scene.addObject(chiba);
 
-//                Object3DData ball = Object3DBuilder.loadObj(this.getActivity().getAssets(), "models", "BallAnimiert.obj");
-//                ball.centerAndScale(2.0f);
-//                ball.setPosition(new float[]{0f, 0f, 0f});
-//                scene.addObject(ball);
+                Object3DData ball = Object3DBuilder.loadObj(this.getActivity().getAssets(), "models", "BallAnimiert.obj");
+                ball.centerAndScale(1.0f);
+                ball.setPosition(new float[]{1.0f, 0.0f, 0f});
+                scene.addObject(ball);
 
             } catch (Exception ex) {
             }
@@ -255,23 +255,6 @@ public class MainFragment extends Fragment {
                 }
             }
         }
-    }
-
-
-    public File getParamFile() {
-        return getParamFilename() != null ? new File(getParamFilename()) : null;
-    }
-
-    public String getParamAssetDir() {
-        return paramAssetDir;
-    }
-
-    public String getParamAssetFilename() {
-        return paramAssetFilename;
-    }
-
-    public String getParamFilename() {
-        return paramFilename;
     }
 
     public float[] getBackgroundColor() {

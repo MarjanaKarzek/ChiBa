@@ -256,27 +256,27 @@ public class MainActivity extends AppCompatActivity {
             int currentHour = currentTime.get(Calendar.HOUR);
             int followingHour = currentTime.get(Calendar.HOUR);
 
-            if(currentTime.get(Calendar.MINUTE) < 10){
-                if(currentFreeTimeSlots.get(currentHour)){
-                    do {
-                        timeslotlength++;
-                        followingHour++;
-                    }while(currentFreeTimeSlots.get(followingHour));
-                }
-                Log.d(TAG, "run: current hour: " + currentHour);
-                Log.d(TAG, "run: hour state " + currentFreeTimeSlots.get(currentHour));
-                Log.d(TAG, "run: timeslot: " + timeslotlength);
-                Cursor data = database.showToDosByMaxDuration(timeslotlength);
-                if(data.getCount() != 0){
-                    int randomIndex = random.nextInt(data.getCount()-1);
-                    String selectedToDo = "";
-                    data.moveToPosition(randomIndex);
-                    selectedToDo = data.getString(1);
-                    Log.d(TAG, "run: selected ToDo " + selectedToDo);
-                    createPushNotification(selectedToDo);
-                }
-            }
-            else
+//            if(currentTime.get(Calendar.MINUTE) < 10){
+//                if(currentFreeTimeSlots.get(currentHour)){
+//                    do {
+//                        timeslotlength++;
+//                        followingHour++;
+//                    }while(currentFreeTimeSlots.get(followingHour));
+//                }
+//                Log.d(TAG, "run: current hour: " + currentHour);
+//                Log.d(TAG, "run: hour state " + currentFreeTimeSlots.get(currentHour));
+//                Log.d(TAG, "run: timeslot: " + timeslotlength);
+//                Cursor data = database.showToDosByMaxDuration(timeslotlength);
+//                if(data.getCount() != 0){
+//                    int randomIndex = random.nextInt(data.getCount()-1);
+//                    String selectedToDo = "";
+//                    data.moveToPosition(randomIndex);
+//                    selectedToDo = data.getString(1);
+//                    Log.d(TAG, "run: selected ToDo " + selectedToDo);
+//                    createPushNotification(selectedToDo);
+//                }
+//            }
+//            else
                 Log.d(TAG, "run: not scheduled yet");
         }
 

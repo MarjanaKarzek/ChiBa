@@ -4,7 +4,7 @@ import de.emm.teama.chibaapp.Model3D.model.Object3DData;
 import de.emm.teama.chibaapp.Model3D.sceneloader.SceneLoader;
 import de.emm.teama.chibaapp.Model3D.view.ModelRenderer;
 import de.emm.teama.chibaapp.Model3D.view.ModelSurfaceView;
-import de.emm.teama.chibaapp.Model3D.util.math.Math3DUtils;
+import de.emm.teama.chibaapp.Model3D.util.Math3DUtils;
 
 import android.graphics.PointF;
 import android.opengl.GLU;
