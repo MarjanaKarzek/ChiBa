@@ -9,7 +9,6 @@ import java.util.Map;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import de.emm.teama.chibaapp.Main.MainFragment;
 import de.emm.teama.chibaapp.Model3D.entities.Camera;
 import de.emm.teama.chibaapp.Model3D.model.Object3D;
 import de.emm.teama.chibaapp.Model3D.model.Object3DBuilder;
@@ -76,9 +75,9 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 	 * @param modelSurfaceView
 	 *            the 3D window
 	 */
-    public ModelRenderer(ModelSurfaceView modelSurfaceView)
-    {
-        this.main = modelSurfaceView;
+	public ModelRenderer(ModelSurfaceView modelSurfaceView)
+	{
+		this.main = modelSurfaceView;
 	}
 
 	public float getNear() {
@@ -94,7 +93,7 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 		// Set the background frame color
 		float[] backgroundColor = main.getMainFragment().getBackgroundColor();
 
-        GLES20.glClearColor(backgroundColor[0], backgroundColor[1], backgroundColor[2], backgroundColor[3]);
+		GLES20.glClearColor(backgroundColor[0], backgroundColor[1], backgroundColor[2], backgroundColor[3]);
 
 		// Enable depth testing for hidden-surface elimination.
 		GLES20.glEnable(GLES20.GL_DEPTH_TEST);
@@ -125,7 +124,7 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 
 		// the projection matrix is the 3D virtual space (cube) that we want to project
 		float ratio = (float) width / height;
-		Log.d(TAG, "projection: [" + -ratio + "," + ratio + ",-1,1]-near/far[1,10]");
+//		Log.d(TAG, "projection: [" + -ratio + "," + ratio + ",-1,1]-near/far[1,10]");
 		Matrix.frustumM(modelProjectionMatrix, 0, -ratio, ratio, -1, 1, getNear(), getFar());
 
 		// Calculate the projection and view transformation
@@ -147,7 +146,7 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 			camera.setChanged(false);
 		}
 
-        SceneLoader scene = main.getMainFragment().getScene();
+		SceneLoader scene = main.getMainFragment().getScene();
 		if (scene == null) {
 			// scene not ready
 			return;
@@ -181,7 +180,7 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 				boolean changed = objData.isChanged();
 
 				Object3D drawerObject = drawer.getDrawer(objData, scene.isDrawTextures(), scene.isDrawLighting());
-				// Log.d("ModelRenderer","Drawing object using '"+drawerObject.getClass()+"'");
+//                Log.d("ModelRenderer","Drawing object using '"+drawerObject.getClass()+"'");
 
 				Integer textureId = textures.get(objData.getTextureData());
 				if (textureId == null && objData.getTextureData() != null) {
@@ -199,7 +198,7 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 						// Only draw wireframes for objects having faces (triangles)
 						Object3DData wireframe = wireframes.get(objData);
 						if (wireframe == null || changed) {
-							Log.i("ModelRenderer","Generating wireframe model...");
+//							Log.i("ModelRenderer","Generating wireframe model...");
 //							wireframe = Object3DBuilder.buildWireframe4(objData);
 //							wireframe.centerAndScale(5.0f);
 							wireframe = Object3DBuilder.buildWireframe(objData);
@@ -220,17 +219,6 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 				}
 
 				// Draw bounding box
-				if (scene.isDrawBoundingBox() || scene.getSelectedObject() == objData) {
-					Object3DData boundingBoxData = boundingBoxes.get(objData);
-					if (boundingBoxData == null || changed) {
-						boundingBoxData = Object3DBuilder.buildBoundingBox(objData);
-						boundingBoxes.put(objData, boundingBoxData);
-					}
-//					Object3D boundingBoxDrawer = drawer.getBoundingBoxDrawer();
-//					boundingBoxDrawer.draw(boundingBoxData, modelProjectionMatrix, modelViewMatrix, -1, null);
-				}
-
-				// Draw bounding box
 				if (scene.isDrawNormals()) {
 					Object3DData normalData = normals.get(objData);
 					if (normalData == null || changed) {
@@ -245,8 +233,7 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 						normalsDrawer.draw(normalData, modelProjectionMatrix, modelViewMatrix, -1, null);
 					}
 				}
-				// TODO: enable this only when user wants it
-				// obj3D.drawVectorNormals(result, modelViewMatrix);
+
 			} catch (IOException ex) {
 				Toast.makeText(main.getMainFragment().getActivity().getApplicationContext(),
 						"There was a problem creating 3D object", Toast.LENGTH_LONG).show();

@@ -4,7 +4,6 @@ import de.emm.teama.chibaapp.Main.MainFragment;
 import de.emm.teama.chibaapp.Model3D.controller.TouchController;
 
 import android.opengl.GLSurfaceView;
-import android.support.v4.app.FragmentActivity;
 import android.view.MotionEvent;
 
 public class ModelSurfaceView extends GLSurfaceView {
@@ -14,7 +13,7 @@ public class ModelSurfaceView extends GLSurfaceView {
 	private TouchController touchHandler;
 
 	public ModelSurfaceView(MainFragment parent)
- 	{
+	{
 		super(parent.getContext());
 
 		// parent component

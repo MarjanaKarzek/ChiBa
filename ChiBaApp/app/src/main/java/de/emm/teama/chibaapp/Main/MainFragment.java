@@ -31,7 +31,6 @@ import java.util.Locale;
 import de.emm.teama.chibaapp.Model3D.model.Object3DBuilder;
 import de.emm.teama.chibaapp.Model3D.model.Object3DData;
 import de.emm.teama.chibaapp.Model3D.sceneloader.SceneLoader;
-import de.emm.teama.chibaapp.Model3D.util.Utils;
 import de.emm.teama.chibaapp.Model3D.view.ModelSurfaceView;
 import de.emm.teama.chibaapp.R;
 import de.emm.teama.chibaapp.Utils.CityPreference;
@@ -123,14 +122,13 @@ public class MainFragment extends Fragment {
             // Create our 3D scenario
             scene = new SceneLoader(this);
             try {
-                Object3DData android = Object3DBuilder.loadObj(this.getActivity().getAssets(), "models", "chiba.obj");
-                android.setPosition(new float[]{0f, 0f, 0f});
-                android.setColor(new float[]{1.0f, 1.0f, 1.0f, 1.0f});
-                scene.addObject(android);
+                Object3DData object = Object3DBuilder.loadObj(this.getActivity().getAssets(), "models", "chiba.obj");
+                object.centerAndScale(4.0f);
+                object.setPosition(new float[]{0f, 0f, 0f});
+                object.setColor(new float[]{1.0f, 1.0f, 1.0f, 1.0f});
+                scene.addObject(object);
             } catch (Exception ex) {
             }
-            // TODO: Alert user when there is no multitouch support (2 fingers). He won't be able to rotate or zoom for
-            Utils.printTouchCapabilities(this.getActivity().getPackageManager());
 
             gLView.setId(new Integer(100000));
             LinearLayout.LayoutParams rlpGLView = new LinearLayout.LayoutParams(

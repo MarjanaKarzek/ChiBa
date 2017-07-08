@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib Chiba_Nathalie.mtl
+mtllib chiba.mtl
 g default
 v -1.927234 3.206395 -0.263130
 v -1.778754 3.467352 -0.329710

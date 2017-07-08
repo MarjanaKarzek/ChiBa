@@ -102,7 +102,7 @@ public final class GLUtil {
 	}
 
 	public static int loadTexture(final InputStream is) {
-		Log.v("GLUtil", "Loading texture '" + is + "' from stream...");
+//		Log.v("GLUtil", "Loading texture '" + is + "' from stream...");
 
 		final int[] textureHandle = new int[1];
 

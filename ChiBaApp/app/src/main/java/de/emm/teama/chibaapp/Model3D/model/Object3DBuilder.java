@@ -8,6 +8,8 @@ import de.emm.teama.chibaapp.Model3D.sceneloader.WavefrontLoader;
 import de.emm.teama.chibaapp.Model3D.sceneloader.WavefrontLoader.*;
 import de.emm.teama.chibaapp.Model3D.util.math.*;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,43 +37,14 @@ public final class Object3DBuilder {
 
 	private static float[] DEFAULT_COLOR = {1.0f, 1.0f, 0, 1.0f};
 
-	final static float[] axisVertexLinesData = new float[]{
-			//@formatter:off
-			0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,     // right
-			0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,    // left
-			0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,     // up
-			0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f,    // down
-			0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,     // z+
-			0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f,    // z-
-
-			0.95f, 0.05f, 0, 1, 0, 0, 0.95f, -0.05f, 0, 1, 0f, 0f,      // Arrow X (>)
-			-0.95f, 0.05f, 0, -1, 0, 0, -0.95f, -0.05f, 0, -1, 0f, 0f,  // Arrow X (<)
-			-0.05f, 0.95f, 0, 0, 1, 0, 0.05f, 0.95f, 0, 0, 1f, 0f,      // Arrow Y (^)
-			-0.05f, 0, 0.95f, 0, 0, 1, 0.05f, 0, 0.95f, 0, 0, 1,        // Arrow Z (v)
-
-			1.05F, 0.05F, 0, 1.10F, -0.05F, 0, 1.05F, -0.05F, 0, 1.10F, 0.05F, 0,   // Letter X
-			-0.05F, 1.05F, 0, 0.05F, 1.10F, 0, -0.05F, 1.10F, 0, 0.0F, 1.075F, 0,   // Letter Y
-			-0.05F, 0.05F, 1.05F, 0.05F, 0.05F, 1.05F, 0.05F, 0.05F, 1.05F, -0.05F, -0.05F, 1.05F, -0.05F, -0.05F,
-			1.05F, 0.05F, -0.05F, 1.05F                                             // Letter Z
-			//@formatter:on
-	};
-
 	private Object3DV0 object3dv0;
 	private Object3DV1 object3dv1;
-	private Object3DV4 object3dv4;
-	private Object3DV6 object3dv6;
-	private Object3DV7 object3dv7;
-	private Object3DV8 object3dv8;
+    private Object3DV6 object3dv6;
+    private Object3DV7 object3dv7;
 
 	public static Object3DData buildPoint(float[] point) {
 		return new Object3DData(createNativeByteBuffer(point.length * 4).asFloatBuffer().put(point))
 				.setDrawMode(GLES20.GL_POINTS);
-	}
-
-	public static Object3DData buildAxis() {
-		return new Object3DData(
-				createNativeByteBuffer(axisVertexLinesData.length * 4).asFloatBuffer().put(axisVertexLinesData))
-				.setDrawMode(GLES20.GL_LINES);
 	}
 
 	public static Object3DData loadObj(AssetManager assets, String assetDir, String assetFilename) {
@@ -89,11 +62,11 @@ public final class Object3DBuilder {
 			wfl.loadModel(is);
 			is.close();
 
+
 			Object3DData data3D = new Object3DData(wfl.getVerts(), wfl.getNormals(), wfl.getTexCoords(), wfl.getFaces(), wfl.getFaceMats(), wfl.getMaterials());
 			data3D.setId(assetFilename);
 			data3D.setAssetsDir(assetDir);
 			data3D.setDimensions(wfl.getDimensions());
-			data3D.centerScale();
 
 			data3D.setDrawMode(GLES20.GL_TRIANGLES);
 			generateArrays(assets, data3D);
@@ -108,30 +81,20 @@ public final class Object3DBuilder {
 
 		if (object3dv1 == null) {
 			object3dv1 = new Object3DV1();
-			object3dv4 = new Object3DV4();
-			object3dv6 = new Object3DV6();
-			object3dv7 = new Object3DV7();
-			object3dv8 = new Object3DV8();
+            object3dv6 = new Object3DV6();
+            object3dv7 = new Object3DV7();
 		}
 
-//		if (usingTextures && usingLights && obj.getVertexColorsArrayBuffer() != null && obj.getTextureData() != null
-//				&& obj.getTextureCoordsArrayBuffer() != null && obj.getVertexNormalsArrayBuffer() != null
-//				&& obj.getVertexNormalsArrayBuffer() != null) {
-//			return object3dv6;
-//		} else
-//			if (usingTextures && usingLights && obj.getVertexColorsArrayBuffer() == null && obj.getTextureData() != null
-//				&& obj.getTextureCoordsArrayBuffer() != null && obj.getVertexNormalsArrayBuffer() != null
-//				&& obj.getVertexNormalsArrayBuffer() != null) {
-//			return object3dv8;
-//		} else
+        if (usingTextures && usingLights
+                && obj.getVertexColorsArrayBuffer() != null
+                && obj.getTextureData() != null
+                && obj.getTextureCoordsArrayBuffer() != null
+                && obj.getVertexNormalsArrayBuffer() != null
+                && obj.getVertexNormalsArrayBuffer() != null) {
+            return object3dv6;
 
-        if (usingLights && obj.getVertexNormalsArrayBuffer() != null) {
-			return object3dv7;
-
-//		} else
-//		    if (usingTextures && obj.getVertexColorsArrayBuffer() != null && obj.getTextureData() != null
-//				&& obj.getTextureCoordsArrayBuffer() != null) {
-//			return object3dv4;
+        } else if (usingLights && obj.getVertexNormalsArrayBuffer() != null) {
+            return object3dv7;
 
 		} else {
 			return object3dv1;
@@ -144,15 +107,10 @@ public final class Object3DBuilder {
 		FaceMaterials faceMats = obj.getFaceMats();
 		Materials materials = obj.getMaterials();
 
-		// TODO: remove this
-// 		if (true) return obj;
-
-		Log.i("Object3DBuilder", "Allocating vertex array buffer... Vertices ("+faces.getVerticesReferencesCount()+")");
 		final FloatBuffer vertexArrayBuffer = createNativeByteBuffer(faces.getVerticesReferencesCount() * 3 * 4).asFloatBuffer();
 		obj.setVertexArrayBuffer(vertexArrayBuffer);
 		obj.setDrawUsingArrays(true);
 
-		Log.i("Object3DBuilder", "Populating vertex array...");
 		final FloatBuffer vertexBuffer = obj.getVerts();
 		final IntBuffer indexBuffer = faces.getIndexBuffer();
 		for (int i = 0; i < faces.getVerticesReferencesCount(); i++) {
@@ -161,17 +119,13 @@ public final class Object3DBuilder {
 			vertexArrayBuffer.put(i*3+2,vertexBuffer.get(indexBuffer.get(i) * 3 + 2));
 		}
 
-
-
-		Log.i("Object3DBuilder", "Allocating vertex normals buffer... Total normals ("+faces.facesNormIdxs.size()+")");
-		// Normals buffer size = Number_of_faces X 3 (vertices_per_face) X 3 (coords_per_normal) X 4 (bytes_per_float)
+        // Normals buffer size = Number_of_faces X 3 (vertices_per_face) X 3 (coords_per_normal) X 4 (bytes_per_float)
 		final FloatBuffer vertexNormalsArrayBuffer = createNativeByteBuffer(faces.getSize() * 3 * 3 * 4).asFloatBuffer();;
 		obj.setVertexNormalsArrayBuffer(vertexNormalsArrayBuffer);
 
 		// build file normals
 		final FloatBuffer vertexNormalsBuffer = obj.getNormals();
 		if (vertexNormalsBuffer.capacity() > 0) {
-			Log.i("Object3DBuilder", "Populating normals buffer...");
 			for (int n=0; n<faces.facesNormIdxs.size(); n++) {
 				int[] normal = faces.facesNormIdxs.get(n);
 				for (int i = 0; i < normal.length; i++) {
@@ -182,8 +136,6 @@ public final class Object3DBuilder {
 			}
 		} else {
 			// calculate normals for all triangles
-			Log.i("Object3DBuilder", "Model without normals. Calculating [" + faces.getIndexBuffer().capacity() / 3 + "] normals...");
-
 			final float[] v0 = new float[3], v1 = new float[3], v2 = new float[3];
 			for (int i = 0; i < faces.getIndexBuffer().capacity(); i += 3) {
 				try {
@@ -219,12 +171,10 @@ public final class Object3DBuilder {
 
 		FloatBuffer colorArrayBuffer = null;
 		if (materials != null) {
-			Log.i("Object3DBuilder", "Reading materials...");
 			materials.readMaterials(obj.getCurrentDir(), obj.getAssetsDir(), assets);
 		}
 
 		if (materials != null && !faceMats.isEmpty()) {
-			Log.i("Object3DBuilder", "Processing face materials...");
 			colorArrayBuffer = createNativeByteBuffer(4 * faces.getVerticesReferencesCount() * 4)
 					.asFloatBuffer();
 			boolean anyOk = false;
@@ -242,7 +192,6 @@ public final class Object3DBuilder {
 				colorArrayBuffer.put(currentColor);
 			}
 			if (!anyOk) {
-				Log.i("Object3DBuilder", "Using single color.");
 				colorArrayBuffer = null;
 			}
 		}
@@ -252,9 +201,7 @@ public final class Object3DBuilder {
 		String texture = null;
 		byte[] textureData = null;
 		if (materials != null && !materials.materials.isEmpty()) {
-
-			// TODO: process all textures
-			for (Material mat : materials.materials.values()) {
+            for (Material mat : materials.materials.values()) {
 				if (mat.getTexture() != null) {
 					texture = mat.getTexture();
 					break;
@@ -266,7 +213,8 @@ public final class Object3DBuilder {
 					Log.i("Object3DBuilder", "Loading texture '" + file + "'...");
 					ByteArrayOutputStream bos = new ByteArrayOutputStream();
 					FileInputStream fis = new FileInputStream(file);
-					fis.close();
+                    IOUtils.copy(fis, bos);
+                    fis.close();
 					textureData = bos.toByteArray();
 					bos.close();
 				} else {
@@ -274,7 +222,8 @@ public final class Object3DBuilder {
 					Log.i("Object3DBuilder", "Loading texture '" + assetResourceName + "'...");
 					ByteArrayOutputStream bos = new ByteArrayOutputStream();
 					InputStream fis = assets.open(assetResourceName);
-					fis.close();
+                    IOUtils.copy(fis, bos);
+                    fis.close();
 					textureData = bos.toByteArray();
 					bos.close();
 				}
@@ -290,14 +239,12 @@ public final class Object3DBuilder {
 			ArrayList<Tuple3> texCoords = obj.getTexCoords();
 			if (texCoords != null && texCoords.size() > 0) {
 
-				Log.i("Object3DBuilder", "Allocating/populating texture buffer...");
 				FloatBuffer textureCoordsBuffer = createNativeByteBuffer(texCoords.size() * 2 * 4).asFloatBuffer();
 				for (Tuple3 texCor : texCoords) {
 					textureCoordsBuffer.put(texCor.getX());
 					textureCoordsBuffer.put(obj.isFlipTextCoords() ? 1 - texCor.getY() : texCor.getY());
 				}
 
-				Log.i("Object3DBuilder", "Populating texture array buffer...");
 				FloatBuffer textureCoordsArraysBuffer = createNativeByteBuffer(2 * faces.getVerticesReferencesCount() * 4).asFloatBuffer();
 				obj.setTextureCoordsArrayBuffer(textureCoordsArraysBuffer);
 
@@ -306,7 +253,6 @@ public final class Object3DBuilder {
 					boolean anyTextureOk = false;
 					String currentTexture = null;
 
-					Log.i("Object3DBuilder", "Populating texture array buffer...");
 					int counter = 0;
 					for (int i = 0; i < faces.facesTexIdxs.size(); i++) {
 
@@ -359,10 +305,6 @@ public final class Object3DBuilder {
 		return obj;
 	}
 
-//	public Object3D getBoundingBoxDrawer() {
-//		return object3dv2;
-//	}
-
 	public Object3D getFaceNormalsDrawer() {
 		return object3dv1;
 	}
@@ -396,7 +338,6 @@ public final class Object3DBuilder {
 		if (objData.getDrawOrder() != null) {
 
 			try {
-				Log.i("Object3DBuilder", "Building wireframe...");
 				IntBuffer drawBuffer = objData.getDrawOrder();
 				IntBuffer wireframeDrawOrder = createNativeByteBuffer(drawBuffer.capacity() * 2 * 4).asIntBuffer();
 				for (int i = 0; i < drawBuffer.capacity(); i += 3) {
@@ -425,7 +366,6 @@ public final class Object3DBuilder {
 			}
 		}
 		else if (objData.getVertexArrayBuffer() != null){
-			Log.i("Object3DBuilder", "Building wireframe...");
 			FloatBuffer vertexBuffer = objData.getVertexArrayBuffer();
 			IntBuffer wireframeDrawOrder = createNativeByteBuffer(vertexBuffer.capacity()/3 * 2 * 4).asIntBuffer();
 			for (int i = 0; i < vertexBuffer.capacity()/3; i += 3) {
@@ -448,7 +388,7 @@ public final class Object3DBuilder {
 	/**
 	 * Generate a new object that contains all the line normals for all the faces for the specified object
 	 * <p>
-	 * TODO: This only works for objects made of triangles. Make it useful for any kind of polygonal face
+	 * This only works for objects made of triangles.
 	 *
 	 * @param obj the object to which we calculate the normals.
 	 * @return the model with all the normal lines
@@ -468,9 +408,7 @@ public final class Object3DBuilder {
 		FloatBuffer normalsLines;
 		IntBuffer drawBuffer = obj.getDrawOrder();
 		if (drawBuffer != null) {
-			Log.v("Builder", "Generating face normals for '" + obj.getId() + "' using indices...");
-			int size = /* 2 points */ 2 * 3 * /* 3 points per face */ (drawBuffer.capacity() / 3)
-					* /* bytes per float */4;
+			int size = 2 * 3 * (drawBuffer.capacity() / 3) * 4;
 			normalsLines = createNativeByteBuffer(size).asFloatBuffer();
 			drawBuffer.position(0);
 			for (int i = 0; i < drawBuffer.capacity(); i += 3) {
@@ -486,12 +424,10 @@ public final class Object3DBuilder {
 		} else {
 			if (vertexBuffer.capacity() % (/* COORDS_PER_VERTEX */3 * /* VERTEX_PER_FACE */ 3) != 0) {
 				// something in the data is wrong
-				Log.v("Builder", "Generating face normals for '" + obj.getId()
-						+ "' I found that vertices are not multiple of 9 (3*3): " + vertexBuffer.capacity());
+				Log.v("Builder", "Generating face normals for '" + obj.getId() + "' I found that vertices are not multiple of 9 (3*3): " + vertexBuffer.capacity());
 				return null;
 			}
 
-			Log.v("Builder", "Generating face normals for '" + obj.getId() + "'...");
 			normalsLines = createNativeByteBuffer(6 * vertexBuffer.capacity() / 9 * 4).asFloatBuffer();
 			vertexBuffer.position(0);
 			for (int i = 0; i < vertexBuffer.capacity() / /* COORDS_PER_VERTEX */ 3 / /* VERTEX_PER_FACE */3; i++) {
@@ -501,12 +437,6 @@ public final class Object3DBuilder {
 						new float[]{vertexBuffer.get(), vertexBuffer.get(), vertexBuffer.get()});
 				normalsLines.put(normalLine[0]).put(normalLine[1]);
 
-				// debug
-				@SuppressWarnings("unused")
-				String normal = new StringBuilder().append(normalLine[0][0]).append(",").append(normalLine[0][1])
-						.append(",").append(normalLine[0][2]).append("-").append(normalLine[1][0]).append(",")
-						.append(normalLine[1][1]).append(",").append(normalLine[1][2]).toString();
-				// Log.v("Builder", "fNormal[" + i + "]:(" + normal + ")");
 			}
 		}
 

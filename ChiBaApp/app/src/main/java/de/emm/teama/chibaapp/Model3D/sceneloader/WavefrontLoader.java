@@ -81,7 +81,6 @@ public class WavefrontLoader {
 	// buffers
 	private FloatBuffer vertsBuffer;
 	private FloatBuffer normalsBuffer;
-	// TODO: build texture data directly into this buffer
 	private FloatBuffer textureCoordsBuffer;
 
 	// flags
@@ -96,7 +95,7 @@ public class WavefrontLoader {
 
 		faceMats = new FaceMaterials();
 		modelDims = new ModelDimensions();
-	} // end of initModelData()
+	}
 
 	public FloatBuffer getVerts() {
 		return vertsBuffer;
@@ -126,9 +125,7 @@ public class WavefrontLoader {
 		return modelDims;
 	}
 
-	/**
-	 * Count verts, normals, faces etc and reserve buffers to save the data.
-	 */
+	/* Count verts, normals, faces etc and reserve buffers to save the data. */
 	public void analyzeModel(InputStream is) {
 		int lineNum = 0;
 		String line;
@@ -193,10 +190,7 @@ public class WavefrontLoader {
 		Log.i("WavefrontLoader","Number of faces:"+numFaces);
 	}
 
-	/**
-	 * Allocate buffers for pushing the model data
-	 * TODO: use textureCoordsBuffer
-	 */
+	/* Allocate buffers for pushing the model data */
 	public void allocateBuffers() {
 		// size = 3 (x,y,z) * 4 (bytes per float)
 		vertsBuffer = createNativeByteBuffer(numVerts*3*4).asFloatBuffer();
@@ -232,9 +226,8 @@ public class WavefrontLoader {
 		return bb;
 	}
 
-	private void readModel(BufferedReader br)
-	// parse the OBJ file line-by-line
-	{
+	/* parse the OBJ file line-by-line */
+	private void readModel(BufferedReader br) {
 		boolean isLoaded = true; // hope things will go okay
 
 		int lineNum = 0;
@@ -294,7 +287,7 @@ public class WavefrontLoader {
 			Log.e("WavefrontLoader","Error loading model");
 			// throw new RuntimeException("Error loading model");
 		}
-	} // end of readModel()
+	}
 
 	/**
 	 * Parse the vertex and add it to the buffer. If the vertex cannot be parsed,
@@ -304,14 +297,12 @@ public class WavefrontLoader {
 	 * @param offset the offset of the buffer
 	 * @param line the vertex to parse
 	 * @param isFirstCoord if this is the first vertex to be parsed
-	 * @param dimensions the model dimesions so they are updated (TODO move this out of this method)
+	 * @param dimensions the model dimesions so they are updated
 	 * @return <code>true</code> if the vertex could be parsed, <code>false</code> otherwise
 	 */
-	private boolean addVert(FloatBuffer buffer, int offset, String line, boolean isFirstCoord, ModelDimensions dimensions)
-	/*
-	 * Add vertex from line "v x y z" to vert ArrayList, and update the model dimension's info.
-	 */
-	{
+
+	/* Add vertex from line "v x y z" to vert ArrayList, and update the model dimension's info. */
+    private boolean addVert(FloatBuffer buffer, int offset, String line, boolean isFirstCoord, ModelDimensions dimensions) {
 		float x=0,y=0,z=0;
 		try{
 			String[] tokens = null;
@@ -342,14 +333,10 @@ public class WavefrontLoader {
 		}
 
 		return false;
-	} // end of addVert()
+	}
 
-	private boolean addTexCoord(String line, boolean isFirstTC)
-	/*
-	 * Add the texture coordinate from the line "vt u v w" to the texCoords ArrayList. There may only be two tex coords
-	 * on the line, which is determined by looking at the first tex coord line.
-	 */
-	{
+    /* Add the texture coordinate from the line "vt u v w" to the texCoords ArrayList. There may only be two tex coords on the line, which is determined by looking at the first tex coord line. */
+    private boolean addTexCoord(String line, boolean isFirstTC) {
 		if (isFirstTC) {
 			hasTCs3D = checkTC3D(line);
 			System.out.println("Using 3D tex coords: " + hasTCs3D);
@@ -362,23 +349,16 @@ public class WavefrontLoader {
 		}
 
 		return false;
-	} // end of addTexCoord()
+	}
 
-	private boolean checkTC3D(String line)
-	/*
-	 * Check if the line has 4 tokens, which will be the "vt" token and 3 tex coords in this case.
-	 */
-	{
+    /* Check if the line has 4 tokens, which will be the "vt" token and 3 tex coords in this case. */
+	private boolean checkTC3D(String line) {
 		String[] tokens = line.split("\\s+");
 		return (tokens.length == 4);
-	} // end of checkTC3D()
+	}
 
-	private Tuple3 readTCTuple(String line)
-	/*
-	 * The line starts with a "vt" OBJ word and two or three floats (x, y, z) for the tex coords separated by spaces. If
-	 * there are only two coords, then the z-value is assigned a dummy value, DUMMY_Z_TC.
-	 */
-	{
+	/* The line starts with a "vt" OBJ word and two or three floats (x, y, z) for the tex coords separated by spaces. If there are only two coords, then the z-value is assigned a dummy value, DUMMY_Z_TC. */
+	private Tuple3 readTCTuple(String line) {
 		StringTokenizer tokens = new StringTokenizer(line, " ");
 		tokens.nextToken(); // skip "vt" OBJ word
 
@@ -395,22 +375,7 @@ public class WavefrontLoader {
 		}
 
 		return null; // means an error occurred
-	} // end of readTCTuple()
-
-	public void reportOnModel() {
-		Log.i("WavefrontLoader","No. of vertices: " + vertsBuffer.capacity()/3);
-		Log.i("WavefrontLoader","No. of normal coords: " + normalsBuffer.capacity()/3);
-		Log.i("WavefrontLoader","No. of tex coords: " + texCoords.size());
-		Log.i("WavefrontLoader","No. of faces: " + faces.getSize());
-
-		modelDims.reportDimensions();
-		// dimensions of model (before centering and scaling)
-
-		if (materials != null)
-			materials.showMaterials(); // list defined materials
-		faceMats.showUsedMaterials(); // show what materials have been used by
-		// faces
-	} // end of reportOnModel()
+	}
 
 	public static class Tuple3 {
 		private float x, y, z;
@@ -449,7 +414,7 @@ public class WavefrontLoader {
 			return z;
 		}
 
-	} // end of Tuple3 class
+	}
 
 	public static class ModelDimensions {
 		// edge coordinates
@@ -548,7 +513,7 @@ public class WavefrontLoader {
 			System.out.println("  Mid: " + df.format(center.getZ()) + "; Depth: " + df.format(getDepth()));
 		} // end of reportDimensions()
 
-	} // end of ModelDimensions class
+	}
 
 	public static class Materials {
 
@@ -686,7 +651,7 @@ public class WavefrontLoader {
 			return materials.get(name);
 		}
 
-	} // end of Materials class
+	}
 
 	public static class Material {
 		private String name;
@@ -782,31 +747,6 @@ public class WavefrontLoader {
 			return ks;
 		}
 
-		public void setMaterialColors(GLES20 gl)
-		// start rendering using this material's colour information
-		{
-			// if (ka != null) { // ambient color
-			// float[] colorKa = {ka.getX(), ka.getY(), ka.getZ(), 1.0f};
-			// gl.glMaterialfv(GLES20.GL_FRONT_AND_BACK, GLES20.GL_AMBIENT, colorKa, 0);
-			// }
-			// if (kd != null) { // diffuse color
-			// float[] colorKd = {kd.getX(), kd.getY(), kd.getZ(), 1.0f};
-			// gl.glMaterialfv(GLES20.GL_FRONT_AND_BACK, GLES20.GL_DIFFUSE, colorKd, 0);
-			// }
-			// if (ks != null) { // specular color
-			// float[] colorKs = {ks.getX(), ks.getY(), ks.getZ(), 1.0f};
-			// gl.glMaterialfv(GLES20.GL_FRONT_AND_BACK, GLES20.GL_SPECULAR, colorKs, 0);
-			// }
-			//
-			// if (ns != 0.0f) { // shininess
-			// gl.glMaterialf(GLES20.GL_FRONT_AND_BACK, GLES20.GL_SHININESS, ns);
-			// }
-			//
-			// if (d != 1.0f) { // alpha
-			// // not implemented
-			// }
-		} // end of setMaterialColors()
-
 		// --------- set/get methods for texture info --------------
 
 		public void setTexture(String t) {
@@ -821,7 +761,7 @@ public class WavefrontLoader {
 			return name;
 		}
 
-	} // end of Material class
+	}
 
 	public class Faces {
 		private static final float DUMMY_Z_TC = -5.0f;
@@ -985,7 +925,7 @@ public class WavefrontLoader {
 
 		public IntBuffer getIndexBuffer(){return facesVertIdxs;}
 
-	} // end of Faces class
+	}
 
 	public static class FaceMaterials {
 		// the face index (integer) where a material is first used
@@ -1046,6 +986,6 @@ public class WavefrontLoader {
 			return faceMats.isEmpty() || this.matCount.isEmpty();
 		}
 
-	} // end of FaceMaterials class
+	}
 
-} // end of WavefrontLoader class
+}

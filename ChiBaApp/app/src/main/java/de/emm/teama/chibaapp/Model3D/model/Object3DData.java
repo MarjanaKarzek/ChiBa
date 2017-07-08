@@ -1,10 +1,7 @@
 package de.emm.teama.chibaapp.Model3D.model;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -16,7 +13,6 @@ import de.emm.teama.chibaapp.Model3D.sceneloader.WavefrontLoader.FaceMaterials;
 import de.emm.teama.chibaapp.Model3D.sceneloader.WavefrontLoader.Faces;
 import de.emm.teama.chibaapp.Model3D.sceneloader.WavefrontLoader.Materials;
 import de.emm.teama.chibaapp.Model3D.sceneloader.WavefrontLoader.Tuple3;
-import de.emm.teama.chibaapp.Model3D.util.math.Math3DUtils;
 
 import android.opengl.GLES20;
 import android.util.Log;
@@ -31,29 +27,16 @@ public class Object3DData {
 
 	// opengl version to use to draw this object
 	private int version = 5;
-	/**
-	 * The directory where the files reside so we can build referenced files in the model like material and textures
-	 * files
-	 */
+
 	private File currentDir;
-	/**
-	 * The assets directory where the files reside so we can build referenced files in the model like material and
-	 * textures files
-	 */
+
 	private String assetsDir;
 	private String id;
 	private boolean drawUsingArrays = false;
 	private boolean flipTextCoords = true;
 
-	// Model data for the simplest object
-
-	private boolean isVisible = true;
-
 	private float[] color;
-	/**
-	 * The minimum thing we can draw in space is a vertex (or point).
-	 * This drawing mode uses the vertexBuffer
-	 */
+
 	private int drawMode = GLES20.GL_POINTS;
 	private int drawSize;
 
@@ -88,33 +71,10 @@ public class Object3DData {
 
 	// Async Loader
 	private WavefrontLoader.ModelDimensions modelDimensions;
-	private WavefrontLoader loader;
 
 	public Object3DData(FloatBuffer vertexArrayBuffer) {
 		this.vertexArrayBuffer = vertexArrayBuffer;
 		this.version = 1;
-	}
-
-	public Object3DData(FloatBuffer vertexBuffer, IntBuffer drawOrder) {
-		this.vertexBuffer = vertexBuffer;
-		this.drawOrderBuffer = drawOrder;
-		this.version = 2;
-	}
-
-	public Object3DData(FloatBuffer vertexArrayBuffer, FloatBuffer textureCoordsArrayBuffer, byte[] texData) {
-		this.vertexArrayBuffer = vertexArrayBuffer;
-		this.textureCoordsArrayBuffer = textureCoordsArrayBuffer;
-		this.textureData = texData;
-		this.version = 3;
-	}
-
-	public Object3DData(FloatBuffer vertexArrayBuffer, FloatBuffer vertexColorsArrayBuffer,
-			FloatBuffer textureCoordsArrayBuffer, byte[] texData) {
-		this.vertexArrayBuffer = vertexArrayBuffer;
-		this.vertexColorsArrayBuffer = vertexColorsArrayBuffer;
-		this.textureCoordsArrayBuffer = textureCoordsArrayBuffer;
-		this.textureData = texData;
-		this.version = 4;
 	}
 
 	public Object3DData(FloatBuffer verts, FloatBuffer normals, ArrayList<Tuple3> texCoords, Faces faces,
@@ -128,39 +88,12 @@ public class Object3DData {
 		this.materials = materials;
 	}
 
-	public void setLoader(WavefrontLoader loader) {
-		this.loader = loader;
-	}
-
-
-	public WavefrontLoader getLoader() {
-		return loader;
-	}
-
 	public void setDimensions(WavefrontLoader.ModelDimensions modelDimensions) {
 		this.modelDimensions = modelDimensions;
 	}
 
 	public WavefrontLoader.ModelDimensions getDimensions() {
 		return modelDimensions;
-	}
-
-	/**
-	 * Can be called when the faces were loaded asynchronously
-	 *
-	 * @param faces 3d faces
-	 */
-	public void setFaces(Faces faces) {
-		this.faces = faces;
-		this.drawOrderBuffer = faces.getIndexBuffer();
-	}
-
-	public boolean isVisible() {
-		return isVisible;
-	}
-
-	public void setVisible(boolean isVisible) {
-		this.isVisible = isVisible;
 	}
 
 	public int getVersion() {
@@ -189,13 +122,6 @@ public class Object3DData {
 		return color;
 	}
 
-	public float[] getColorInverted() {
-		if (getColor() == null || getColor().length != 4) {
-			return null;
-		}
-		return new float[] { 1 - getColor()[0], 1 - getColor()[1], 1 - getColor()[2], 1 };
-	}
-
 	public Object3DData setColor(float[] color) {
 		this.color = color;
 		return this;
@@ -213,8 +139,6 @@ public class Object3DData {
 	public int getDrawSize() {
 		return drawSize;
 	}
-
-	// -----------
 
 	public byte[] getTextureData() {
 		return textureData;
@@ -297,10 +221,6 @@ public class Object3DData {
 		return currentDir;
 	}
 
-	public void setCurrentDir(File currentDir) {
-		this.currentDir = currentDir;
-	}
-
 	public void setAssetsDir(String assetsDir) {
 		this.assetsDir = assetsDir;
 	}
@@ -345,8 +265,6 @@ public class Object3DData {
 	public Materials getMaterials() {
 		return materials;
 	}
-
-	// -------------------- Buffers ---------------------- //
 
 	public FloatBuffer getVertexBuffer() {
 		return vertexBuffer;
@@ -402,14 +320,6 @@ public class Object3DData {
 		return this;
 	}
 
-	private static ByteBuffer createNativeByteBuffer(int length) {
-		// initialize vertex byte buffer for shape coordinates
-		ByteBuffer bb = ByteBuffer.allocateDirect(length);
-		// use the device hardware's native byte order
-		bb.order(ByteOrder.nativeOrder());
-		return bb;
-	}
-
 	public BoundingBox getBoundingBox() {
 		if (boundingBox == null && vertexBuffer != null) {
 			float xMin = Float.MAX_VALUE, xMax = Float.MIN_VALUE, yMin = Float.MAX_VALUE, yMax = Float.MIN_VALUE, zMin = Float.MAX_VALUE, zMax = Float.MIN_VALUE;
@@ -445,40 +355,77 @@ public class Object3DData {
 		return boundingBox;
 	}
 
-	public void centerScale()
-	/*
-	 * Position the model so it's center is at the origin, and scale it so its longest dimension is no bigger than
-	 * maxSize.
-	 */
-	{
-		// calculate a scale factor
-		float scaleFactor = 1.0f;
-		float largest = modelDimensions.getLargest();
-		// System.out.println("Largest dimension: " + largest);
-		if (largest != 0.0f)
-			scaleFactor = (1.0f / largest);
-		Log.i("Object3DData","Scaling model with factor: " + scaleFactor+". Largest: "+largest);
+    public Object3DData centerAndScale(float maxSize) {
+        float leftPt = Float.MAX_VALUE, rightPt = Float.MIN_VALUE; // on x-axis
+        float topPt = Float.MIN_VALUE, bottomPt = Float.MAX_VALUE; // on y-axis
+        float farPt = Float.MAX_VALUE, nearPt = Float.MIN_VALUE; // on z-axis
 
-		// get the model's center point
-		Tuple3 center = modelDimensions.getCenter();
-		Log.i("Object3DData","Objects actual position: " + center.toString());
+        FloatBuffer vertexBuffer = getVertexArrayBuffer() != null ? getVertexArrayBuffer() : getVertexBuffer();
+        if (vertexBuffer == null) {
+            Log.v("Object3DData", "Scaling for '" + getId() + "' I found that there is no vertex data");
+            return this;
+        }
 
-		// modify the model's vertices
-		float x0, y0, z0;
-		float x, y, z;
-		FloatBuffer vertexBuffer = getVertexBuffer() != null? getVertexBuffer() : getVertexArrayBuffer();
-		for (int i = 0; i < vertexBuffer.capacity()/3; i++) {
-			x0 = vertexBuffer.get(i*3);
-			y0 = vertexBuffer.get(i*3+1);
-			z0 = vertexBuffer.get(i*3+2);
-			x = (x0 - center.getX()) * scaleFactor;
-			vertexBuffer.put(i*3,x);
-			y = (y0 - center.getY()) * scaleFactor;
-			vertexBuffer.put(i*3+1,y);
-			z = (z0 - center.getZ()) * scaleFactor;
-			vertexBuffer.put(i*3+2,z);
-		}
-	} // end of centerScale()
+//        Log.i("Object3DData", "Calculating dimensions for '" + getId() + "...");
+        for (int i = 0; i < vertexBuffer.capacity(); i += 3) {
+            if (vertexBuffer.get(i) > rightPt)
+                rightPt = vertexBuffer.get(i);
+            else if (vertexBuffer.get(i) < leftPt)
+                leftPt = vertexBuffer.get(i);
+            if (vertexBuffer.get(i + 1) > topPt)
+                topPt = vertexBuffer.get(i + 1);
+            else if (vertexBuffer.get(i + 1) < bottomPt)
+                bottomPt = vertexBuffer.get(i + 1);
+            if (vertexBuffer.get(i + 2) > nearPt)
+                nearPt = vertexBuffer.get(i + 2);
+            else if (vertexBuffer.get(i + 2) < farPt)
+                farPt = vertexBuffer.get(i + 2);
+        } // end
+//        Log.i("Object3DData", "Dimensions for '" + getId() + " (X left, X right): ("+leftPt+","+rightPt+")");
+//        Log.i("Object3DData", "Dimensions for '" + getId() + " (Y top, Y bottom): ("+topPt+","+bottomPt+")");
+//        Log.i("Object3DData", "Dimensions for '" + getId() + " (Z near, Z far): ("+nearPt+","+farPt+")");
 
+        // calculate center of 3D object
+        float xc = (rightPt + leftPt) / 2.0f;
+        float yc = (topPt + bottomPt) / 2.0f;
+        float zc = (nearPt + farPt) / 2.0f;
 
+        // this.setOriginalPosition(new float[]{-xc,-yc,-zc});
+
+        // calculate largest dimension
+        float height = topPt - bottomPt;
+        float depth = nearPt - farPt;
+        float largest = rightPt - leftPt;
+        if (height > largest)
+            largest = height;
+        if (depth > largest)
+            largest = depth;
+//        Log.i("Object3DData", "Largest dimension ["+largest+"]");
+
+        // scale object
+
+        // calculate a scale factor
+        float scaleFactor = 1.0f;
+        // System.out.println("Largest dimension: " + largest);
+        if (largest != 0.0f)
+            scaleFactor = (maxSize / largest);
+//        Log.i("Object3DData", "Centering & scaling '" + getId() + "' to (" + xc + "," + yc + "," + zc + ") scale: '" + scaleFactor + "'");
+
+        // this.setOriginalScale(new float[]{scaleFactor,scaleFactor,scaleFactor});
+
+        // modify the model's vertices
+        for (int i = 0; i < vertexBuffer.capacity(); i += 3) {
+            float x = vertexBuffer.get(i);
+            float y = vertexBuffer.get(i + 1);
+            float z = vertexBuffer.get(i + 2);
+            x = (x - xc) * scaleFactor;
+            y = (y - yc) * scaleFactor;
+            z = (z - zc) * scaleFactor;
+            vertexBuffer.put(i, x);
+            vertexBuffer.put(i + 1, y);
+            vertexBuffer.put(i + 2, z);
+        }
+
+        return this;
+    }
 }

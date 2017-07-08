@@ -1,6 +1,5 @@
 package de.emm.teama.chibaapp.Model3D.controller;
 
-import de.emm.teama.chibaapp.Main.MainFragment;
 import de.emm.teama.chibaapp.Model3D.model.Object3DData;
 import de.emm.teama.chibaapp.Model3D.sceneloader.SceneLoader;
 import de.emm.teama.chibaapp.Model3D.view.ModelRenderer;
@@ -96,7 +95,7 @@ public class TouchController {
 		case MotionEvent.ACTION_DOWN:
 		case MotionEvent.ACTION_POINTER_DOWN:
 		case MotionEvent.ACTION_HOVER_ENTER:
-			Log.d(TAG, "Gesture changed...");
+//			Log.d(TAG, "Gesture changed...");
 			gestureChanged = true;
 			touchDelay = 0;
 			lastActionTime = SystemClock.uptimeMillis();
@@ -203,12 +202,12 @@ public class TouchController {
 				if (fingersAreClosing) {
 					touchStatus = TOUCH_STATUS_ZOOMING_CAMERA;
 					float zoomFactor = (length - previousLength) / max * mRenderer.getFar();
-					Log.i("Camera", "Zooming '" + zoomFactor + "'...");
+//					Log.i("Camera", "Zooming '" + zoomFactor + "'...");
 					mRenderer.getCamera().MoveCameraZ(zoomFactor);
 				}
 				if (isRotating) {
 					touchStatus = TOUCH_STATUS_ROTATING_CAMERA;
-					Log.i("Camera", "Rotating camera '" + Math.signum(rotationVector[2]) + "'...");
+//					Log.i("Camera", "Rotating camera '" + Math.signum(rotationVector[2]) + "'...");
 					mRenderer.getCamera().Rotate((float) (Math.signum(rotationVector[2]) / Math.PI) / 4);
 				}
 			}
