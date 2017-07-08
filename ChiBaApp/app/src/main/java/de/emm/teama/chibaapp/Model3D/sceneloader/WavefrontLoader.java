@@ -159,6 +159,7 @@ public class WavefrontLoader {
 					} else if (line.startsWith("mtllib ")) // build material
 					{
 						materials = new Materials(line.substring(7));
+
 					} else if (line.startsWith("usemtl ")) {// use material
 					} else if (line.charAt(0) == 'g') { // group name
 						// not implemented

@@ -62,7 +62,6 @@ public final class Object3DBuilder {
 			wfl.loadModel(is);
 			is.close();
 
-
 			Object3DData data3D = new Object3DData(wfl.getVerts(), wfl.getNormals(), wfl.getTexCoords(), wfl.getFaces(), wfl.getFaceMats(), wfl.getMaterials());
 			data3D.setId(assetFilename);
 			data3D.setAssetsDir(assetDir);
