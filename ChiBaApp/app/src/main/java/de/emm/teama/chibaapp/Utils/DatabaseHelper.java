@@ -67,6 +67,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_FULLDAYMATCHING_DATE = "DATE";
     private static final String COLUMN_FULLDAYMATCHING_EVENT_ID = "EVENT_ID";
 
+    private static final String TABLE_NAME_SYSTEMINFO = "systeminfo_table";
+    private static final String COLUMN_SYSTEMINFO_ID = "ID";
+    private static final String COLUMN_SYSTEMINFO_CITY = "CITY";
+    private static final String COLUMN_SYSTEMINFO_TEMPERATURE = "TEMPERATURE";
+    private static final String COLUMN_SYSTEMINFO_WEATHER_ID = "WEATHER_ID";
+    private static final String COLUMN_SYSTEMINFO_SUNRISE = "SUNRISE";
+    private static final String COLUMN_SYSTEMINFO_SUNSET = "SUNSET";
+    private static final String COLUMN_SYSTEMINFO_TIMESTAMP = "TIMESTAMP";
+
 
     private ArrayList<String> hashtags = new ArrayList<>(Arrays.asList("Ballsport", "Fitness", "Schwimmen",
                                                                         "Restaurant", "Brunch", "Business Launch",
@@ -132,6 +141,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_FULLDAYMATCHING_DATE + " DATE, "
                 + COLUMN_FULLDAYMATCHING_EVENT_ID + " INTEGER)";
         db.execSQL(createTableFullDayMatching);
+        String createTableSystemInfo = "CREATE TABLE " + TABLE_NAME_SYSTEMINFO + "( "
+                + COLUMN_SYSTEMINFO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+                + COLUMN_SYSTEMINFO_CITY + " TEXT, "
+                + COLUMN_SYSTEMINFO_TEMPERATURE + " TEXT, "
+                + COLUMN_SYSTEMINFO_WEATHER_ID + " TEXT, "
+                + COLUMN_SYSTEMINFO_SUNRISE + " TEXT, "
+                + COLUMN_SYSTEMINFO_SUNSET + " TEXT, "
+                + COLUMN_SYSTEMINFO_TIMESTAMP + " TEXT)";
+        db.execSQL(createTableSystemInfo);
     }
 
     @Override
@@ -139,9 +157,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public void addUserIfNotExist(){
+    public void addUserAndSystemIfNotExist(){
         SQLiteDatabase db = this.getWritableDatabase();
-        //Create Table if it not exists
+        //Create Table SystemInfo if it not exists
+        String createTableSystemInfo = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_SYSTEMINFO + "( "
+                + COLUMN_SYSTEMINFO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+                + COLUMN_SYSTEMINFO_CITY + " TEXT, "
+                + COLUMN_SYSTEMINFO_TEMPERATURE + " TEXT, "
+                + COLUMN_SYSTEMINFO_WEATHER_ID + " TEXT, "
+                + COLUMN_SYSTEMINFO_SUNRISE + " TEXT, "
+                + COLUMN_SYSTEMINFO_SUNSET + " TEXT, "
+                + COLUMN_SYSTEMINFO_TIMESTAMP + " TEXT)";
+        db.execSQL(createTableSystemInfo);
+        //Create Table User if it not exists
         String createTableUser = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_USER + "( "
                 + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
                 + COLUMN_USER_NAME + " TEXT, "
@@ -168,9 +196,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contentUserValues.put(COLUMN_USER_NOTDISTURB_ENDTIME, "06:00");
                 db.insert(TABLE_NAME_USER, null, contentUserValues);
 
-                Log.d(TAG, "addUserIfNotExist: user had to be created");
+                Log.d(TAG, "addUserAndSystemIfNotExist: user had to be created");
             } else
-                Log.d(TAG, "addUserIfNotExist: user exist");
+                Log.d(TAG, "addUserAndSystemIfNotExist: user exist");
+        }
+        //check if system info exists
+        Cursor dataSystem = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_NAME_SYSTEMINFO, null);
+        //if not, create system info
+        if(dataSystem != null && dataSystem.moveToNext()) {
+            if (dataSystem.getString(0).contains("0")) {
+                //create system info
+                ContentValues contentSystemInfoValues = new ContentValues();
+                contentSystemInfoValues.put(COLUMN_SYSTEMINFO_CITY, "BERLIN,DE");
+                contentSystemInfoValues.put(COLUMN_SYSTEMINFO_TEMPERATURE, "0 *C");
+                contentSystemInfoValues.put(COLUMN_SYSTEMINFO_WEATHER_ID, "80000");
+                contentSystemInfoValues.put(COLUMN_SYSTEMINFO_SUNRISE, "1499313136");
+                contentSystemInfoValues.put(COLUMN_SYSTEMINFO_SUNSET, "1499372285");
+                contentSystemInfoValues.put(COLUMN_SYSTEMINFO_TIMESTAMP, "0");
+                db.insert(TABLE_NAME_SYSTEMINFO, null, contentSystemInfoValues);
+
+                Log.d(TAG, "addUserAndSystemIfNotExist: system info had to be created");
+            } else
+                Log.d(TAG, "addUserAndSystemIfNotExist: system info exist");
         }
     }
 
@@ -689,5 +736,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             endtime = data.getString(0);
         }
         return endtime;
+    }
+
+    public Cursor getSystemInformation() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_SYSTEMINFO +
+                " WHERE " + COLUMN_SYSTEMINFO_ID + " = 1", null);
+        return data;
+    }
+
+    public void setSystemInfoData(String city, String temperature) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_NAME_SYSTEMINFO +
+                " SET " + COLUMN_SYSTEMINFO_CITY+ " = '" + city + "', " +
+                COLUMN_SYSTEMINFO_TEMPERATURE + " = '" + temperature + "' " +
+                " WHERE " + COLUMN_SYSTEMINFO_ID + " = 1";
+        db.execSQL(query);
+    }
+
+    public void setSystemInfoWeatherData(int weatherId, long sunrise, long sunset) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_NAME_SYSTEMINFO +
+                " SET " + COLUMN_SYSTEMINFO_WEATHER_ID+ " = '" + weatherId + "', " +
+                COLUMN_SYSTEMINFO_SUNRISE + " = '" + sunrise + "', " +
+                COLUMN_SYSTEMINFO_SUNSET + " = '" + sunset + "' " +
+                " WHERE " + COLUMN_SYSTEMINFO_ID + " = 1";
+        db.execSQL(query);
+    }
+
+    public void setSystemInfoTimeStamp(long timestamp) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_NAME_SYSTEMINFO +
+                " SET " + COLUMN_SYSTEMINFO_TIMESTAMP + " = '" + timestamp + "' " +
+                " WHERE " + COLUMN_SYSTEMINFO_ID + " = 1";
+        db.execSQL(query);
     }
 }

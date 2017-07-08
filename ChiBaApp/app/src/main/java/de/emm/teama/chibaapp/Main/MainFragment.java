@@ -72,37 +72,50 @@ public class MainFragment extends Fragment {
     private TextView textCity;
     private TextView textTemperature;
 
-    private String lastKnownCity = "BERLIN,DE";
-    private String lastKnownTemperature = "0 *C";
-    private int lastKnownWeatherID = 80000;
-    private long lastKnownSunrise = 1499313136;
-    private long lastKnownSunset = 1499372285;
-    private long lastCallTimeStamp = 0;
-
+    private String lastKnownCity;
+    private String lastKnownTemperature;
+    private int lastKnownWeatherID;
+    private long lastKnownSunrise;
+    private long lastKnownSunset;
+    private long lastCallTimeStamp;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Cursor data = database.getSystemInformation();
+        if (data.getCount() != 0 && data.moveToNext()) {
+            lastKnownCity = data.getString(1);
+            lastKnownTemperature = data.getString(2);
+            lastKnownWeatherID = Integer.valueOf(data.getString(3));
+            lastKnownSunrise = Long.valueOf(data.getString(4));
+            lastKnownSunset = Long.valueOf(data.getString(5));
+            lastCallTimeStamp = Long.valueOf(data.getString(6));
+        }
+
         weatherFont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/weather.ttf");
         weathericon = new TextView(this.getContext());
         textCity = new TextView(this.getContext());
         textTemperature = new TextView(this.getContext());
-        calendar.add(Calendar.MINUTE,15);
+        calendar.add(Calendar.MINUTE, 15);
         calendar = Calendar.getInstance();
         Log.d(TAG, "onCreate: current timestamp " + calendar.getTimeInMillis());
         Log.d(TAG, "onCreate: compare to timestamp " + lastCallTimeStamp);
-        if(lastCallTimeStamp == 0 || calendar.getTimeInMillis() > lastCallTimeStamp) {
+        if (lastCallTimeStamp == 0 || calendar.getTimeInMillis() > lastCallTimeStamp) {
             Log.d(TAG, "onCreate: timestamp ok");
-            //updateWeatherData(new CityPreference(getActivity()).getCity());
-            lastCallTimeStamp = calendar.getTimeInMillis()+900000;
-        }else
+            updateWeatherData(new CityPreference(getActivity()).getCity());
+            database.setSystemInfoTimeStamp(calendar.getTimeInMillis() + 900000);
+        } else {
             Log.d(TAG, "onCreate: timestamp not ok");
+            textCity.setText(lastKnownCity);
+            textTemperature.setText(lastKnownTemperature);
+            setWeatherIcon(lastKnownWeatherID, lastKnownSunrise, lastKnownSunset);
+        }
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if(fragmentHome == null) {
+        if (fragmentHome == null) {
             LinearLayout linearLayoutRoot = new LinearLayout(this.getContext());
             linearLayoutRoot.setOrientation(LinearLayout.VERTICAL);
             //linearLayoutRoot.setWeightSum(2f);
@@ -125,7 +138,7 @@ public class MainFragment extends Fragment {
                 Object3DData chiba = Object3DBuilder.loadObj(this.getActivity().getAssets(), "models", "chiba.obj");
                 chiba.centerAndScale(2.0f);
                 chiba.setPosition(new float[]{-2.0f, -0.5f, 0f});
-                chiba.setColor(new float[] { 1.0f, 1.0f, 1f, 1.0f });
+                chiba.setColor(new float[]{1.0f, 1.0f, 1f, 1.0f});
                 scene.addObject(chiba);
 
                 Object3DData ball = Object3DBuilder.loadObj(this.getActivity().getAssets(), "models", "BallAnimiert.obj");
@@ -168,9 +181,9 @@ public class MainFragment extends Fragment {
             //Weather icon
             RelativeLayout.LayoutParams rlpWeathericon = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
-            rlpWeathericon.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            rlpWeathericon.topMargin = 300;
-            rlpWeathericon.rightMargin = 100;
+            rlpWeathericon.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            rlpWeathericon.topMargin = 50;
+            rlpWeathericon.leftMargin = 50;
             weathericon.setLayoutParams(rlpWeathericon);
             weathericon.setTextSize(80);
             weathericon.setTypeface(weatherFont);
@@ -181,15 +194,15 @@ public class MainFragment extends Fragment {
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
             rlpTextCity.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             textCity.setLayoutParams(rlpTextCity);
-            rlpTextCity.topMargin = 650;
-            rlpTextCity.rightMargin = 250;
+            rlpTextCity.topMargin = 150;
+            rlpTextCity.rightMargin = 50;
 
             //Temperature
             RelativeLayout.LayoutParams rlpTextTemperature = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
             rlpTextTemperature.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             textTemperature.setLayoutParams(rlpTextTemperature);
-            rlpTextTemperature.topMargin = 650;
+            rlpTextTemperature.topMargin = 215;
             rlpTextTemperature.rightMargin = 50;
             textTemperature.setTextColor(getContext().getColor(R.color.colorBlackish));
 
@@ -280,61 +293,64 @@ public class MainFragment extends Fragment {
         }.start();
     }
 
-    private void renderWeather(JSONObject json){
+    private void renderWeather(JSONObject json) {
         try {
             textCity.setText(json.getString("name").toUpperCase(Locale.GERMAN) +
                     ", " +
                     json.getJSONObject("sys").getString("country"));
-            lastKnownCity = textCity.getText().toString();
 
             JSONObject details = json.getJSONArray("weather").getJSONObject(0);
             JSONObject main = json.getJSONObject("main");
 
             textTemperature.setText(
-                    String.format("%.2f", main.getDouble("temp"))+ " ℃");
-            lastKnownTemperature = textTemperature.getText().toString();
+                    String.format("%.2f", main.getDouble("temp")) + " ℃");
 
             setWeatherIcon(details.getInt("id"),
                     json.getJSONObject("sys").getLong("sunrise") * 1000,
                     json.getJSONObject("sys").getLong("sunset") * 1000);
 
-        }catch(Exception e){
+            database.setSystemInfoData(textCity.getText().toString(),textTemperature.getText().toString());
+        } catch (Exception e) {
             Log.e("SimpleWeather", "One or more fields not found in the JSON data");
             textCity.setText(lastKnownCity);
             textTemperature.setText(lastKnownTemperature);
-            setWeatherIcon(lastKnownWeatherID,lastKnownSunrise,lastKnownSunset);
+            setWeatherIcon(lastKnownWeatherID, lastKnownSunrise, lastKnownSunset);
         }
     }
 
-    private void setWeatherIcon(int actualId, long sunrise, long sunset){
+    private void setWeatherIcon(int actualId, long sunrise, long sunset) {
         int id = actualId / 100;
         String icon = "";
-        if(actualId == 800){
+        if (actualId == 800) {
             long currentTime = new Date().getTime();
-            if(currentTime>=sunrise && currentTime<sunset) {
+            if (currentTime >= sunrise && currentTime < sunset) {
                 icon = getActivity().getString(R.string.weather_sunny);
             } else {
                 icon = getActivity().getString(R.string.weather_clear_night);
             }
         } else {
-            switch(id) {
-                case 2 : icon = getActivity().getString(R.string.weather_thunder);
+            switch (id) {
+                case 2:
+                    icon = getActivity().getString(R.string.weather_thunder);
                     break;
-                case 3 : icon = getActivity().getString(R.string.weather_drizzle);
+                case 3:
+                    icon = getActivity().getString(R.string.weather_drizzle);
                     break;
-                case 7 : icon = getActivity().getString(R.string.weather_foggy);
+                case 7:
+                    icon = getActivity().getString(R.string.weather_foggy);
                     break;
-                case 8 : icon = getActivity().getString(R.string.weather_cloudy);
+                case 8:
+                    icon = getActivity().getString(R.string.weather_cloudy);
                     break;
-                case 6 : icon = getActivity().getString(R.string.weather_snowy);
+                case 6:
+                    icon = getActivity().getString(R.string.weather_snowy);
                     break;
-                case 5 : icon = getActivity().getString(R.string.weather_rainy);
+                case 5:
+                    icon = getActivity().getString(R.string.weather_rainy);
                     break;
             }
         }
-        lastKnownWeatherID = actualId;
-        lastKnownSunrise = sunrise;
-        lastKnownSunset = sunset;
+        database.setSystemInfoWeatherData(actualId, sunrise, sunset);
         weathericon.setText(icon);
     }
 }

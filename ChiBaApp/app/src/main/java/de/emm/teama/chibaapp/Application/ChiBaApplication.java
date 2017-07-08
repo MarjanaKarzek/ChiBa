@@ -16,6 +16,6 @@ public class ChiBaApplication extends Application {
     public void onCreate() {
         super.onCreate();
         database = new DatabaseHelper(this);
-        database.addUserIfNotExist();
+        database.addUserAndSystemIfNotExist();
     }
 }
