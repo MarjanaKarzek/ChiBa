@@ -5,12 +5,15 @@ import android.graphics.Typeface;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CalendarView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -33,6 +36,7 @@ import de.emm.teama.chibaapp.Model3D.model.Object3DData;
 import de.emm.teama.chibaapp.Model3D.sceneloader.SceneLoader;
 import de.emm.teama.chibaapp.Model3D.view.ModelSurfaceView;
 import de.emm.teama.chibaapp.R;
+import de.emm.teama.chibaapp.Utils.AppointmentDetailDialogFragment;
 import de.emm.teama.chibaapp.Utils.CityPreference;
 import de.emm.teama.chibaapp.Utils.DisplayEventListAdapter;
 import de.emm.teama.chibaapp.Utils.WeatherRemoteFetch;
@@ -64,6 +68,7 @@ public class MainFragment extends Fragment {
     private String selectedDate;
     private Calendar calendar = Calendar.getInstance();
     private ArrayList<String> currentEvents = new ArrayList<String>();
+    private ArrayList<Integer> displayedEvents = new ArrayList<Integer>();
     private ListView eventlist;
     private DisplayEventListAdapter adapter;
 
@@ -220,7 +225,21 @@ public class MainFragment extends Fragment {
             getCurrentEventData();
             adapter = new DisplayEventListAdapter(inflater.getContext(), R.layout.layout_list_events_adapter_view, currentEvents);
             eventlist.setAdapter(adapter);
+            eventlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    Fragment prev = getFragmentManager().findFragmentByTag("appointment_detail_fragment");
+                    if (prev != null) {
+                        transaction.remove(prev);
+                    }
+                    transaction.addToBackStack(null);
 
+                    // Create and show the dialog.
+                    DialogFragment newDialog = AppointmentDetailDialogFragment.newInstance(displayedEvents.get(position));
+                    newDialog.show(transaction, "appointment_detail_fragment");
+                }
+            });
 
             //Add Views to Layouts
             relativeLayoutAvatarArea.addView(gLView);
@@ -245,6 +264,7 @@ public class MainFragment extends Fragment {
         selectedDate = simpleDateFormat.format(calendar.getTime());
         Cursor data = database.showEventsByStartDateWithoutFullDay(selectedDate);
         currentEvents.clear();
+        displayedEvents.clear();
 
         if (data.getCount() != 0) {
             String event = "";
@@ -252,6 +272,7 @@ public class MainFragment extends Fragment {
                 event += data.getString(5) + " ";
                 event += data.getString(1);
                 currentEvents.add(event);
+                displayedEvents.add(Integer.valueOf(data.getString(0)));
                 event = "";
             }
         }
