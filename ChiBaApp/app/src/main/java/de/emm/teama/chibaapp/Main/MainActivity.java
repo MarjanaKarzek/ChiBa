@@ -1,8 +1,13 @@
 package de.emm.teama.chibaapp.Main;
 
+import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.NotificationCompat;
@@ -33,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private TabLayout tabLayout;
 
-    private HashMap<Integer,Boolean> currentFreeTimeSlots;
+    private HashMap<Integer,Boolean> currentFreeTimeSlots = new HashMap<Integer, Boolean>();
     private Calendar currentDate = Calendar.getInstance();
     private String dateFormat = "d. MMMM yyyy";
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.GERMANY);
@@ -117,10 +122,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getFreeTimeSlots() {
-        if(currentFreeTimeSlots != null)
-            currentFreeTimeSlots.clear();
-        else
-            currentFreeTimeSlots = new HashMap<Integer, Boolean>();
+        currentFreeTimeSlots.clear();
         currentFreeTimeSlots.put(8, true);
         currentFreeTimeSlots.put(9, true);
         currentFreeTimeSlots.put(10, true);
@@ -225,13 +227,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpTimerForToDos() {
+        HashMap<Integer,Boolean> freeTimeSlots = currentFreeTimeSlots;
         Timer timer = new Timer();
         Calendar currentTime = Calendar.getInstance();
         currentTime.set(Calendar.MINUTE,0);
         Date date = currentTime.getTime();
         long period = 3600000;
 
-        timer.schedule(new ScheduledToDoNotification(currentFreeTimeSlots, this, (NotificationManager)getSystemService(NOTIFICATION_SERVICE)), date, period);
+        timer.schedule(new ScheduledToDoNotification(freeTimeSlots, this, (NotificationManager)getSystemService(NOTIFICATION_SERVICE), getResources()), date, period);
     }
 
     private static class ScheduledToDoNotification extends TimerTask {
@@ -239,11 +242,17 @@ public class MainActivity extends AppCompatActivity {
         private Random random = new Random();
         private Context context;
         private NotificationManager notifyMgr;
+        private Resources resources;
+        private Intent applicationIntent;
+        private PendingIntent pendingApplicationIntent;
 
-        public ScheduledToDoNotification(HashMap<Integer,Boolean> currentFreeTimeSlots, Context context, NotificationManager notifyMgr){
+        public ScheduledToDoNotification(HashMap<Integer,Boolean> currentFreeTimeSlots, Context context, NotificationManager notifyMgr, Resources resources){
             this.currentFreeTimeSlots = currentFreeTimeSlots;
             this.context = context;
             this.notifyMgr = notifyMgr;
+            this.resources = resources;
+            applicationIntent = new Intent(context, MainActivity.class);
+            pendingApplicationIntent = PendingIntent.getBroadcast(context, 0, applicationIntent, 0);
         }
 
         public void run()
@@ -253,41 +262,70 @@ public class MainActivity extends AppCompatActivity {
             Calendar currentTime = Calendar.getInstance();
             //get current timeslot length
             int timeslotlength = 0;
-            int currentHour = currentTime.get(Calendar.HOUR);
-            int followingHour = currentTime.get(Calendar.HOUR);
+            int currentHour = currentTime.get(Calendar.HOUR_OF_DAY);
+            int followingHour = currentTime.get(Calendar.HOUR_OF_DAY);
+            Log.d(TAG, "run: curentHour: " + currentHour + " following Hour " + followingHour);
 
-//            if(currentTime.get(Calendar.MINUTE) < 10){
-//                if(currentFreeTimeSlots.get(currentHour)){
-//                    do {
-//                        timeslotlength++;
-//                        followingHour++;
-//                    }while(currentFreeTimeSlots.get(followingHour));
-//                }
-//                Log.d(TAG, "run: current hour: " + currentHour);
-//                Log.d(TAG, "run: hour state " + currentFreeTimeSlots.get(currentHour));
-//                Log.d(TAG, "run: timeslot: " + timeslotlength);
-//                Cursor data = database.showToDosByMaxDuration(timeslotlength);
-//                if(data.getCount() != 0){
-//                    int randomIndex = random.nextInt(data.getCount()-1);
-//                    String selectedToDo = "";
-//                    data.moveToPosition(randomIndex);
-//                    selectedToDo = data.getString(1);
-//                    Log.d(TAG, "run: selected ToDo " + selectedToDo);
-//                    createPushNotification(selectedToDo);
-//                }
-//            }
-//            else
+            if(currentTime.get(Calendar.MINUTE) < 10){
+                if(currentFreeTimeSlots.get(currentHour)){
+                    do {
+                        timeslotlength++;
+                        followingHour++;
+                    }while(currentFreeTimeSlots.get(followingHour));
+                }
+                Log.d(TAG, "run: current hour: " + currentHour);
+                Log.d(TAG, "run: hour state " + currentFreeTimeSlots.get(currentHour));
+                Log.d(TAG, "run: timeslot: " + timeslotlength);
+                Cursor data = database.showToDosByMaxDuration(timeslotlength);
+                if(data.getCount() != 0){
+                    int randomIndex = random.nextInt(data.getCount()-1);
+                    String selectedToDo = "";
+                    data.moveToPosition(randomIndex);
+                    selectedToDo = data.getString(1);
+                    Log.d(TAG, "run: selected ToDo " + selectedToDo);
+                    createPushNotification(selectedToDo);
+                }
+           }
+            else
+
+           // if(currentTime.get(Calendar.MINUTE) < 10){
+                if(currentFreeTimeSlots.containsKey(currentHour)){
+                    do {
+                        timeslotlength += 1;
+                        followingHour += 1;
+                    }while(currentFreeTimeSlots.containsKey(followingHour));
+                }
+                Log.d(TAG, "run: current hour: " + currentHour);
+                Log.d(TAG, "run: hour state " + currentFreeTimeSlots.get(currentHour));
+                Log.d(TAG, "run: timeslot: " + timeslotlength);
+                Cursor data = database.showToDosByMaxDuration(timeslotlength);
+                if(data.getCount() != 0){
+                    int randomIndex = random.nextInt(data.getCount()-1);
+                    String selectedToDo = "";
+                    data.moveToPosition(randomIndex+1);
+                    selectedToDo = data.getString(1);
+                    Log.d(TAG, "run: selected ToDo " + selectedToDo);
+                    //TODO check do not disturb option here
+                    createPushNotification(selectedToDo);
+                //}
+            }
+            else
                 Log.d(TAG, "run: not scheduled yet");
         }
 
         public void createPushNotification(String selectedToDo){
+            String text = "Du hättest jetzt etwas Zeit. Möchtest du dich um folgendes ToDo kümmern: " + selectedToDo;
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(context)
-                            .setSmallIcon(R.drawable.ic_home)
+                            .setSmallIcon(R.drawable.ic_notification_todo)
                             .setContentTitle("ToDo Erinnerung")
-                            .setContentText("Möchtest du dich um folgendes ToDo kümmern: " + selectedToDo);
+                            .setContentText(text)
+                            .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_chiba_profile))
+                            .setStyle(new NotificationCompat.BigTextStyle()
+                                    .bigText(text))
+                            .addAction(R.drawable.ic_home,"nein, danke",pendingApplicationIntent)
+                            .addAction(R.drawable.ic_home,"ja, ok",pendingApplicationIntent);
             int mNotificationId = 001;
-            // Builds the notification and issues it.
             notifyMgr.notify(mNotificationId, mBuilder.build());
         }
     }
