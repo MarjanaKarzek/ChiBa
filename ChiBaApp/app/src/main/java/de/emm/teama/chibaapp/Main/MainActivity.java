@@ -173,14 +173,23 @@ public class MainActivity extends AppCompatActivity {
     private void setUpTimerForToDos() {
         Timer timer = new Timer();
         Calendar currentTime = Calendar.getInstance();
-        if (Calendar.MINUTE >= 10)
-            currentTime.add(Calendar.HOUR_OF_DAY, 1);
-        currentTime.set(Calendar.MINUTE, 0);
         Date date = currentTime.getTime();
-        long period = 3600000;
-
         String dateFormat = "d. MMMM yyyy HH:mm";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.GERMANY);
+
+        if (currentTime.MINUTE <= 10) {
+            currentTime.add(Calendar.MINUTE,2);
+            date = currentTime.getTime();
+            Log.d(TAG, "setUpTimerForToDos: create single notification");
+            Log.d(TAG, "setUpTimerForToDos: scheduled for " + simpleDateFormat.format(date));
+            timer.schedule(new ScheduledToDoNotification(this, (NotificationManager) getSystemService(NOTIFICATION_SERVICE), getResources()), date);
+        }
+        currentTime.add(Calendar.HOUR_OF_DAY, 1);
+        currentTime.set(Calendar.MINUTE, 0);
+        date = currentTime.getTime();
+        long period = 3600000;
+
+
         Log.d(TAG, "setUpTimerForToDos: scheduled for " + simpleDateFormat.format(date));
 
         timer.schedule(new ScheduledToDoNotification(this, (NotificationManager) getSystemService(NOTIFICATION_SERVICE), getResources()), date, period);
@@ -368,6 +377,7 @@ public class MainActivity extends AppCompatActivity {
         public void run() {
             getCurrentAvailableHours();
             if (availableHours.contains(Calendar.getInstance().HOUR_OF_DAY)) {
+                Log.d(TAG, "run: available");
                 //calculate current free timeslots
                 getFreeTimeSlots();
                 //write your code here
@@ -379,7 +389,7 @@ public class MainActivity extends AppCompatActivity {
                 int followingHour = currentTime.get(Calendar.HOUR_OF_DAY);
                 Log.d(TAG, "run: currentHour: " + currentHour + " following Hour " + followingHour);
 
-                if (currentTime.get(Calendar.MINUTE) < 10) {
+                if (currentTime.get(Calendar.MINUTE) <= 10) {
                     if (currentFreeTimeSlots.containsKey(currentHour)) {
                         do {
                             timeslotlength += 1;
@@ -416,7 +426,7 @@ public class MainActivity extends AppCompatActivity {
                             .setSmallIcon(R.drawable.ic_notification_todo)
                             .setContentTitle("ToDo Erinnerung")
                             .setContentText(text)
-                            .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_chiba_profile))
+                            .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_home))
                             .setStyle(new NotificationCompat.BigTextStyle()
                                     .bigText(text))
                             .addAction(R.drawable.ic_home, "nein, danke", pendingApplicationIntentAction1)
