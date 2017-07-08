@@ -122,11 +122,12 @@ public class MainFragment extends Fragment {
             // Create our 3D scenario
             scene = new SceneLoader(this);
             try {
-                Object3DData object = Object3DBuilder.loadObj(this.getActivity().getAssets(), "models", "chiba.obj");
-                object.centerAndScale(4.0f);
-                object.setPosition(new float[]{0f, 0f, 0f});
-                object.setColor(new float[]{1.0f, 1.0f, 1.0f, 1.0f});
-                scene.addObject(object);
+                Object3DData chiba = Object3DBuilder.loadObj(this.getActivity().getAssets(), "models", "chiba.obj");
+                chiba.centerAndScale(2.0f);
+                chiba.setPosition(new float[]{-2.0f, -0.5f, 0f});
+                chiba.setColor(new float[] { 1.0f, 1.0f, 1f, 1.0f });
+                scene.addObject(chiba);
+
             } catch (Exception ex) {
             }
 

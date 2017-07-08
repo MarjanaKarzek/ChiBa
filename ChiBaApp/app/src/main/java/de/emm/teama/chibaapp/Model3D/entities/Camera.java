@@ -170,7 +170,7 @@ public class Camera {
 					buffer[0] / buffer[3]
 					, buffer[1] / buffer[3]
 					, buffer[2] / buffer[3] )) {
-				Log.d("Camera", "Inside bounds of '" + objects.get(i).getId() + "'");
+//				Log.d("Camera", "Inside bounds of '" + objects.get(i).getId() + "'");
 				return true;
 			}
 		}

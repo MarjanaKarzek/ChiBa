@@ -380,10 +380,7 @@ public class Object3DData {
                 nearPt = vertexBuffer.get(i + 2);
             else if (vertexBuffer.get(i + 2) < farPt)
                 farPt = vertexBuffer.get(i + 2);
-        } // end
-//        Log.i("Object3DData", "Dimensions for '" + getId() + " (X left, X right): ("+leftPt+","+rightPt+")");
-//        Log.i("Object3DData", "Dimensions for '" + getId() + " (Y top, Y bottom): ("+topPt+","+bottomPt+")");
-//        Log.i("Object3DData", "Dimensions for '" + getId() + " (Z near, Z far): ("+nearPt+","+farPt+")");
+        }
 
         // calculate center of 3D object
         float xc = (rightPt + leftPt) / 2.0f;
