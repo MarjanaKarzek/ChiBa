@@ -643,4 +643,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 " WHERE (" + COLUMN_TODO_STATE + " = '0' OR " + COLUMN_TODO_STATE + " = 'false') AND " + COLUMN_TODO_DURATION + " <= " + timeslotlength, null);
         return data;
     }
+
+    public String getUserName() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT " + COLUMN_USER_NAME + " FROM " + TABLE_NAME_USER +
+                " WHERE " + COLUMN_USER_ID + " = 1", null);
+        String name = "";
+        if(data.getCount() != 0 && data.moveToNext()){
+            name = data.getString(0);
+        }
+        return name;
+    }
 }

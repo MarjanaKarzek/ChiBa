@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import de.emm.teama.chibaapp.Utils.ActionReceiver;
 import de.emm.teama.chibaapp.Utils.BottomNavigationViewHelper;
 import de.emm.teama.chibaapp.R;
 
@@ -38,11 +39,6 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private TabLayout tabLayout;
 
-    private HashMap<Integer,Boolean> currentFreeTimeSlots = new HashMap<Integer, Boolean>();
-    private Calendar currentDate = Calendar.getInstance();
-    private String dateFormat = "d. MMMM yyyy";
-    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.GERMANY);
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG,"onCreate: starting.");
 
         tryToastOnSuccess();
-        getFreeTimeSlots();
         setUpTimerForToDos();
 
         //Setup View Pager
@@ -121,67 +116,6 @@ public class MainActivity extends AppCompatActivity {
         database.checkHashtagTable();
     }
 
-    private void getFreeTimeSlots() {
-        currentFreeTimeSlots.clear();
-        currentFreeTimeSlots.put(8, true);
-        currentFreeTimeSlots.put(9, true);
-        currentFreeTimeSlots.put(10, true);
-        currentFreeTimeSlots.put(11, true);
-        currentFreeTimeSlots.put(12, true);
-        currentFreeTimeSlots.put(13, true);
-        currentFreeTimeSlots.put(14, true);
-        currentFreeTimeSlots.put(15, true);
-        currentFreeTimeSlots.put(16, true);
-        currentFreeTimeSlots.put(17, true);
-        currentFreeTimeSlots.put(18, true);
-        currentFreeTimeSlots.put(19, true);
-        currentFreeTimeSlots.put(20, true);
-        currentFreeTimeSlots.put(21, true);
-        Cursor dataFullDay = database.showEventIdsByStartDateThatAreFullDay(simpleDateFormat.format(currentDate.getTime()));
-        //if there is a fullday event, the complete day is blocked
-        if(dataFullDay.getCount() != 0){
-            Set<Integer> keySet = currentFreeTimeSlots.keySet();
-            currentFreeTimeSlots.clear();
-            for(Integer key: keySet){
-                currentFreeTimeSlots.put(key, false);
-            }
-        }
-        else{
-            //0 COLUMN_EVENTS_ID
-            //1 COLUMN_EVENTS_TITLE
-            //2 COLUMN_EVENTS_FULLDAY
-            //3 COLUMN_EVENTS_STARTDATE
-            //4 COLUMN_EVENTS_ENDDATE
-            //5 COLUMN_EVENTS_STARTTIME
-            //6 COLUMN_EVENTS_ENDTIME
-            //7 COLUMN_EVENTS_LOCATION
-            Cursor data = database.showEventsByStartDateWithoutFullDay(simpleDateFormat.format(currentDate.getTime()));
-            if (data.getCount() != 0) {
-                while (data.moveToNext()) {
-                    //set blocks to false if blocked
-                    String[] starttime = data.getString(5).split(":");
-                    int starthour = Integer.valueOf(starttime[0]);
-
-                    String[] endtime = data.getString(6).split(":");
-                    int endhour = Integer.valueOf(endtime[0]);
-                    int endminute = Integer.valueOf(endtime[1]);
-
-                    do{
-                        currentFreeTimeSlots.remove(starthour);
-                        currentFreeTimeSlots.put(starthour,false);
-                        starthour++;
-                    }while(starthour < endhour);
-
-                    if(endminute > 0){
-                        currentFreeTimeSlots.remove(endhour);
-                        currentFreeTimeSlots.put(endhour,false);
-                    }
-                }
-            }
-            Log.d(TAG, "getFreeTimeSlots: currentTimeSlots " + currentFreeTimeSlots.toString());
-        }
-    }
-
     private void tryToastOnSuccess() {
         //Success Toast for add Appointment
         int successState_addAppointment = getIntent().getIntExtra("EXTRA_SUCCESS_STATE_ADD_APPOINTMENT",3);
@@ -233,36 +167,115 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpTimerForToDos() {
-        HashMap<Integer,Boolean> freeTimeSlots = currentFreeTimeSlots;
         Timer timer = new Timer();
         Calendar currentTime = Calendar.getInstance();
+        if(Calendar.MINUTE >= 10)
+            currentTime.add(Calendar.HOUR_OF_DAY,1);
         currentTime.set(Calendar.MINUTE,0);
         Date date = currentTime.getTime();
         long period = 3600000;
 
-        timer.schedule(new ScheduledToDoNotification(freeTimeSlots, this, (NotificationManager)getSystemService(NOTIFICATION_SERVICE), getResources()), date, period);
+        String dateFormat = "d. MMMM yyyy HH:mm";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.GERMANY);
+        Log.d(TAG, "setUpTimerForToDos: scheduled for " + simpleDateFormat.format(date));
+
+        timer.schedule(new ScheduledToDoNotification(this, (NotificationManager)getSystemService(NOTIFICATION_SERVICE), getResources()), date, period);
     }
 
     private static class ScheduledToDoNotification extends TimerTask {
-        private HashMap<Integer,Boolean> currentFreeTimeSlots;
         private Random random = new Random();
         private Context context;
         private NotificationManager notifyMgr;
         private Resources resources;
-        private Intent applicationIntent;
-        private PendingIntent pendingApplicationIntent;
 
-        public ScheduledToDoNotification(HashMap<Integer,Boolean> currentFreeTimeSlots, Context context, NotificationManager notifyMgr, Resources resources){
-            this.currentFreeTimeSlots = currentFreeTimeSlots;
+        private Intent applicationIntentAction1;
+        private PendingIntent pendingApplicationIntentAction1;
+        private Intent applicationIntentAction2;
+        private PendingIntent pendingApplicationIntentAction2;
+
+        private HashMap<Integer,Boolean> currentFreeTimeSlots = new HashMap<Integer, Boolean>();
+        private Calendar currentDate = Calendar.getInstance();
+        private String dateFormat = "d. MMMM yyyy";
+        private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.GERMANY);
+
+        public ScheduledToDoNotification(Context context, NotificationManager notifyMgr, Resources resources){
             this.context = context;
             this.notifyMgr = notifyMgr;
             this.resources = resources;
-            applicationIntent = new Intent(context, MainActivity.class);
-            pendingApplicationIntent = PendingIntent.getBroadcast(context, 0, applicationIntent, 0);
+
+            applicationIntentAction1 = new Intent(context, ActionReceiver.class);
+            applicationIntentAction1.setAction("action1");
+            pendingApplicationIntentAction1 = PendingIntent.getBroadcast(context, 0, applicationIntentAction1, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            applicationIntentAction2 = new Intent(context, ActionReceiver.class);
+            applicationIntentAction2.setAction("action2");
+        }
+
+        private void getFreeTimeSlots() {
+            currentFreeTimeSlots.clear();
+            currentFreeTimeSlots.put(8, true);
+            currentFreeTimeSlots.put(9, true);
+            currentFreeTimeSlots.put(10, true);
+            currentFreeTimeSlots.put(11, true);
+            currentFreeTimeSlots.put(12, true);
+            currentFreeTimeSlots.put(13, true);
+            currentFreeTimeSlots.put(14, true);
+            currentFreeTimeSlots.put(15, true);
+            currentFreeTimeSlots.put(16, true);
+            currentFreeTimeSlots.put(17, true);
+            currentFreeTimeSlots.put(18, true);
+            currentFreeTimeSlots.put(19, true);
+            currentFreeTimeSlots.put(20, true);
+            currentFreeTimeSlots.put(21, true);
+            Cursor dataFullDay = database.showEventIdsByStartDateThatAreFullDay(simpleDateFormat.format(currentDate.getTime()));
+            //if there is a fullday event, the complete day is blocked
+            if(dataFullDay.getCount() != 0){
+                Set<Integer> keySet = currentFreeTimeSlots.keySet();
+                currentFreeTimeSlots.clear();
+                for(Integer key: keySet){
+                    currentFreeTimeSlots.put(key, false);
+                }
+            }
+            else{
+                //0 COLUMN_EVENTS_ID
+                //1 COLUMN_EVENTS_TITLE
+                //2 COLUMN_EVENTS_FULLDAY
+                //3 COLUMN_EVENTS_STARTDATE
+                //4 COLUMN_EVENTS_ENDDATE
+                //5 COLUMN_EVENTS_STARTTIME
+                //6 COLUMN_EVENTS_ENDTIME
+                //7 COLUMN_EVENTS_LOCATION
+                Cursor data = database.showEventsByStartDateWithoutFullDay(simpleDateFormat.format(currentDate.getTime()));
+                if (data.getCount() != 0) {
+                    while (data.moveToNext()) {
+                        //set blocks to false if blocked
+                        String[] starttime = data.getString(5).split(":");
+                        int starthour = Integer.valueOf(starttime[0]);
+
+                        String[] endtime = data.getString(6).split(":");
+                        int endhour = Integer.valueOf(endtime[0]);
+                        int endminute = Integer.valueOf(endtime[1]);
+
+                        do{
+                            currentFreeTimeSlots.remove(starthour);
+                            currentFreeTimeSlots.put(starthour,false);
+                            starthour++;
+                        }while(starthour < endhour);
+
+                        if(endminute > 0){
+                            currentFreeTimeSlots.remove(endhour);
+                            currentFreeTimeSlots.put(endhour,false);
+                        }
+                    }
+                }
+                Log.d(TAG, "getFreeTimeSlots: currentTimeSlots " + currentFreeTimeSlots.toString());
+            }
         }
 
         public void run()
         {
+            //calculate current free timeslots
+            getFreeTimeSlots();
             //write your code here
             Log.d(TAG, "run: scheduled notification");
             Calendar currentTime = Calendar.getInstance();
@@ -270,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
             int timeslotlength = 0;
             int currentHour = currentTime.get(Calendar.HOUR_OF_DAY);
             int followingHour = currentTime.get(Calendar.HOUR_OF_DAY);
-            Log.d(TAG, "run: curentHour: " + currentHour + " following Hour " + followingHour);
+            Log.d(TAG, "run: currentHour: " + currentHour + " following Hour " + followingHour);
 
             if(currentTime.get(Calendar.MINUTE) < 10){
                 if(currentFreeTimeSlots.get(currentHour)){
@@ -306,22 +319,27 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "run: timeslot: " + timeslotlength);
                 Cursor data = database.showToDosByMaxDuration(timeslotlength);
                 if(data.getCount() != 0){
-                    int randomIndex = random.nextInt(data.getCount()-1);
+                    int randomIndex = 0;
+                    if(data.getCount() != 1)
+                        randomIndex = random.nextInt(data.getCount()-1);
                     String selectedToDo = "";
-                    data.moveToPosition(randomIndex+1);
+                    data.moveToPosition(randomIndex);
                     selectedToDo = data.getString(1);
+                    Log.d(TAG, "run: selected ToDo id " + Integer.valueOf(data.getString(0)));
+                    applicationIntentAction2.putExtra("todoId",data.getString(0));
+                    pendingApplicationIntentAction2 = PendingIntent.getBroadcast(context, 0, applicationIntentAction2, PendingIntent.FLAG_UPDATE_CURRENT);
                     Log.d(TAG, "run: selected ToDo " + selectedToDo);
                     //TODO check do not disturb option here
                     createPushNotification(selectedToDo);
-                //}
+                }
             }
             else
                 Log.d(TAG, "run: not scheduled yet");
         }
 
         public void createPushNotification(String selectedToDo){
-            String text = "Du hättest jetzt etwas Zeit. Möchtest du dich um folgendes ToDo kümmern: " + selectedToDo;
-            NotificationCompat.Builder mBuilder =
+            String text = database.getUserName() + ", du hättest jetzt etwas Zeit. Möchtest du dich um folgendes ToDo kümmern: " + selectedToDo;
+            NotificationCompat.Builder builder =
                     new NotificationCompat.Builder(context)
                             .setSmallIcon(R.drawable.ic_notification_todo)
                             .setContentTitle("ToDo Erinnerung")
@@ -329,10 +347,9 @@ public class MainActivity extends AppCompatActivity {
                             .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_chiba_profile))
                             .setStyle(new NotificationCompat.BigTextStyle()
                                     .bigText(text))
-                            .addAction(R.drawable.ic_home,"nein, danke",pendingApplicationIntent)
-                            .addAction(R.drawable.ic_home,"ja, ok",pendingApplicationIntent);
-            int mNotificationId = 001;
-            notifyMgr.notify(mNotificationId, mBuilder.build());
+                            .addAction(R.drawable.ic_home,"nein, danke",pendingApplicationIntentAction1)
+                            .addAction(R.drawable.ic_home,"ja, ok",pendingApplicationIntentAction2);
+            notifyMgr.notify(001, builder.build());
         }
     }
 }
