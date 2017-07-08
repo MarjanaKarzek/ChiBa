@@ -654,4 +654,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return name;
     }
+
+    public boolean getUserDoNotDisturbOptionState() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT " + COLUMN_USER_NOTDISTURB + " FROM " + TABLE_NAME_USER +
+                " WHERE " + COLUMN_USER_ID + " = 1", null);
+        String option = "";
+        if(data.getCount() != 0 && data.moveToNext()){
+            option = data.getString(0);
+        }
+        if(option.contains("0") || option.contains("false"))
+            return false;
+        else
+            return true;
+    }
+
+    public String getUserDoNotDisturbStartTime() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT " + COLUMN_USER_NOTDISTURB_STARTTIME + " FROM " + TABLE_NAME_USER +
+                " WHERE " + COLUMN_USER_ID + " = 1", null);
+        String starttime = "";
+        if(data.getCount() != 0 && data.moveToNext()){
+            starttime = data.getString(0);
+        }
+        return starttime;
+    }
+
+    public String getUserDoNotDisturbEndTime() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT " + COLUMN_USER_NOTDISTURB_ENDTIME + " FROM " + TABLE_NAME_USER +
+                " WHERE " + COLUMN_USER_ID + " = 1", null);
+        String endtime = "";
+        if(data.getCount() != 0 && data.moveToNext()){
+            endtime = data.getString(0);
+        }
+        return endtime;
+    }
 }
