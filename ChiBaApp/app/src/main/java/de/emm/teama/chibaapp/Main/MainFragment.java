@@ -262,14 +262,12 @@ public class MainFragment extends Fragment {
 
             Object3DData chiba = Object3DBuilder.loadObj(this.getActivity().getAssets(), "models", "chiba.obj");
             chiba.centerAndScale(2.0f);
-//                chiba.setRotationY(-10.0f);
             chiba.setPosition(new float[]{-2.0f, -0.5f, 0f});
             scene.addObject(chiba);
 
             Object3DData ball = Object3DBuilder.loadObj(this.getActivity().getAssets(), "models", "BallAnimiert.obj");
             ball.centerAndScale(1.0f);
             ball.setPosition(new float[]{1.0f, 0.0f, 0f});
-//            scene.setSelectedObject(ball);
             scene.addObject(ball);
 
         } catch (Exception ex) {

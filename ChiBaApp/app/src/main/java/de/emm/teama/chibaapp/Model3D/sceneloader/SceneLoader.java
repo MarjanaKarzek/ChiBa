@@ -8,9 +8,12 @@ import de.emm.teama.chibaapp.Model3D.model.Object3DBuilder;
 import de.emm.teama.chibaapp.Model3D.model.Object3DData;
 
 import android.os.SystemClock;
+import android.transition.Scene;
+import android.util.Log;
 
 public class SceneLoader
 {
+    private final static String TAG = SceneLoader.class.getName();
 	/* Parent component */
 	private final MainFragment parent;
 
@@ -75,10 +78,21 @@ public class SceneLoader
     private void animateObject() {
         if (!rotatingObject || selectedObject == null) return;
 
-        // animate light - Do a complete rotation every 5 seconds.
-        long time = SystemClock.uptimeMillis() % 5000L;
-        float angleInDegrees = (360.0f / 5000.0f) * ((int) time);
-        selectedObject.setRotationY(angleInDegrees);
+        if (selectedObject.getId().equals("BallAnimiert.obj")) {
+            float posX = selectedObject.getPositionX();
+            float posY = selectedObject.getPositionY();
+            float posZ = selectedObject.getPositionZ();
+
+            if (posX < 0 && posY < 0 || posX > 10 && posY > 10) {
+                posX = 0.0f;
+                posY = 0.0f;
+            } else {
+                posX = posX + 0.05f;
+                posY = posY + 0.05f;
+            }
+
+            selectedObject.setPosition(new float[]{posX, posY, posZ});
+        }
     }
 
 	public synchronized void addObject(Object3DData obj) {
@@ -103,10 +117,6 @@ public class SceneLoader
 	public boolean isDrawPoints() {
 		return this.drawingPoints;
 	}
-
-//	public boolean isDrawBoundingBox() {
-//		return drawBoundingBox;
-//	}
 
 	public boolean isDrawNormals() {
 		return drawNormals;
