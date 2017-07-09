@@ -34,6 +34,7 @@ public class SceneLoader
 
 	/* Light toggle feature: we have 3 states: no light, light, light + rotation */
 	private boolean rotatingLight = false;
+    private boolean rotatingObject = true;
 
 	/* Light toggle feature: whether to draw using lights */
 	private boolean drawLighting = true;
@@ -59,6 +60,7 @@ public class SceneLoader
 	/* Hook for animating the objects before the rendering; rotate the light source around object */
 	public void onDrawFrame(){
 		animateLight();
+        animateObject();
 	}
 
 	private void animateLight() {
@@ -67,8 +69,17 @@ public class SceneLoader
 		// animate light - Do a complete rotation every 5 seconds.
 		long time = SystemClock.uptimeMillis() % 5000L;
 		float angleInDegrees = (360.0f / 5000.0f) * ((int) time);
-		lightPoint.setRotationY(angleInDegrees);
+        lightPoint.setRotationY(angleInDegrees);
 	}
+
+    private void animateObject() {
+        if (!rotatingObject || selectedObject == null) return;
+
+        // animate light - Do a complete rotation every 5 seconds.
+        long time = SystemClock.uptimeMillis() % 5000L;
+        float angleInDegrees = (360.0f / 5000.0f) * ((int) time);
+        selectedObject.setRotationY(angleInDegrees);
+    }
 
 	public synchronized void addObject(Object3DData obj) {
 		List<Object3DData> newList = new ArrayList<Object3DData>(objects);
@@ -93,9 +104,9 @@ public class SceneLoader
 		return this.drawingPoints;
 	}
 
-	public boolean isDrawBoundingBox() {
-		return drawBoundingBox;
-	}
+//	public boolean isDrawBoundingBox() {
+//		return drawBoundingBox;
+//	}
 
 	public boolean isDrawNormals() {
 		return drawNormals;

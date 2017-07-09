@@ -53,9 +53,6 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 	// The loaded textures
 	private Map<byte[], Integer> textures = new HashMap<byte[], Integer>();
 
-	// The corresponding opengl bounding boxes and drawer
-	private Map<Object3DData, Object3DData> boundingBoxes = new HashMap<Object3DData, Object3DData>();
-
 	// The corresponding opengl bounding boxes
 	private Map<Object3DData, Object3DData> normals = new HashMap<Object3DData, Object3DData>();
 

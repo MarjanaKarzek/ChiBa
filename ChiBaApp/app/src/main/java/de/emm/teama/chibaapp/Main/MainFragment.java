@@ -2,8 +2,10 @@ package de.emm.teama.chibaapp.Main;
 
 import android.database.Cursor;
 import android.graphics.Typeface;
+import android.media.audiofx.BassBoost;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -15,9 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CalendarView;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +38,7 @@ import java.util.Locale;
 import de.emm.teama.chibaapp.Model3D.model.Object3DBuilder;
 import de.emm.teama.chibaapp.Model3D.model.Object3DData;
 import de.emm.teama.chibaapp.Model3D.sceneloader.SceneLoader;
+import de.emm.teama.chibaapp.Model3D.view.ModelRenderer;
 import de.emm.teama.chibaapp.Model3D.view.ModelSurfaceView;
 import de.emm.teama.chibaapp.R;
 import de.emm.teama.chibaapp.Utils.AppointmentDetailDialogFragment;
@@ -135,24 +140,10 @@ public class MainFragment extends Fragment {
                     1200);
             relativeLayoutAvatarArea.setLayoutParams(rlpAvatarArea);
 
-            //Create Views for Realative Layout
+            //Create Views for Relative Layout
+
+            // Create gLView for 3D scenario
             gLView = new ModelSurfaceView(this);
-            // Create our 3D scenario
-            scene = new SceneLoader(this);
-            try {
-                Object3DData chiba = Object3DBuilder.loadObj(this.getActivity().getAssets(), "models", "chiba.obj");
-                chiba.centerAndScale(2.0f);
-                chiba.setPosition(new float[]{-2.0f, -0.5f, 0f});
-                chiba.setColor(new float[]{1.0f, 1.0f, 1f, 1.0f});
-                scene.addObject(chiba);
-
-                Object3DData ball = Object3DBuilder.loadObj(this.getActivity().getAssets(), "models", "BallAnimiert.obj");
-                ball.centerAndScale(1.0f);
-                ball.setPosition(new float[]{1.0f, 0.0f, 0f});
-                scene.addObject(ball);
-
-            } catch (Exception ex) {
-            }
 
             gLView.setId(new Integer(100000));
             LinearLayout.LayoutParams rlpGLView = new LinearLayout.LayoutParams(
@@ -257,6 +248,33 @@ public class MainFragment extends Fragment {
             fragmentHome = linearLayoutRoot;
         }
         return fragmentHome;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: ");
+
+        // Create Scene for 3D scenario
+        scene = new SceneLoader(this);
+        try {
+            Log.d(TAG, "onStart: create scene");
+
+            Object3DData chiba = Object3DBuilder.loadObj(this.getActivity().getAssets(), "models", "chiba.obj");
+            chiba.centerAndScale(2.0f);
+//                chiba.setRotationY(-10.0f);
+            chiba.setPosition(new float[]{-2.0f, -0.5f, 0f});
+            scene.addObject(chiba);
+
+            Object3DData ball = Object3DBuilder.loadObj(this.getActivity().getAssets(), "models", "BallAnimiert.obj");
+            ball.centerAndScale(1.0f);
+            ball.setPosition(new float[]{1.0f, 0.0f, 0f});
+//            scene.setSelectedObject(ball);
+            scene.addObject(ball);
+
+        } catch (Exception ex) {
+        }
+
     }
 
     private void getCurrentEventData() {
