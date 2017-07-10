@@ -11,6 +11,7 @@ import android.util.Log;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * Created by Marjana Karzek on 22.06.2017.
@@ -76,16 +77,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_SYSTEMINFO_SUNSET = "SUNSET";
     private static final String COLUMN_SYSTEMINFO_TIMESTAMP = "TIMESTAMP";
 
+    private static final String TABLE_NAME_HASHTAGREMINDERS = "reminder_table";
+    private static final String COLUMN_HASHTAGREMINDERS_ID = "ID";
+    private static final String COLUMN_HASHTAGREMINDERS_HASHTAG_NAME = "HASHTAG_NAME";
+    private static final String COLUMN_HASHTAGREMINDERS_REMINDER = "REMINDER";
 
     private ArrayList<String> hashtags = new ArrayList<>(Arrays.asList("Ballsport", "Fitness", "Schwimmen",
-                                                                        "Restaurant", "Brunch", "Business Launch",
+                                                                        "Restaurant", "Brunch", "Business Lunch", "Mahlzeit",
                                                                         "Geburtstag", "Jahrestag", "Muttertag", "Vatertag", "Valentinstag",
                                                                         "Weihnachten", "Halloween", "Silvester", "Chanukka", "Chinesisches Neujahr", "Ostern",
                                                                         "Sommersonnenwende", "Kino",
-                                                                        "Einkaufen", "Wäsche waschen", "Geschirrspühlen", "Bügeln", "Staub wischen", "Staub saugen",
+                                                                        "Einkaufen", "Wäsche waschen", "Geschirr spühlen", "Bügeln", "Staub wischen", "Staub saugen",
                                                                         "Prüfungsanmeldung", "Kursbelegung", "Klausur", "Lerngruppe", "Lernen",
                                                                         "Laptop", "Unterlagen", "Hausaufgaben",
                                                                         "Arbeit", "Party"));
+
+    private HashMap<String,ArrayList<String>> reminders = new HashMap<String, ArrayList<String>>();
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -93,6 +100,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        fillReminders();
+
         String createTableEvents = "CREATE TABLE " + TABLE_NAME_EVENTS + "("
                 + COLUMN_EVENTS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
                 + COLUMN_EVENTS_TITLE + " TEXT,"
@@ -150,6 +159,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_SYSTEMINFO_SUNSET + " TEXT, "
                 + COLUMN_SYSTEMINFO_TIMESTAMP + " TEXT)";
         db.execSQL(createTableSystemInfo);
+        String createTableHashtagReminders = "CREATE TABLE " + TABLE_NAME_HASHTAGREMINDERS+ "( "
+                + COLUMN_HASHTAGREMINDERS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+                + COLUMN_HASHTAGREMINDERS_HASHTAG_NAME + " TEXT, "
+                + COLUMN_HASHTAGREMINDERS_REMINDER + " TEXT)";
+        db.execSQL(createTableHashtagReminders);
     }
 
     @Override
@@ -157,8 +171,55 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    private void fillReminders(){
+        reminders.put("Ballsport",new ArrayList<String>(Arrays.asList("Ball","Trainingstasche")));
+        reminders.put("Fitness",new ArrayList<String>(Arrays.asList("Handtuch","Trinkflasche")));
+        reminders.put("Schwimmen",new ArrayList<String>(Arrays.asList("Handtuch","Schwimmbrille")));
+        reminders.put("Restaurant",new ArrayList<String>(Arrays.asList("Portmonee")));
+        reminders.put("Brunch",new ArrayList<String>(Arrays.asList("Portmonee")));
+        reminders.put("Business Lunch",new ArrayList<String>(Arrays.asList("Portmonee")));
+        reminders.put("Mahlzeit",new ArrayList<String>(Arrays.asList("Essen kochen")));
+        reminders.put("Geburtstag",new ArrayList<String>(Arrays.asList("Geschenk")));
+        reminders.put("Jahrestag",new ArrayList<String>(Arrays.asList("Geschenk")));
+        reminders.put("Muttertag",new ArrayList<String>(Arrays.asList("Geschenk","Blumen")));
+        reminders.put("Vatertag",new ArrayList<String>(Arrays.asList("Geschenk","Bier")));
+        reminders.put("Valentinstag",new ArrayList<String>(Arrays.asList("Geschenk","Sekt")));
+        reminders.put("Weihnachten",new ArrayList<String>(Arrays.asList("Geschenke")));
+        reminders.put("Halloween",new ArrayList<String>(Arrays.asList("Kürbis","Kostüm")));
+        reminders.put("Silvester",new ArrayList<String>(Arrays.asList("Partyhut","Sekt","Luftschlangen","Tröte","Feuerzeug","Feuerwerk")));
+        reminders.put("Chanukka",new ArrayList<String>(Arrays.asList("Geschenke")));
+        reminders.put("Chinesisches Neujahr",new ArrayList<String>(Arrays.asList("Geschenke")));
+        reminders.put("Ostern",new ArrayList<String>(Arrays.asList("bunte Eier","Hefezopf")));
+        reminders.put("Sommersonnenwende",new ArrayList<String>(Arrays.asList("Grillgut","Sonnencreme")));
+        reminders.put("Kino",new ArrayList<String>(Arrays.asList("Karten","Portmonee")));
+        reminders.put("Einkaufen",new ArrayList<String>(Arrays.asList("Einkaufsliste","Portmonee","Einkaufstasche")));
+        reminders.put("Wäsche waschen",new ArrayList<String>(Arrays.asList("Kleidung sammeln")));
+        reminders.put("Geschirr spühlen",new ArrayList<String>(Arrays.asList("Geschirr sammeln")));
+        reminders.put("Bügeln",new ArrayList<String>(Arrays.asList("Kleiderstapel")));
+        reminders.put("Staub wischen",new ArrayList<String>(Arrays.asList("Staubwedel")));
+        reminders.put("Staub saugen",new ArrayList<String>(Arrays.asList("Staubsauger")));
+        reminders.put("Prüfungsanmeldung",new ArrayList<String>(Arrays.asList("Liste der Fächer")));
+        reminders.put("Kursbelegung",new ArrayList<String>(Arrays.asList("Liste der Fächer")));
+        reminders.put("Klausur",new ArrayList<String>(Arrays.asList("Stifte","Taschenrechner","Hilfsmittel","Studierendenausweis","Personalausweis")));
+        reminders.put("Lerngruppe",new ArrayList<String>(Arrays.asList("Unterlagen","Kaffee")));
+        reminders.put("Lernen",new ArrayList<String>(Arrays.asList("Unterlagen","Kaffee")));
+        reminders.put("Laptop",new ArrayList<String>(Arrays.asList("Ladegerät","Maus")));
+        reminders.put("Unterlagen",new ArrayList<String>(Arrays.asList("Hefter","Notizblock")));
+        reminders.put("Hausaufgaben",new ArrayList<String>(Arrays.asList("Unterlagen")));
+        reminders.put("Arbeit",new ArrayList<String>(Arrays.asList("Essen","Getränke")));
+        reminders.put("Party",new ArrayList<String>(Arrays.asList("Portmonee","Fahrkarte")));
+    }
+
     public void addUserAndSystemIfNotExist(){
         SQLiteDatabase db = this.getWritableDatabase();
+        //Check Hashtag Table
+        checkHashtagTable();
+        /*String createTableHashtagReminders = "CREATE TABLE " + TABLE_NAME_HASHTAGREMINDERS+ "( "
+                + COLUMN_HASHTAGREMINDERS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+                + COLUMN_HASHTAGREMINDERS_HASHTAG_NAME + " TEXT, "
+                + COLUMN_HASHTAGREMINDERS_REMINDER + " TEXT)";
+        db.execSQL(createTableHashtagReminders);*/
+        checkReminderTable();
         //Create Table SystemInfo if it not exists
         String createTableSystemInfo = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_SYSTEMINFO + "( "
                 + COLUMN_SYSTEMINFO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
@@ -332,6 +393,36 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         deleteAssignedHashtagsByEventId(eventId);
         insertAssignedHashtags(eventId,hashtags);
         return true;
+    }
+
+    private void checkReminderTable() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        /*Cursor data = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_NAME_HASHTAGREMINDERS, null);
+        int amountEntries = 0;
+        if(data != null && data.moveToNext()) {
+            amountEntries = Integer.valueOf(data.getString(0));
+            data.close();
+        }
+
+        if(amountEntries != reminders.size()){
+            Log.d(TAG, "checkRemindersTable: entries must be added");
+            db.execSQL("DROP TABLE " + TABLE_NAME_HASHTAGREMINDERS);
+            String createTableHashtagReminders = "CREATE TABLE " + TABLE_NAME_HASHTAGREMINDERS + "("
+                    + COLUMN_HASHTAGREMINDERS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+                    + COLUMN_HASHTAGREMINDERS_HASHTAG_NAME + " TEXT, "
+                    + COLUMN_HASHTAGREMINDERS_REMINDER + " TEXT)";
+            db.execSQL(createTableHashtagReminders);
+            for(String hashtag: hashtags) {
+                for(String reminder: reminders.get(hashtag)){
+                    ContentValues contentHashtagReminder = new ContentValues();
+                    contentHashtagReminder.put(COLUMN_HASHTAGREMINDERS_HASHTAG_NAME, hashtag);
+                    contentHashtagReminder.put(COLUMN_HASHTAGREMINDERS_REMINDER, reminder);
+                    db.insert(TABLE_NAME_HASHTAGREMINDERS, null, contentHashtagReminder);
+                }
+            }
+        }*/
+        reminders.clear();
+        fillReminders();
     }
 
     public void checkHashtagTable() {
@@ -786,5 +877,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor data = db.rawQuery("SELECT " + COLUMN_TODO_STARTTIME + ", " + COLUMN_TODO_DURATION + " FROM " + TABLE_NAME_TODOS +
                 " WHERE " + COLUMN_TODO_STARTDATE + " = '" + date + "'", null);
         return data;
+    }
+
+    public ArrayList<String> showRemindersByHashtagString(String hashtag) {
+        return reminders.get(hashtag);
+    }
+
+    public String getEventTitleByEventId(String eventId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT " + COLUMN_EVENTS_TITLE + " FROM " + TABLE_NAME_EVENTS +
+                " WHERE " + COLUMN_EVENTS_ID + " = " + eventId, null);
+        String title = "";
+        if(data.getCount() != 0 && data.moveToNext()){
+            title = data.getString(0);
+        }
+        return title;
     }
 }

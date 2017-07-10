@@ -32,6 +32,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Locale;
 
+import de.emm.teama.chibaapp.Application.ChiBaApplication;
 import de.emm.teama.chibaapp.Main.MainActivity;
 import de.emm.teama.chibaapp.R;
 import de.emm.teama.chibaapp.Utils.AddHashtagListAdapter;
@@ -276,6 +277,11 @@ public class AddAppointmentActivity extends AppCompatActivity {
                             database.insertFullDayEvent(currentDateString, eventId);
                             calendarStartDate.add(Calendar.DAY_OF_MONTH,1);
                         }while(!currentDateString.contentEquals(endDateString));
+                    }
+
+                    if(startDateString.contains(simpleDateFormat.format(Calendar.getInstance().getTime()))){
+                        Log.d(TAG, "onClick: calling appointment schedule");
+                        ChiBaApplication.addAppointmentTimer(database.getEventIdByLastEvent(),startTimeString,assignedHashtags);
                     }
 
                     Intent intent = new Intent(context, MainActivity.class);

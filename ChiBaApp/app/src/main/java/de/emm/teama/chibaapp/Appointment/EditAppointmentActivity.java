@@ -35,6 +35,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Locale;
 
+import de.emm.teama.chibaapp.Application.ChiBaApplication;
 import de.emm.teama.chibaapp.Main.MainActivity;
 import de.emm.teama.chibaapp.R;
 import de.emm.teama.chibaapp.Utils.AddHashtagListAdapter;
@@ -178,6 +179,7 @@ public class EditAppointmentActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 database.deleteEventByEventId(eventId);
+                                ChiBaApplication.deleteApplicationTimer(eventId);
                                 Intent intent = new Intent(context, MainActivity.class);
                                 context.startActivity(intent);
                             }
@@ -361,6 +363,8 @@ public class EditAppointmentActivity extends AppCompatActivity {
                             database.insertFullDayEvent(currentDateString, eventId);
                             calendarStartDate.add(Calendar.DAY_OF_MONTH,1);
                         }while(!currentDateString.contentEquals(endDateString));
+                    }else if(startDateString.contains(simpleDateFormat.format(Calendar.getInstance().getTime()))){
+                        ChiBaApplication.editAppointmentTimer(database.getEventIdByLastEvent(),startTimeString,assignedHashtags);
                     }
 
                     Intent intent = new Intent(context, MainActivity.class);

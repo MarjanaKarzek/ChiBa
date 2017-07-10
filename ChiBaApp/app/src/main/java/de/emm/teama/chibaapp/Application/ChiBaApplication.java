@@ -11,7 +11,9 @@ import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,20 +29,80 @@ import de.emm.teama.chibaapp.Utils.ActionReceiver;
 import de.emm.teama.chibaapp.Utils.DatabaseHelper;
 
 /**
- * Created by marja on 02.07.2017.
+ * Created by Marjana Karzek on 02.07.2017.
  */
-
 public class ChiBaApplication extends Application {
     //Database Initialization
-    public static DatabaseHelper database ;
+    public static DatabaseHelper database;
     private static final String TAG = "ChiBaApplication";
+    private static HashMap<Integer, Timer> appointmentTimers = new HashMap<Integer, Timer>();
+    private static Context context;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        this.context = getApplicationContext();
         database = new DatabaseHelper(this);
         database.addUserAndSystemIfNotExist();
         setUpTimerForToDos();
+        setUpTimerForAppointments();
+    }
+
+    private void setUpTimerForAppointments() {
+        Calendar today = Calendar.getInstance();
+        String dateFormat = "d. MMMM yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.GERMANY);
+
+        //Setup notifications for all appointments of that day, that are not fullday
+        Cursor data = database.showEventsByStartDateWithoutFullDay(simpleDateFormat.format(today.getTime()));
+        if (data.getCount() != 0) {
+            while (data.moveToNext()) {
+                int eventId = Integer.valueOf(data.getString(0));
+                ArrayList<String> hashtags = database.showHashtagsByEventId(eventId);
+                String[] starttime = data.getString(5).split(":");
+                Calendar date = Calendar.getInstance();
+                date.set(Calendar.HOUR_OF_DAY, Integer.valueOf(starttime[0]));
+                date.set(Calendar.MINUTE, Integer.valueOf(starttime[1]));
+                date.add(Calendar.MINUTE, -30);
+                Date time = date.getTime();
+
+                Timer timer = new Timer();
+                appointmentTimers.put(eventId, timer);
+                Log.d(TAG, "setUpTimerForAppointments: event " + eventId + " scheduled for " + simpleDateFormat.format(date.getTime()));
+                appointmentTimers.get(eventId).schedule(new ScheduledAppointmentNotification(eventId, hashtags, this, (NotificationManager) getSystemService(NOTIFICATION_SERVICE), getResources()), time);
+            }
+        }
+    }
+
+    public static void addAppointmentTimer(int eventId, String startTimeString, ArrayList<String> hashtags) {
+        Log.d(TAG, "addAppointmentTimer: Adding new scheduled notification");
+        String dateFormat = "d. MMMM yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.GERMANY);
+
+        String[] starttime = startTimeString.split(":");
+        Calendar date = Calendar.getInstance();
+        date.set(Calendar.HOUR_OF_DAY, Integer.valueOf(starttime[0]));
+        date.set(Calendar.MINUTE, Integer.valueOf(starttime[1]));
+        date.add(Calendar.MINUTE, -30);
+        Date time = date.getTime();
+
+        Timer timer = new Timer();
+        appointmentTimers.put(eventId, timer);
+        Log.d(TAG, "addAppointmentTimer: event " + eventId + " scheduled for " + simpleDateFormat.format(date.getTime()));
+        appointmentTimers.get(eventId).schedule(new ScheduledAppointmentNotification(eventId, hashtags, context, (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE), context.getResources()), time);
+    }
+
+    public static void deleteApplicationTimer(int eventId) {
+        if(appointmentTimers.containsKey(eventId)) {
+            appointmentTimers.remove(eventId);
+            Log.d(TAG, "deleteApplicationTimer: Timer deleted for " + eventId);
+        }
+    }
+
+    public static void editAppointmentTimer(int eventId, String startTimeString, ArrayList<String> assignedHashtags) {
+        deleteApplicationTimer(eventId);
+        addAppointmentTimer(eventId,startTimeString,assignedHashtags);
+
     }
 
     private void setUpTimerForToDos() {
@@ -52,7 +114,7 @@ public class ChiBaApplication extends Application {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.GERMANY);
 
         if (currentTime.get(Calendar.MINUTE) <= 10) {
-            currentTime.add(Calendar.MINUTE,2);
+            currentTime.add(Calendar.MINUTE, 2);
             date = currentTime.getTime();
             //Log.d(TAG, "setUpTimerForToDos: create single notification");
             //Log.d(TAG, "setUpTimerForToDos: scheduled for " + simpleDateFormat.format(date));
@@ -154,13 +216,13 @@ public class ChiBaApplication extends Application {
                         int starthour = Integer.valueOf(starttime[0]);
                         int duration = Integer.valueOf(toDoData.getString(1));
 
-                        if(currentFreeTimeSlots.get(starthour)){
+                        if (currentFreeTimeSlots.get(starthour)) {
                             do {
                                 currentFreeTimeSlots.remove(starthour);
                                 currentFreeTimeSlots.put(starthour, false);
                                 starthour++;
                                 duration--;
-                            }while(duration != 0);
+                            } while (duration != 0);
                         }
                     }
                 }
@@ -257,12 +319,57 @@ public class ChiBaApplication extends Application {
                             .setSmallIcon(R.drawable.ic_notification_todo)
                             .setContentTitle("ToDo Erinnerung")
                             .setContentText(text)
-                            .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_home))
                             .setStyle(new NotificationCompat.BigTextStyle()
                                     .bigText(text))
                             .addAction(R.drawable.ic_home, "nein, danke", pendingApplicationIntentAction1)
                             .addAction(R.drawable.ic_home, "ja, ok", pendingApplicationIntentAction2);
             notifyMgr.notify(001, builder.build());
+        }
+    }
+
+    private static class ScheduledAppointmentNotification extends TimerTask {
+        private Context context;
+        private NotificationManager notifyMgr;
+        private Resources resources;
+        private String eventId;
+
+        private ArrayList<String> hashtags;
+        private HashMap<String, ArrayList<String>> reminders = new HashMap<String, ArrayList<String>>();
+        private Random random = new Random();
+
+        public ScheduledAppointmentNotification(int eventId, ArrayList<String> hashtags, Context context, NotificationManager notifyMgr, Resources resources) {
+            this.context = context;
+            this.notifyMgr = notifyMgr;
+            this.resources = resources;
+            this.eventId = "" + eventId;
+
+            this.hashtags = hashtags;
+            setupReminders();
+        }
+
+        private void setupReminders() {
+            for (String hashtag : hashtags) {
+                reminders.put(hashtag,database.showRemindersByHashtagString(hashtag));
+            }
+        }
+
+        @Override
+        public void run() {
+            int randomHashtag = random.nextInt(reminders.size());
+            int randomReminder = random.nextInt(reminders.get(hashtags.get(randomHashtag)).size());
+            String reminderTag = reminders.get(hashtags.get(randomHashtag)).get(randomReminder);
+            createPushNotification("Hallo " + database.getUserName() + ", für deinen Termin " + database.getEventTitleByEventId(eventId) + " vergiss nicht folgendes: " + reminderTag);
+        }
+
+        public void createPushNotification(String text) {
+            NotificationCompat.Builder builder =
+                    new NotificationCompat.Builder(context)
+                            .setSmallIcon(R.drawable.ic_notification_appointment)
+                            .setContentTitle("Termin Erinnerung")
+                            .setContentText(text)
+                            .setStyle(new NotificationCompat.BigTextStyle()
+                                    .bigText(text));
+            notifyMgr.notify(002, builder.build());
         }
     }
 }
