@@ -784,7 +784,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor showToDosByStartDate(String date) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT " + COLUMN_TODO_STARTTIME + ", " + COLUMN_TODO_DURATION + " FROM " + TABLE_NAME_TODOS +
-                " WHERE " + COLUMN_TODO_STARTDATE + " = " + date, null);
+                " WHERE " + COLUMN_TODO_STARTDATE + " = '" + date + "'", null);
         return data;
     }
 }
