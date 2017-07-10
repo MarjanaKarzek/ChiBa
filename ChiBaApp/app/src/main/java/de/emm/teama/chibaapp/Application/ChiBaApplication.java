@@ -94,6 +94,7 @@ public class ChiBaApplication extends Application {
 
     public static void deleteApplicationTimer(int eventId) {
         if(appointmentTimers.containsKey(eventId)) {
+            appointmentTimers.get(eventId).cancel();
             appointmentTimers.remove(eventId);
             Log.d(TAG, "deleteApplicationTimer: Timer deleted for " + eventId);
         }
