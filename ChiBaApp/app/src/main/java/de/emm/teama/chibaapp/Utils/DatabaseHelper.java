@@ -771,4 +771,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 " WHERE " + COLUMN_SYSTEMINFO_ID + " = 1";
         db.execSQL(query);
     }
+
+    public void scheduleToDoByToDoId(Integer todoId, String date, int hour) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_NAME_TODOS +
+                " SET " + COLUMN_TODO_STARTDATE + " = '" + date + "', " +
+                COLUMN_TODO_STARTTIME + " = '" + hour + "' " +
+                " WHERE " + COLUMN_TODO_ID + " = " + todoId;
+        db.execSQL(query);
+    }
+
+    public Cursor showToDosByStartDate(String date) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT " + COLUMN_TODO_STARTTIME + ", " + COLUMN_TODO_DURATION + " FROM " + TABLE_NAME_TODOS +
+                " WHERE " + COLUMN_TODO_STARTDATE + " = " + date, null);
+        return data;
+    }
 }

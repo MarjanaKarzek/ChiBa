@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
 
 /**
@@ -34,7 +38,11 @@ public class ActionReceiver extends BroadcastReceiver {
 
     public void updateToDoState(String todoId){
         Log.d(TAG, "performAction2: change state of todo " + todoId);
-        database.setStateOfToDoByToDoId(Integer.valueOf(todoId), true);
+        String dateFormat = "d. MMMM yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.GERMANY);
+        Calendar currentTime = Calendar.getInstance();
+        String date = simpleDateFormat.format(currentTime);
+        database.scheduleToDoByToDoId(Integer.valueOf(todoId), date , currentTime.get(Calendar.HOUR_OF_DAY));
     }
 
 }

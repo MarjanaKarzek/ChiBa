@@ -177,12 +177,13 @@ public class MainActivity extends AppCompatActivity {
         String dateFormat = "d. MMMM yyyy HH:mm";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.GERMANY);
 
-        if (currentTime.MINUTE <= 10) {
+        if (currentTime.get(Calendar.MINUTE) <= 10) {
             currentTime.add(Calendar.MINUTE,2);
             date = currentTime.getTime();
             Log.d(TAG, "setUpTimerForToDos: create single notification");
             Log.d(TAG, "setUpTimerForToDos: scheduled for " + simpleDateFormat.format(date));
-            timer.schedule(new ScheduledToDoNotification(this, (NotificationManager) getSystemService(NOTIFICATION_SERVICE), getResources()), date);
+            ScheduledToDoNotification singleNotification = new ScheduledToDoNotification(this, (NotificationManager) getSystemService(NOTIFICATION_SERVICE), getResources());
+            singleNotification.run();
         }
         currentTime.add(Calendar.HOUR_OF_DAY, 1);
         currentTime.set(Calendar.MINUTE, 0);
@@ -268,6 +269,24 @@ public class MainActivity extends AppCompatActivity {
                         if (endminute > 0) {
                             currentFreeTimeSlots.remove(endhour);
                             currentFreeTimeSlots.put(endhour, false);
+                        }
+                    }
+                }
+                Cursor toDoData = database.showToDosByStartDate(simpleDateFormat.format(currentDate.getTime()));
+                if (toDoData.getCount() != 0) {
+                    while (toDoData.moveToNext()) {
+                        //set blocks to false if blocked by scheduled to do
+                        String[] starttime = toDoData.getString(0).split(":");
+                        int starthour = Integer.valueOf(starttime[0]);
+                        int duration = Integer.valueOf(toDoData.getString(1));
+
+                        if(currentFreeTimeSlots.get(starthour)){
+                            do {
+                                currentFreeTimeSlots.remove(starthour);
+                                currentFreeTimeSlots.put(starthour, false);
+                                starthour++;
+                                duration--;
+                            }while(duration != 0);
                         }
                     }
                 }
