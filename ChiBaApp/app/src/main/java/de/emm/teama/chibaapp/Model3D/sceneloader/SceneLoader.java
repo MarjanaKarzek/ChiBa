@@ -7,29 +7,23 @@ import de.emm.teama.chibaapp.Main.MainFragment;
 import de.emm.teama.chibaapp.Model3D.model.Object3DBuilder;
 import de.emm.teama.chibaapp.Model3D.model.Object3DData;
 
+import android.content.res.AssetManager;
 import android.os.SystemClock;
-import android.transition.Scene;
-import android.util.Log;
 
 public class SceneLoader
 {
     private final static String TAG = SceneLoader.class.getName();
-	/* Parent component */
-	private final MainFragment parent;
 
-	/* List of data objects containing info for building the opengl objects */
-	private List<Object3DData> objects = new ArrayList<Object3DData>();
+	private final MainFragment parent;                          // Parent component
 
-	/* Whether to draw objects as wireframes */
+	private List<Object3DData> objects = new ArrayList<Object3DData>();    // List of data objects containing info for building the opengl objects
+
 	private boolean drawWireframe = false;
 
-	/* Whether to draw using points */
 	private boolean drawingPoints = false;
 
-	/* Whether to draw bounding boxes around objects */
 	private boolean drawBoundingBox = false;
 
-	/* Whether to draw face normals. Normally used to debug models */
 	private boolean drawNormals = false;
 
 	/* Whether to draw using textures */
@@ -39,60 +33,133 @@ public class SceneLoader
 	private boolean rotatingLight = false;
     private boolean rotatingObject = true;
 
-	/* Light toggle feature: whether to draw using lights */
-	private boolean drawLighting = true;
+	private boolean drawLighting = true;                        // Light toggle feature: whether to draw using lights
 
-	/* Initial light position */
-	private float[] lightPosition = new float[]{0, 0, 3, 1};
+	private float[] lightPosition = new float[]{0, 0, 3, 1};    // Initial light position
 
-    /* Object selected by the user */
-    private Object3DData selectedObject = null;
+    private Object3DData selectedObject = null;                 // Object selected by the user
+    boolean istLinks = false;
+    boolean istOben = false;
 
-	/* Light bulb 3d data */
+	// Light bulb 3d data
 	private final Object3DData lightPoint = Object3DBuilder.buildPoint(new float[4]).setId("light").setPosition(lightPosition);
 
-    public SceneLoader(MainFragment main)
+    public SceneLoader(MainFragment main, AssetManager assets, boolean usesAvatar, boolean usesBall)
     {
-		this.parent = main;
+        this.parent = main;
+
+        if(usesAvatar)
+        {
+            try {
+
+                Object3DData chiba = Object3DBuilder.loadObj(assets, "models", "chiba.obj");
+                chiba.centerAndScale(2.0f);
+                chiba.setPosition(new float[]{-2.0f, 0f, 0f});
+                addObject(chiba);
+
+            } catch (Exception ex) {
+            }
+
+            if(usesBall)
+                try {
+
+                    Object3DData ball = Object3DBuilder.loadObj(assets, "models", "BallAnimiert.obj");
+                    ball.centerAndScale(0.75f);
+                    ball.setPosition(new float[]{0f, -1.0f, 0f});
+                    addObject(ball);
+
+                } catch (Exception ex) {
+                }
+        }
 	}
 
 	public Object3DData getLightBulb() {
 		return lightPoint;
 	}
 
-	/* Hook for animating the objects before the rendering; rotate the light source around object */
 	public void onDrawFrame(){
 		animateLight();
-        animateObject();
+
+        animateObject(0);
 	}
 
 	private void animateLight() {
 		if (!rotatingLight) return;
 
-		// animate light - Do a complete rotation every 5 seconds.
-		long time = SystemClock.uptimeMillis() % 5000L;
+        long time = SystemClock.uptimeMillis() % 5000L;
 		float angleInDegrees = (360.0f / 5000.0f) * ((int) time);
         lightPoint.setRotationY(angleInDegrees);
 	}
 
-    private void animateObject() {
+    private void animateObject(int animation) {
         if (!rotatingObject || selectedObject == null) return;
 
-        if (selectedObject.getId().equals("BallAnimiert.obj")) {
-            float posX = selectedObject.getPositionX();
-            float posY = selectedObject.getPositionY();
-            float posZ = selectedObject.getPositionZ();
 
-            if (posX < 0 && posY < 0 || posX > 10 && posY > 10) {
-                posX = 0.0f;
-                posY = 0.0f;
-            } else {
-                posX = posX + 0.05f;
-                posY = posY + 0.05f;
+        if (selectedObject.getId().equals("BallAnimiert.obj"))
+        {
+            switch(animation)
+            {
+                case 0:
+                    rotateAroundY();
+                    break;
+                case 1:
+                    bouncing();
+                case 2:
+                    blah();
+                    break;
+                default:
+                    break;
             }
-
-            selectedObject.setPosition(new float[]{posX, posY, posZ});
         }
+    }
+
+    private void blah(){
+
+    }
+
+    private void bouncing(){
+//        float gLViewWidth = parent.getgLView().getWidth();
+//        float gLViewHeight = parent.getgLView().getHeight();
+//        float radius = (selectedObject.getDimensions().getWidth() / 2 );
+
+        float posX = selectedObject.getPositionX();
+        float posY = selectedObject.getPositionY();
+        float posZ = selectedObject.getPositionZ();
+
+        if(posX < 3f && !istLinks) {
+            // rechts
+            posX += 0.02f;
+
+        } else {
+            // links
+            posX = posX - 0.02f;
+            istLinks = true;
+
+            if(posX < -3f)
+                istLinks = false;
+        }
+
+        if(posY < 3f && !istOben)
+            // oben
+            posY += 0.02f;
+        else {
+            // unten
+            posY = posY - 0.02f;
+            istOben = true;
+
+            if(posY < -3f)
+                istOben = false;
+
+        }
+
+        selectedObject.setPosition(new float[]{posX, posY, posZ});
+    }
+
+    private void rotateAroundY(){
+        // Drehung um die Y-Achse
+        long time = SystemClock.uptimeMillis() % 5000L;
+        float angleInDegrees = (360.0f / 5000.0f) * ((int) time);
+        selectedObject.setRotationY(angleInDegrees);
     }
 
 	public synchronized void addObject(Object3DData obj) {

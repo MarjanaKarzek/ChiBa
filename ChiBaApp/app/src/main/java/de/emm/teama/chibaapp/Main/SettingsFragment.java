@@ -141,6 +141,7 @@ public class SettingsFragment extends Fragment {
         setUpOnCheckedChangedListener();
         setUpDatePicker();
         setUpTimePickers();
+        setUpAvatarListender();
         return view;
     }
 
@@ -235,5 +236,16 @@ public class SettingsFragment extends Fragment {
 
            }
        });
+    }
+
+    private void setUpAvatarListender(){
+        avatarUse.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.d(TAG, "onCheckedChanged: " + isChecked);
+                MainFragment.setAvatar(isChecked);
+
+            }
+        });
     }
 }

@@ -27,45 +27,29 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 
 	private final static String TAG = ModelRenderer.class.getName();
 
-	// 3D window (parent component)
-	private ModelSurfaceView main;
+	private ModelSurfaceView main;		// 3D window (parent component)
+	private int width;					// width of the screen
+	private int height;					// height of the screen
+	private Camera camera;				// Out point of view handler
 
-	// width of the screen
-	private int width;
-
-	// height of the screen
-	private int height;
-
-	// Out point of view handler
-	private Camera camera;
-
-	// frustrum - nearest pixel
-	private float near = 1f;
-
-	// frustrum - fartest pixel
-	private float far = 10f;
+	private float near = 1f;			// frustrum - nearest pixel
+	private float far = 10f;			// frustrum - fartest pixel
 
 	private Object3DBuilder drawer;
 
-	// The wireframe associated shape (it should be made of lines only)
-	private Map<Object3DData, Object3DData> wireframes = new HashMap<Object3DData, Object3DData>();
-
-	// The loaded textures
-	private Map<byte[], Integer> textures = new HashMap<byte[], Integer>();
-
-	// The corresponding opengl bounding boxes
-	private Map<Object3DData, Object3DData> normals = new HashMap<Object3DData, Object3DData>();
+	private Map<Object3DData, Object3DData> wireframes = new HashMap<Object3DData, Object3DData>();	// The wireframe associated shape (it should be made of lines only)
+	private Map<byte[], Integer> textures = new HashMap<byte[], Integer>();	// The loaded textures
+	private Map<Object3DData, Object3DData> normals = new HashMap<Object3DData, Object3DData>();		// The corresponding opengl bounding boxes
 
 	// 3D matrices to project our 3D world
 	private final float[] modelProjectionMatrix = new float[16];
 	private final float[] modelViewMatrix = new float[16];
 
-	// mvpMatrix is an abbreviation for "Model View Projection Matrix"
-	private final float[] mvpMatrix = new float[16];
+	private final float[] mvpMatrix = new float[16];						// mvpMatrix is an abbreviation for "Model View Projection Matrix"
 
-	// light position required to render with lighting
-	private final float[] lightPosInEyeSpace = new float[4];
+	private final float[] lightPosInEyeSpace = new float[4];				// light position required to render with lighting
 
+    private List<Object3DData> objects;
 	/**
 	 * Construct a new renderer for the specified surface view
 	 *
@@ -116,12 +100,10 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 
 		// INFO: Set the camera position (View matrix)
 		// The camera has 3 vectors (the position, the vector where we are looking at, and the up position (sky)
-		Matrix.setLookAtM(modelViewMatrix, 0, camera.xPos, camera.yPos, camera.zPos, camera.xView, camera.yView,
-				camera.zView, camera.xUp, camera.yUp, camera.zUp);
+		Matrix.setLookAtM(modelViewMatrix, 0, camera.xPos, camera.yPos, camera.zPos, camera.xView, camera.yView, camera.zView, camera.xUp, camera.yUp, camera.zUp);
 
 		// the projection matrix is the 3D virtual space (cube) that we want to project
 		float ratio = (float) width / height;
-//		Log.d(TAG, "projection: [" + -ratio + "," + ratio + ",-1,1]-near/far[1,10]");
 		Matrix.frustumM(modelProjectionMatrix, 0, -ratio, ratio, -1, 1, getNear(), getFar());
 
 		// Calculate the projection and view transformation
@@ -148,7 +130,6 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 			// scene not ready
 			return;
 		}
-
 
 		// camera should know about objects that collision with it
 		camera.setScene(scene);
@@ -177,7 +158,6 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 				boolean changed = objData.isChanged();
 
 				Object3D drawerObject = drawer.getDrawer(objData, scene.isDrawTextures(), scene.isDrawLighting());
-//                Log.d("ModelRenderer","Drawing object using '"+drawerObject.getClass()+"'");
 
 				Integer textureId = textures.get(objData.getTextureData());
 				if (textureId == null && objData.getTextureData() != null) {
@@ -190,12 +170,10 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 				if (scene.isDrawWireframe() && objData.getDrawMode() != GLES20.GL_POINTS
 						&& objData.getDrawMode() != GLES20.GL_LINES && objData.getDrawMode() != GLES20.GL_LINE_STRIP
 						&& objData.getDrawMode() != GLES20.GL_LINE_LOOP) {
-					// Log.d("ModelRenderer","Drawing wireframe model...");
 					try{
 						// Only draw wireframes for objects having faces (triangles)
 						Object3DData wireframe = wireframes.get(objData);
 						if (wireframe == null || changed) {
-//							Log.i("ModelRenderer","Generating wireframe model...");
 							wireframe = Object3DBuilder.buildWireframe(objData);
 							wireframes.put(objData, wireframe);
 						}
@@ -219,7 +197,7 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 					if (normalData == null || changed) {
 						normalData = Object3DBuilder.buildFaceNormals(objData);
 						if (normalData != null) {
-							// it can be null if object isnt made of triangles
+							// it can be null if object isn't made of triangles
 							normals.put(objData, normalData);
 						}
 					}

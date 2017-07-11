@@ -2,9 +2,13 @@ package de.emm.teama.chibaapp.Model3D.view;
 
 import de.emm.teama.chibaapp.Main.MainFragment;
 import de.emm.teama.chibaapp.Model3D.controller.TouchController;
+import de.emm.teama.chibaapp.Model3D.model.Object3DData;
 
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModelSurfaceView extends GLSurfaceView {
 
@@ -12,7 +16,7 @@ public class ModelSurfaceView extends GLSurfaceView {
 	private ModelRenderer mRenderer;
 	private TouchController touchHandler;
 
-	public ModelSurfaceView(MainFragment parent)
+    public ModelSurfaceView(MainFragment parent)
 	{
 		super(parent.getContext());
 

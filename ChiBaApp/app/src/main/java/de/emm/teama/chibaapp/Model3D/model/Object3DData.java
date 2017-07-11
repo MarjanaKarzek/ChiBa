@@ -348,9 +348,10 @@ public class Object3DData {
 					zMax = vertexz;
 				}
 			}
-			boundingBox = new BoundingBox(getId(), xMin+getPositionX(), xMax+getPositionX()
-					, yMin+getPositionY(), yMax+getPositionY()
-					, zMin+getPositionZ(), zMax+getPositionZ());
+			boundingBox = new BoundingBox(  getId(),
+                                            xMin+getPositionX(), xMax+getPositionX(),
+                                            yMin+getPositionY(), yMax+getPositionY(),
+                                            zMin+getPositionZ(), zMax+getPositionZ());
 		}
 		return boundingBox;
 	}
