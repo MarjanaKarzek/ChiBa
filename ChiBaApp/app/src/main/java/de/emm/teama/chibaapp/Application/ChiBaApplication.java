@@ -64,12 +64,13 @@ public class ChiBaApplication extends Application {
                 date.set(Calendar.HOUR_OF_DAY, Integer.valueOf(starttime[0]));
                 date.set(Calendar.MINUTE, Integer.valueOf(starttime[1]));
                 date.add(Calendar.MINUTE, -30);
-                Date time = date.getTime();
-
-                Timer timer = new Timer();
-                appointmentTimers.put(eventId, timer);
-                Log.d(TAG, "setUpTimerForAppointments: event " + eventId + " scheduled for " + simpleDateFormat.format(date.getTime()));
-                appointmentTimers.get(eventId).schedule(new ScheduledAppointmentNotification(eventId, hashtags, this, (NotificationManager) getSystemService(NOTIFICATION_SERVICE), getResources()), time);
+                if(today.before(date)) {
+                    Date time = date.getTime();
+                    Timer timer = new Timer();
+                    appointmentTimers.put(eventId, timer);
+                    Log.d(TAG, "setUpTimerForAppointments: event " + eventId + " scheduled for " + simpleDateFormat.format(date.getTime()));
+                    appointmentTimers.get(eventId).schedule(new ScheduledAppointmentNotification(eventId, hashtags, this, (NotificationManager) getSystemService(NOTIFICATION_SERVICE), getResources()), time);
+                }
             }
         }
     }
@@ -103,7 +104,6 @@ public class ChiBaApplication extends Application {
     public static void editAppointmentTimer(int eventId, String startTimeString, ArrayList<String> assignedHashtags) {
         deleteApplicationTimer(eventId);
         addAppointmentTimer(eventId,startTimeString,assignedHashtags);
-
     }
 
     private void setUpTimerForToDos() {
@@ -117,8 +117,6 @@ public class ChiBaApplication extends Application {
         if (currentTime.get(Calendar.MINUTE) <= 10) {
             currentTime.add(Calendar.MINUTE, 2);
             date = currentTime.getTime();
-            //Log.d(TAG, "setUpTimerForToDos: create single notification");
-            //Log.d(TAG, "setUpTimerForToDos: scheduled for " + simpleDateFormat.format(date));
             ScheduledToDoNotification singleNotification = new ScheduledToDoNotification(this, (NotificationManager) getSystemService(NOTIFICATION_SERVICE), getResources());
             singleNotification.run();
         }
@@ -126,9 +124,6 @@ public class ChiBaApplication extends Application {
         currentTime.set(Calendar.MINUTE, 0);
         date = currentTime.getTime();
         long period = 3600000;
-
-
-        //Log.d(TAG, "setUpTimerForToDos: scheduled for " + simpleDateFormat.format(date));
 
         timer.schedule(new ScheduledToDoNotification(this, (NotificationManager) getSystemService(NOTIFICATION_SERVICE), getResources()), date, period);
     }
