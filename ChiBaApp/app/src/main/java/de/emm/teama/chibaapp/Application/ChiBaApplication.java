@@ -294,20 +294,20 @@ public class ChiBaApplication extends Application {
                     //Log.d(TAG, "run: current hour: " + currentHour);
                     //Log.d(TAG, "run: hour state " + currentFreeTimeSlots.get(currentHour));
                     //Log.d(TAG, "run: timeslot: " + timeslotlength);
-//                    Cursor data = database.showToDosByMaxDuration(timeslotlength);
-//                    if (data.getCount() != 0) {
-//                        int randomIndex = 0;
-//                        if (data.getCount() != 1)
-//                            randomIndex = random.nextInt(data.getCount() - 1);
-//                        String selectedToDo = "";
-//                        data.moveToPosition(randomIndex);
-//                        selectedToDo = data.getString(1);
-//                        //Log.d(TAG, "run: selected To Do id " + Integer.valueOf(data.getString(0)));
-//                        applicationIntentAction2.putExtra("todoId", data.getString(0));
-//                        pendingApplicationIntentAction2 = PendingIntent.getBroadcast(context, 0, applicationIntentAction2, PendingIntent.FLAG_UPDATE_CURRENT);
-//                        //Log.d(TAG, "run: selected To Do " + selectedToDo);
-//                        createPushNotification(selectedToDo);
-//                    }
+                    Cursor data = database.showToDosByMaxDuration(timeslotlength);
+                    if (data.getCount() != 0) {
+                        int randomIndex = 0;
+                        if (data.getCount() != 1)
+                            randomIndex = random.nextInt(data.getCount() - 1);
+                        String selectedToDo = "";
+                        data.moveToPosition(randomIndex);
+                        selectedToDo = data.getString(1);
+                        //Log.d(TAG, "run: selected To Do id " + Integer.valueOf(data.getString(0)));
+                        applicationIntentAction2.putExtra("todoId", data.getString(0));
+                        pendingApplicationIntentAction2 = PendingIntent.getBroadcast(context, 0, applicationIntentAction2, PendingIntent.FLAG_UPDATE_CURRENT);
+                        //Log.d(TAG, "run: selected To Do " + selectedToDo);
+                        createPushNotification(selectedToDo);
+                    }
                 }
             } else
                 Log.d(TAG, "run: not scheduled yet");
