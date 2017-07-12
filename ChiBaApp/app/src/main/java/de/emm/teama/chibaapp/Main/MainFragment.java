@@ -43,7 +43,7 @@ import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
 
 public class MainFragment extends Fragment {
     private static final String TAG = "MainFragment";
-    private static boolean usesAvatar;
+    private boolean usesAvatar;
 
     /* Enter into Android Immersive mode so the renderer is full screen or not */
     private boolean immersiveMode = true;
@@ -80,6 +80,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        usesAvatar = database.getUserAvatarOptionState();
         Cursor data = database.getSystemInformation();
         if (data.getCount() != 0 && data.moveToNext()) {
             lastKnownCity = data.getString(1);
@@ -96,14 +97,10 @@ public class MainFragment extends Fragment {
         textTemperature = new TextView(this.getContext());
         calendar.add(Calendar.MINUTE, 15);
         calendar = Calendar.getInstance();
-        Log.d(TAG, "onCreate: current timestamp " + calendar.getTimeInMillis());
-        Log.d(TAG, "onCreate: compare to timestamp " + lastCallTimeStamp);
         if (lastCallTimeStamp == 0 || calendar.getTimeInMillis() > lastCallTimeStamp) {
-            Log.d(TAG, "onCreate: timestamp ok");
             updateWeatherData(new CityPreference(getActivity()).getCity());
             database.setSystemInfoTimeStamp(calendar.getTimeInMillis() + 900000);
         } else {
-            Log.d(TAG, "onCreate: timestamp not ok");
             textCity.setText(lastKnownCity);
             textTemperature.setText(lastKnownTemperature);
             setWeatherIcon(lastKnownWeatherID, lastKnownSunrise, lastKnownSunset);
@@ -242,11 +239,11 @@ public class MainFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        //TODO switch case for different animations
+
 
         // Create Scene for 3D scenario
-        scene = new SceneLoader(this, this.getActivity().getAssets(), usesAvatar, true);
-
-
+        scene = new SceneLoader(this, this.getActivity().getAssets(), usesAvatar, "sunnyday");
     }
 
     private void getCurrentEventData() {
@@ -363,9 +360,5 @@ public class MainFragment extends Fragment {
         }
         database.setSystemInfoWeatherData(actualId, sunrise, sunset);
         weathericon.setText(icon);
-    }
-
-    public static void setAvatar(boolean isUsed){
-        usesAvatar = isUsed;
     }
 }

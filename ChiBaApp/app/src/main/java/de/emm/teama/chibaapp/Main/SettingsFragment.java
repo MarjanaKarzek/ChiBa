@@ -144,7 +144,6 @@ public class SettingsFragment extends Fragment {
             setUpOnCheckedChangedListener();
             setUpDatePicker();
             setUpTimePickers();
-            setUpAvatarListender();
         }
         return view;
     }
@@ -235,17 +234,6 @@ public class SettingsFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 database.updateUserAddress(viewHolder.address.getText().toString());
-
-            }
-        });
-    }
-
-    private void setUpAvatarListender() {
-        viewHolder.avatarUse.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Log.d(TAG, "onCheckedChanged: " + isChecked);
-                MainFragment.setAvatar(isChecked);
 
             }
         });
