@@ -32,6 +32,7 @@ import de.emm.teama.chibaapp.Model3D.sceneloader.SceneLoader;
 import de.emm.teama.chibaapp.Model3D.view.ModelSurfaceView;
 import de.emm.teama.chibaapp.R;
 import de.emm.teama.chibaapp.Utils.AppointmentDetailDialogFragment;
+import de.emm.teama.chibaapp.Utils.CityChangeDialogFragment;
 import de.emm.teama.chibaapp.Utils.CityPreference;
 import de.emm.teama.chibaapp.Utils.DisplayEventListAdapter;
 import de.emm.teama.chibaapp.Utils.WeatherRemoteFetch;
@@ -39,7 +40,7 @@ import de.emm.teama.chibaapp.Utils.WeatherRemoteFetch;
 import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
 
 
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements CityChangeDialogFragment.CityChangeDialogFragmentListener {
     private static final String TAG = "MainFragment";
 
     /* Enter into Android Immersive mode so the renderer is full screen or not */
@@ -175,6 +176,24 @@ public class MainFragment extends Fragment {
             textCity.setLayoutParams(rlpTextCity);
             rlpTextCity.topMargin = 150;
             rlpTextCity.rightMargin = 50;
+            textCity.setFocusable(false);
+            textCity.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    Fragment prevCityChangeDialog = getFragmentManager().findFragmentByTag("city_change_dialog_fragment");
+                    Fragment prevAppointmentDetailDialog = getFragmentManager().findFragmentByTag("appointment_detail_fragment");
+                    if (prevCityChangeDialog != null)
+                        transaction.remove(prevCityChangeDialog);
+                    if(prevAppointmentDetailDialog != null)
+                        transaction.remove(prevAppointmentDetailDialog);
+                    transaction.addToBackStack(null);
+
+                    // Create and show the dialog.
+                    DialogFragment newDialog = CityChangeDialogFragment.newInstance();
+                    newDialog.show(transaction, "city_change_dialog_fragment");
+                }
+            });
 
             //Temperature
             RelativeLayout.LayoutParams rlpTextTemperature = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -196,6 +215,7 @@ public class MainFragment extends Fragment {
             //Setup ListView
             eventlist = (ListView) eventListLayout.findViewById(R.id.eventlistHome);
             eventlist.setEmptyView(eventListLayout.findViewById(R.id.textViewEventsHomeEmpty));
+            eventlist.setFocusable(false);
             getCurrentEventData();
             adapter = new DisplayEventListAdapter(inflater.getContext(), R.layout.layout_list_events_adapter_view, currentEvents);
             eventlist.setAdapter(adapter);
@@ -204,9 +224,11 @@ public class MainFragment extends Fragment {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
                     Fragment prev = getFragmentManager().findFragmentByTag("appointment_detail_fragment");
-                    if (prev != null) {
+                    Fragment prevCityChangeDialog = getFragmentManager().findFragmentByTag("city_change_dialog_fragment");
+                    if (prev != null)
                         transaction.remove(prev);
-                    }
+                    if (prevCityChangeDialog != null)
+                        transaction.remove(prevCityChangeDialog);
                     transaction.addToBackStack(null);
 
                     // Create and show the dialog.
@@ -371,5 +393,13 @@ public class MainFragment extends Fragment {
         }
         database.setSystemInfoWeatherData(actualId, sunrise, sunset);
         weathericon.setText(icon);
+    }
+
+    @Override
+    public void onReturnValue(String city) {
+        Log.d(TAG, "onReturnValue: city change to " +  city);
+        database.setSystemInfoData(city,lastKnownTemperature);
+        lastKnownCity = city;
+        textCity.setText(city);
     }
 }
