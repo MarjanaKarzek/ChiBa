@@ -31,29 +31,35 @@ public class ToDoListFragment extends Fragment {
     private ListView todoList;
     private ToDoListAdapter adapter;
     private ArrayList<Integer> currentToDos = new ArrayList<Integer>();
+    private View view;
+
+    static class ViewHolderItem {
+        ListView todoList;
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_todolist, container, false);
+        final ViewHolderItem viewHolder;
+        if (view == null) {
+            view = inflater.inflate(R.layout.fragment_todolist, container, false);
+            viewHolder = new ViewHolderItem();
 
-        todoList = (ListView) view.findViewById(R.id.listViewToDoList);
-        todoList.setEmptyView(view.findViewById(R.id.textViewToDosEmpty));
-
-        displayData();
-        adapter = new ToDoListAdapter(inflater.getContext(), R.layout.layout_list_todo_adapter_view, currentToDos);
-        todoList.setAdapter(adapter);
-
-        todoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "onItemClick: clicked");
-                Intent intent = new Intent(getActivity(), EditToDoActivity.class);
-                intent.putExtra("EXTRA_TODO_ID", currentToDos.get(position));
-                startActivity(intent);
-            }
-        });
-
+            viewHolder.todoList = (ListView) view.findViewById(R.id.listViewToDoList);
+            viewHolder.todoList.setEmptyView(view.findViewById(R.id.textViewToDosEmpty));
+            displayData();
+            adapter = new ToDoListAdapter(inflater.getContext(), R.layout.layout_list_todo_adapter_view, currentToDos);
+            viewHolder.todoList.setAdapter(adapter);
+            viewHolder.todoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Log.d(TAG, "onItemClick: clicked");
+                    Intent intent = new Intent(getActivity(), EditToDoActivity.class);
+                    intent.putExtra("EXTRA_TODO_ID", currentToDos.get(position));
+                    startActivity(intent);
+                }
+            });
+        }
         return view;
     }
 
