@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -267,18 +268,14 @@ public class ChiBaApplication extends Application {
         public void run() {
             getCurrentAvailableHours();
             if (availableHours.contains(Calendar.getInstance().HOUR_OF_DAY)) {
-                //Log.d(TAG, "run: available");
                 //calculate current free timeslots
                 getFreeTimeSlots();
                 //write your code here
-                //Log.d(TAG, "run: scheduled notification");
                 Calendar currentTime = Calendar.getInstance();
                 //get current timeslot length
                 int timeslotlength = 0;
                 int currentHour = currentTime.get(Calendar.HOUR_OF_DAY);
                 int followingHour = currentTime.get(Calendar.HOUR_OF_DAY);
-                //Log.d(TAG, "run: currentHour: " + currentHour + " following Hour " + followingHour);
-
                 if (currentTime.get(Calendar.MINUTE) <= 10) {
                     if (currentFreeTimeSlots.containsKey(currentHour)) {
                         do {
@@ -286,9 +283,6 @@ public class ChiBaApplication extends Application {
                             followingHour += 1;
                         } while (currentFreeTimeSlots.containsKey(followingHour));
                     }
-                    //Log.d(TAG, "run: current hour: " + currentHour);
-                    //Log.d(TAG, "run: hour state " + currentFreeTimeSlots.get(currentHour));
-                    //Log.d(TAG, "run: timeslot: " + timeslotlength);
                     Cursor data = database.showToDosByMaxDuration(timeslotlength);
                     if (data.getCount() != 0) {
                         int randomIndex = 0;
@@ -297,10 +291,8 @@ public class ChiBaApplication extends Application {
                         String selectedToDo = "";
                         data.moveToPosition(randomIndex);
                         selectedToDo = data.getString(1);
-                        //Log.d(TAG, "run: selected To Do id " + Integer.valueOf(data.getString(0)));
                         applicationIntentAction2.putExtra("todoId", data.getString(0));
                         pendingApplicationIntentAction2 = PendingIntent.getBroadcast(context, 0, applicationIntentAction2, PendingIntent.FLAG_UPDATE_CURRENT);
-                        //Log.d(TAG, "run: selected To Do " + selectedToDo);
                         createPushNotification(selectedToDo);
                     }
                 }
@@ -313,9 +305,10 @@ public class ChiBaApplication extends Application {
             NotificationCompat.Builder builder =
                     new NotificationCompat.Builder(context)
                             .setSmallIcon(R.drawable.ic_notification_todo)
+                            .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.chiba_profile))
                             .setContentTitle("ToDo Erinnerung")
                             .setContentText(text)
-                            .setStyle(new NotificationCompat.BigTextStyle()
+                            .setStyle(new NotificationCompat.BigTextStyle ()
                                     .bigText(text))
                             .addAction(R.drawable.ic_home, "nein, danke", pendingApplicationIntentAction1)
                             .addAction(R.drawable.ic_home, "ja, ok", pendingApplicationIntentAction2);
@@ -364,7 +357,8 @@ public class ChiBaApplication extends Application {
                             .setContentTitle("Termin Erinnerung")
                             .setContentText(text)
                             .setStyle(new NotificationCompat.BigTextStyle()
-                                    .bigText(text));
+                                    .bigText(text))
+                            .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.chiba_profile));
             notifyMgr.notify(002, builder.build());
         }
     }
