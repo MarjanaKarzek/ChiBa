@@ -38,16 +38,6 @@ import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
 public class SettingsFragment extends Fragment {
     private static final String TAG = "SettingsFragment";
 
-    private EditText name;
-    private TextView birthdate;
-    private EditText address;
-
-    private Switch avatarUse;
-    private Switch doNotDisturb;
-    private TextView notDisturbStartTime;
-    private TextView notDisturbEndTime;
-
-    private ViewFlipper viewFlipper;
     private Calendar calendarOfToday = Calendar.getInstance();
     private Calendar birthdayCalendar = Calendar.getInstance();
     private Calendar startTimeCalendar = Calendar.getInstance();
@@ -61,99 +51,113 @@ public class SettingsFragment extends Fragment {
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.GERMANY);
     private SimpleDateFormat simpleTimeFormat = new SimpleDateFormat(timeFormat, Locale.GERMANY);
 
+    private View view;
+    private final ViewHolderItem viewHolder = new ViewHolderItem();
+
+    static class ViewHolderItem {
+        EditText name;
+        TextView birthdate;
+        EditText address;
+        Switch avatarUse;
+        Switch doNotDisturb;
+        TextView notDisturbStartTime;
+        TextView notDisturbEndTime;
+        ViewFlipper viewFlipper;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        Cursor data = database.showUser();
+        if (view == null) {
+            view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        name = (EditText) view.findViewById(R.id.settingsEditTextName);
-        birthdate = (TextView) view.findViewById(R.id.settingsTextViewBirthdateSelection);
-        address = (EditText) view.findViewById(R.id.settingsEditTextHomeaddress);
-        avatarUse = (Switch) view.findViewById(R.id.settingsSwitchAvatarUse);
-        doNotDisturb = (Switch) view.findViewById(R.id.settingsSwitchDoNotDisturb);
-        notDisturbStartTime = (TextView) view.findViewById(R.id.settingsDoNotDisturbTextViewStartTime);
-        notDisturbEndTime = (TextView) view.findViewById(R.id.settingsDoNotDisturbTextViewEndTime);
-        viewFlipper = (ViewFlipper) view.findViewById(R.id.settingsViewFlipperDoNotDisturbTime);
+            Cursor data = database.showUser();
+            viewHolder.name = (EditText) view.findViewById(R.id.settingsEditTextName);
+            viewHolder.birthdate = (TextView) view.findViewById(R.id.settingsTextViewBirthdateSelection);
+            viewHolder.address = (EditText) view.findViewById(R.id.settingsEditTextHomeaddress);
+            viewHolder.avatarUse = (Switch) view.findViewById(R.id.settingsSwitchAvatarUse);
+            viewHolder.doNotDisturb = (Switch) view.findViewById(R.id.settingsSwitchDoNotDisturb);
+            viewHolder.notDisturbStartTime = (TextView) view.findViewById(R.id.settingsDoNotDisturbTextViewStartTime);
+            viewHolder.notDisturbEndTime = (TextView) view.findViewById(R.id.settingsDoNotDisturbTextViewEndTime);
+            viewHolder.viewFlipper = (ViewFlipper) view.findViewById(R.id.settingsViewFlipperDoNotDisturbTime);
 
-        //Log.d(TAG, "onCreateView: data count: " + data.getCount());
-        if (data.getCount() != 0 && data.moveToNext()) {
-            name.setText(data.getString(1));
-            birthdate.setText(data.getString(2));
-            address.setText(data.getString(3));
-            if(data.getString(4).contains("1") || data.getString(4).contains("true"))
-                avatarUse.setChecked(true);
-            else
-                avatarUse.setChecked(false);
-            if(data.getString(5).contains("1") || data.getString(5).contains("true")) {
-                doNotDisturb.setChecked(true);
-                viewFlipper.showNext();
+            if (data.getCount() != 0 && data.moveToNext()) {
+                viewHolder.name.setText(data.getString(1));
+                viewHolder.birthdate.setText(data.getString(2));
+                viewHolder.address.setText(data.getString(3));
+                if (data.getString(4).contains("1") || data.getString(4).contains("true"))
+                    viewHolder.avatarUse.setChecked(true);
+                else
+                    viewHolder.avatarUse.setChecked(false);
+                if (data.getString(5).contains("1") || data.getString(5).contains("true")) {
+                    viewHolder.doNotDisturb.setChecked(true);
+                    viewHolder.viewFlipper.showNext();
+                } else
+                    viewHolder.doNotDisturb.setChecked(false);
+                viewHolder.notDisturbStartTime.setText(data.getString(6));
+                viewHolder.notDisturbEndTime.setText(data.getString(7));
             }
-            else
-                doNotDisturb.setChecked(false);
-            notDisturbStartTime.setText(data.getString(6));
-            notDisturbEndTime.setText(data.getString(7));
+
+            birthdayCalendar.set(Calendar.YEAR, 1990);
+            birthdayCalendar.set(Calendar.MONTH, 0);
+            birthdayCalendar.set(Calendar.DAY_OF_MONTH, 1);
+
+            birthDatePicker = new DatePickerDialog.OnDateSetListener() {
+
+                @Override
+                public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                      int dayOfMonth) {
+                    birthdayCalendar.set(Calendar.YEAR, year);
+                    birthdayCalendar.set(Calendar.MONTH, monthOfYear);
+                    birthdayCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    if (birthdayCalendar.after(calendarOfToday))
+                        birthdayCalendar = Calendar.getInstance();
+                    viewHolder.birthdate.setText(simpleDateFormat.format(birthdayCalendar.getTime()));
+                    database.updateUserBirthdate(viewHolder.birthdate.getText().toString());
+                }
+            };
+
+            startTimeCalendar.set(Calendar.MINUTE, 0);
+            endTimeCalendar.set(Calendar.MINUTE, 0);
+
+            notDisturbStartTimePicker = new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                    startTimeCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                    startTimeCalendar.set(Calendar.MINUTE, minute);
+                    viewHolder.notDisturbStartTime.setText(simpleTimeFormat.format(startTimeCalendar.getTime()));
+                    database.updateUserDoNotDisturbStartTime(viewHolder.notDisturbStartTime.getText().toString());
+                }
+            };
+
+            notDisturbEndTimePicker = new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                    startTimeCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                    endTimeCalendar.set(Calendar.MINUTE, minute);
+                    viewHolder.notDisturbEndTime.setText(simpleTimeFormat.format(endTimeCalendar.getTime()));
+                    database.updateUserDoNotDisturbEndTime(viewHolder.notDisturbEndTime.getText().toString());
+                }
+            };
+
+            setUpInPlaceEdit();
+            setUpOnCheckedChangedListener();
+            setUpDatePicker();
+            setUpTimePickers();
+            setUpAvatarListender();
         }
-
-        birthdayCalendar.set(Calendar.YEAR, 1990);
-        birthdayCalendar.set(Calendar.MONTH, 0);
-        birthdayCalendar.set(Calendar.DAY_OF_MONTH, 1);
-
-        birthDatePicker = new DatePickerDialog.OnDateSetListener() {
-
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                  int dayOfMonth) {
-                birthdayCalendar.set(Calendar.YEAR, year);
-                birthdayCalendar.set(Calendar.MONTH, monthOfYear);
-                birthdayCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                if(birthdayCalendar.after(calendarOfToday))
-                    birthdayCalendar = Calendar.getInstance();
-                birthdate.setText(simpleDateFormat.format(birthdayCalendar.getTime()));
-                database.updateUserBirthdate(birthdate.getText().toString());
-            }
-        };
-
-        startTimeCalendar.set(Calendar.MINUTE,0);
-        endTimeCalendar.set(Calendar.MINUTE,0);
-
-        notDisturbStartTimePicker = new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                startTimeCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                startTimeCalendar.set(Calendar.MINUTE, minute);
-                notDisturbStartTime.setText(simpleTimeFormat.format(startTimeCalendar.getTime()));
-                database.updateUserDoNotDisturbStartTime(notDisturbStartTime.getText().toString());
-            }
-        };
-
-        notDisturbEndTimePicker = new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                startTimeCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                endTimeCalendar.set(Calendar.MINUTE, minute);
-                notDisturbEndTime.setText(simpleTimeFormat.format(endTimeCalendar.getTime()));
-                database.updateUserDoNotDisturbEndTime(notDisturbEndTime.getText().toString());
-            }
-        };
-
-        setUpInPlaceEdit();
-        setUpOnCheckedChangedListener();
-        setUpDatePicker();
-        setUpTimePickers();
-        setUpAvatarListender();
         return view;
     }
 
     private void setUpTimePickers() {
-        notDisturbStartTime.setOnClickListener(new View.OnClickListener() {
+        viewHolder.notDisturbStartTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new TimePickerDialog(getContext(), notDisturbStartTimePicker, startTimeCalendar.get(Calendar.HOUR_OF_DAY), startTimeCalendar.get(Calendar.MINUTE), true).show();
             }
         });
 
-        notDisturbEndTime.setOnClickListener(new View.OnClickListener() {
+        viewHolder.notDisturbEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new TimePickerDialog(getContext(), notDisturbEndTimePicker, startTimeCalendar.get(Calendar.HOUR_OF_DAY), startTimeCalendar.get(Calendar.MINUTE), true).show();
@@ -164,7 +168,7 @@ public class SettingsFragment extends Fragment {
 
     private void setUpDatePicker() {
 
-        birthdate.setOnClickListener(new View.OnClickListener() {
+        viewHolder.birthdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new DatePickerDialog(getContext(), birthDatePicker, birthdayCalendar.get(Calendar.YEAR), birthdayCalendar.get(Calendar.MONTH), birthdayCalendar.get(Calendar.DAY_OF_MONTH)).show();
@@ -174,27 +178,25 @@ public class SettingsFragment extends Fragment {
     }
 
     private void setUpOnCheckedChangedListener() {
-        doNotDisturb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        viewHolder.doNotDisturb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     database.updateUserDoNotDisturb(true);
-                    viewFlipper.showNext();
-                }
-                else{
+                    viewHolder.viewFlipper.showNext();
+                } else {
                     database.updateUserDoNotDisturb(false);
-                    viewFlipper.showPrevious();
+                    viewHolder.viewFlipper.showPrevious();
                 }
             }
         });
 
-        avatarUse.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        viewHolder.avatarUse.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     database.updateUserAvatarUse(true);
-                }
-                else{
+                } else {
                     database.updateUserAvatarUse(false);
                 }
             }
@@ -202,7 +204,7 @@ public class SettingsFragment extends Fragment {
     }
 
     private void setUpInPlaceEdit() {
-        name.addTextChangedListener(new TextWatcher() {
+        viewHolder.name.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -215,31 +217,31 @@ public class SettingsFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                database.updateUserName(name.getText().toString());
+                database.updateUserName(viewHolder.name.getText().toString());
             }
         });
 
-       address.addTextChangedListener(new TextWatcher() {
-           @Override
-           public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        viewHolder.address.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-           }
+            }
 
-           @Override
-           public void onTextChanged(CharSequence s, int start, int before, int count) {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-           }
+            }
 
-           @Override
-           public void afterTextChanged(Editable s) {
-               database.updateUserAddress(address.getText().toString());
+            @Override
+            public void afterTextChanged(Editable s) {
+                database.updateUserAddress(viewHolder.address.getText().toString());
 
-           }
-       });
+            }
+        });
     }
 
-    private void setUpAvatarListender(){
-        avatarUse.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+    private void setUpAvatarListender() {
+        viewHolder.avatarUse.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Log.d(TAG, "onCheckedChanged: " + isChecked);
