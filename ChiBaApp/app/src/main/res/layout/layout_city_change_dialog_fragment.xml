@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/cityChangeDialogTop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include layout="@layout/snippet_top_city_change_dialog_bar" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/cityChangeDialogCenter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cityChangeDialogTop">
+            <!--<include layout="@layout/snippet_center_city_change_dialog_form" />-->
+            <RadioGroup
+                android:id="@+id/cityChangeDialogRadioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:orientation="vertical">
+                <RadioButton
+                    android:id="@+id/radioButtonOptionBerlin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:text="Berlin, DE" />
+                <RadioButton
+                    android:id="@+id/radioButtonOptionHamburg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:text="Hamburg, DE" />
+                <RadioButton
+                    android:id="@+id/radioButtonOptionCologne"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:text="Köln, DE" />
+                <RadioButton
+                    android:id="@+id/radioButtonOptionFrankfurt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:text="Frankfurt, DE" />
+                <RadioButton
+                    android:id="@+id/radioButtonOptionMunich"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:text="München, DE" />
+            </RadioGroup>
+        </RelativeLayout>
+
+    </RelativeLayout>
+</LinearLayout>
