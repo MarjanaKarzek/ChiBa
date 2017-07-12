@@ -1,0 +1,359 @@
+fileFormatVersion: 2
+guid: b037cf790366fc640b3dde8d50118323
+timeCreated: 1499780068
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: newRigging:BodzL1
+    100002: newRigging:bottom
+    100004: newRigging:headRe:left
+    100006: newRigging:ikHandle1
+    100008: newRigging:ikHandle2
+    100010: newRigging:ikHandle3
+    100012: newRigging:ikHandle4
+    100014: newRigging:joint10
+    100016: newRigging:joint11
+    100018: newRigging:joint12
+    100020: newRigging:joint13
+    100022: newRigging:joint14
+    100024: newRigging:joint15
+    100026: newRigging:joint16
+    100028: newRigging:joint17
+    100030: newRigging:joint18
+    100032: newRigging:joint19
+    100034: newRigging:joint20
+    100036: newRigging:joint21
+    100038: newRigging:joint9
+    100040: newRigging:KneeL
+    100042: newRigging:KneeL1
+    100044: newRigging:L_FrontLeg1
+    100046: newRigging:L_FrontLeg2
+    100048: newRigging:L_FrontLeg3
+    100050: newRigging:L_FrontLeg4
+    100052: newRigging:L_HintLeg1
+    100054: newRigging:L_HintLeg2
+    100056: newRigging:L_HintLeg3
+    100058: newRigging:L_HintLeg4
+    100060: newRigging:left
+    100062: newRigging:nurbsCircle1
+    100064: newRigging:nurbsCircle10
+    100066: newRigging:nurbsCircle11
+    100068: newRigging:nurbsCircle12
+    100070: newRigging:nurbsCircle13
+    100072: newRigging:nurbsCircle14
+    100074: newRigging:nurbsCircle15
+    100076: newRigging:nurbsCircle16
+    100078: newRigging:nurbsCircle17
+    100080: newRigging:nurbsCircle2
+    100082: newRigging:nurbsCircle2 1
+    100084: newRigging:nurbsCircle3
+    100086: newRigging:nurbsCircle3 1
+    100088: newRigging:nurbsCircle4
+    100090: newRigging:nurbsCircle4 1
+    100092: newRigging:nurbsCircle5
+    100094: newRigging:nurbsCircle5 1
+    100096: newRigging:nurbsCircle7
+    100098: newRigging:nurbsCircle8
+    100100: newRigging:nurbsCircle9
+    100102: newRigging:pCone3
+    100104: newRigging:R_FrontLeg1
+    100106: newRigging:R_FrontLeg2
+    100108: newRigging:R_FrontLeg3
+    100110: newRigging:R_FrontLeg4
+    100112: newRigging:R_HintLeg1
+    100114: newRigging:R_HintLeg2
+    100116: newRigging:R_HintLeg3
+    100118: newRigging:R_HintLeg4
+    100120: //RootNode
+    400000: newRigging:BodzL1
+    400002: newRigging:bottom
+    400004: newRigging:headRe:left
+    400006: newRigging:ikHandle1
+    400008: newRigging:ikHandle2
+    400010: newRigging:ikHandle3
+    400012: newRigging:ikHandle4
+    400014: newRigging:joint10
+    400016: newRigging:joint11
+    400018: newRigging:joint12
+    400020: newRigging:joint13
+    400022: newRigging:joint14
+    400024: newRigging:joint15
+    400026: newRigging:joint16
+    400028: newRigging:joint17
+    400030: newRigging:joint18
+    400032: newRigging:joint19
+    400034: newRigging:joint20
+    400036: newRigging:joint21
+    400038: newRigging:joint9
+    400040: newRigging:KneeL
+    400042: newRigging:KneeL1
+    400044: newRigging:L_FrontLeg1
+    400046: newRigging:L_FrontLeg2
+    400048: newRigging:L_FrontLeg3
+    400050: newRigging:L_FrontLeg4
+    400052: newRigging:L_HintLeg1
+    400054: newRigging:L_HintLeg2
+    400056: newRigging:L_HintLeg3
+    400058: newRigging:L_HintLeg4
+    400060: newRigging:left
+    400062: newRigging:nurbsCircle1
+    400064: newRigging:nurbsCircle10
+    400066: newRigging:nurbsCircle11
+    400068: newRigging:nurbsCircle12
+    400070: newRigging:nurbsCircle13
+    400072: newRigging:nurbsCircle14
+    400074: newRigging:nurbsCircle15
+    400076: newRigging:nurbsCircle16
+    400078: newRigging:nurbsCircle17
+    400080: newRigging:nurbsCircle2
+    400082: newRigging:nurbsCircle2 1
+    400084: newRigging:nurbsCircle3
+    400086: newRigging:nurbsCircle3 1
+    400088: newRigging:nurbsCircle4
+    400090: newRigging:nurbsCircle4 1
+    400092: newRigging:nurbsCircle5
+    400094: newRigging:nurbsCircle5 1
+    400096: newRigging:nurbsCircle7
+    400098: newRigging:nurbsCircle8
+    400100: newRigging:nurbsCircle9
+    400102: newRigging:pCone3
+    400104: newRigging:R_FrontLeg1
+    400106: newRigging:R_FrontLeg2
+    400108: newRigging:R_FrontLeg3
+    400110: newRigging:R_FrontLeg4
+    400112: newRigging:R_HintLeg1
+    400114: newRigging:R_HintLeg2
+    400116: newRigging:R_HintLeg3
+    400118: newRigging:R_HintLeg4
+    400120: //RootNode
+    2300000: newRigging:pCone3
+    3300000: newRigging:pCone3
+    4300000: newRigging:pCone3
+    4300002: newRigging:BodzL1
+    7400000: Take 001
+    7400002: Take 001 (1)
+    9500000: //RootNode
+    13700000: newRigging:BodzL1
+  materials:
+    importMaterials: 1
+    materialName: 1
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Take 001 (1)
+      takeName: Take 001
+      firstFrame: 35
+      lastFrame: 195
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: newRigging:BodzL1
+        weight: 1
+      - path: newRigging:bottom
+        weight: 1
+      - path: newRigging:headRe:left
+        weight: 1
+      - path: newRigging:joint9
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint10
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint10/newRigging:joint11
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint10/newRigging:joint11/newRigging:joint12
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint10/newRigging:joint11/newRigging:joint12/newRigging:joint13
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint10/newRigging:L_FrontLeg1
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint10/newRigging:L_FrontLeg1/newRigging:L_FrontLeg2
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint10/newRigging:L_FrontLeg1/newRigging:L_FrontLeg2/newRigging:L_FrontLeg3
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint10/newRigging:L_FrontLeg1/newRigging:L_FrontLeg2/newRigging:L_FrontLeg3/newRigging:L_FrontLeg4
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint10/newRigging:R_FrontLeg1
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint10/newRigging:R_FrontLeg1/newRigging:R_FrontLeg2
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint10/newRigging:R_FrontLeg1/newRigging:R_FrontLeg2/newRigging:R_FrontLeg3
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint10/newRigging:R_FrontLeg1/newRigging:R_FrontLeg2/newRigging:R_FrontLeg3/newRigging:R_FrontLeg4
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint14
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint14/newRigging:joint15
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint14/newRigging:joint15/newRigging:joint16
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint14/newRigging:joint15/newRigging:joint16/newRigging:joint17
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint14/newRigging:joint15/newRigging:joint16/newRigging:joint17/newRigging:joint18
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint14/newRigging:joint15/newRigging:joint16/newRigging:joint17/newRigging:joint18/newRigging:joint19
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint14/newRigging:joint15/newRigging:joint16/newRigging:joint17/newRigging:joint18/newRigging:joint19/newRigging:joint20
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint14/newRigging:joint15/newRigging:joint16/newRigging:joint17/newRigging:joint18/newRigging:joint19/newRigging:joint20/newRigging:joint21
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint14/newRigging:L_HintLeg1
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint14/newRigging:L_HintLeg1/newRigging:L_HintLeg2
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint14/newRigging:L_HintLeg1/newRigging:L_HintLeg2/newRigging:L_HintLeg3
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint14/newRigging:L_HintLeg1/newRigging:L_HintLeg2/newRigging:L_HintLeg3/newRigging:L_HintLeg4
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint14/newRigging:R_HintLeg1
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint14/newRigging:R_HintLeg1/newRigging:R_HintLeg2
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint14/newRigging:R_HintLeg1/newRigging:R_HintLeg2/newRigging:R_HintLeg3
+        weight: 1
+      - path: newRigging:joint9/newRigging:joint14/newRigging:R_HintLeg1/newRigging:R_HintLeg2/newRigging:R_HintLeg3/newRigging:R_HintLeg4
+        weight: 1
+      - path: newRigging:left
+        weight: 1
+      - path: newRigging:nurbsCircle1
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:KneeL
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:KneeL/newRigging:nurbsCircle2
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:KneeL/newRigging:nurbsCircle2/newRigging:ikHandle3
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:KneeL/newRigging:nurbsCircle2/newRigging:nurbsCircle5
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:KneeL/newRigging:nurbsCircle3
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:KneeL/newRigging:nurbsCircle3/newRigging:ikHandle4
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:KneeL/newRigging:nurbsCircle3/newRigging:nurbsCircle4
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:KneeL1
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:KneeL1/newRigging:nurbsCircle2 1
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:KneeL1/newRigging:nurbsCircle2 1/newRigging:ikHandle2
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:KneeL1/newRigging:nurbsCircle2 1/newRigging:nurbsCircle5
+          1
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:KneeL1/newRigging:nurbsCircle3 1
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:KneeL1/newRigging:nurbsCircle3 1/newRigging:ikHandle1
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:KneeL1/newRigging:nurbsCircle3 1/newRigging:nurbsCircle4
+          1
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:nurbsCircle8
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:nurbsCircle8/newRigging:nurbsCircle7
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:nurbsCircle8/newRigging:nurbsCircle9
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:nurbsCircle8/newRigging:nurbsCircle10
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:nurbsCircle8/newRigging:nurbsCircle11
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:nurbsCircle8/newRigging:nurbsCircle12
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:nurbsCircle8/newRigging:nurbsCircle13
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:nurbsCircle8/newRigging:nurbsCircle14
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:nurbsCircle8/newRigging:nurbsCircle15
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:nurbsCircle8/newRigging:nurbsCircle16
+        weight: 1
+      - path: newRigging:nurbsCircle1/newRigging:nurbsCircle8/newRigging:nurbsCircle17
+        weight: 1
+      - path: newRigging:pCone3
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
