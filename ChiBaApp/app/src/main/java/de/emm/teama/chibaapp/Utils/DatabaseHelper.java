@@ -893,4 +893,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return title;
     }
+
+    public boolean getUserAvatarOptionState() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor data = db.rawQuery("SELECT " + COLUMN_USER_AVATAR_USE+ " FROM " + TABLE_NAME_USER +
+                " WHERE " + COLUMN_USER_ID + " = 1", null);
+        boolean avatarUse = false;
+        if(data.getCount() != 0 && data.moveToNext()){
+            String value = data.getString(0);
+            if(value.equals("1") || value.equals("true"))
+                avatarUse = true;
+        }
+        return avatarUse;
+    }
 }

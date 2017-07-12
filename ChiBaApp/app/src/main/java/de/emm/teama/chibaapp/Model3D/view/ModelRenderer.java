@@ -25,212 +25,213 @@ import android.widget.Toast;
 
 public class ModelRenderer implements GLSurfaceView.Renderer {
 
-	private final static String TAG = ModelRenderer.class.getName();
+    private final static String TAG = ModelRenderer.class.getName();
 
-	private ModelSurfaceView main;		// 3D window (parent component)
-	private int width;					// width of the screen
-	private int height;					// height of the screen
-	private Camera camera;				// Out point of view handler
+    private ModelSurfaceView main;        // 3D window (parent component)
+    private int width;                    // width of the screen
+    private int height;                    // height of the screen
+    private Camera camera;                // Out point of view handler
 
-	private float near = 1f;			// frustrum - nearest pixel
-	private float far = 10f;			// frustrum - fartest pixel
+    private float near = 1f;            // frustrum - nearest pixel
+    private float far = 10f;            // frustrum - fartest pixel
 
-	private Object3DBuilder drawer;
+    private Object3DBuilder drawer;
 
-	private Map<Object3DData, Object3DData> wireframes = new HashMap<Object3DData, Object3DData>();	// The wireframe associated shape (it should be made of lines only)
-	private Map<byte[], Integer> textures = new HashMap<byte[], Integer>();	// The loaded textures
-	private Map<Object3DData, Object3DData> normals = new HashMap<Object3DData, Object3DData>();		// The corresponding opengl bounding boxes
+    private Map<Object3DData, Object3DData> wireframes = new HashMap<Object3DData, Object3DData>();    // The wireframe associated shape (it should be made of lines only)
+    private Map<byte[], Integer> textures = new HashMap<byte[], Integer>();    // The loaded textures
+    private Map<Object3DData, Object3DData> normals = new HashMap<Object3DData, Object3DData>();        // The corresponding opengl bounding boxes
 
-	// 3D matrices to project our 3D world
-	private final float[] modelProjectionMatrix = new float[16];
-	private final float[] modelViewMatrix = new float[16];
+    // 3D matrices to project our 3D world
+    private final float[] modelProjectionMatrix = new float[16];
+    private final float[] modelViewMatrix = new float[16];
 
-	private final float[] mvpMatrix = new float[16];						// mvpMatrix is an abbreviation for "Model View Projection Matrix"
+    private final float[] mvpMatrix = new float[16];                        // mvpMatrix is an abbreviation for "Model View Projection Matrix"
 
-	private final float[] lightPosInEyeSpace = new float[4];				// light position required to render with lighting
+    private final float[] lightPosInEyeSpace = new float[4];                // light position required to render with lighting
 
     private List<Object3DData> objects;
-	/**
-	 * Construct a new renderer for the specified surface view
-	 *
-	 * @param modelSurfaceView
-	 *            the 3D window
-	 */
-	public ModelRenderer(ModelSurfaceView modelSurfaceView)
-	{
-		this.main = modelSurfaceView;
-	}
 
-	public float getNear() {
-		return near;
-	}
+    /**
+     * Construct a new renderer for the specified surface view
+     *
+     * @param modelSurfaceView the 3D window
+     */
+    public ModelRenderer(ModelSurfaceView modelSurfaceView) {
+        this.main = modelSurfaceView;
+    }
 
-	public float getFar() {
-		return far;
-	}
+    public float getNear() {
+        return near;
+    }
 
-	@Override
-	public void onSurfaceCreated(GL10 unused, EGLConfig config) {
-		// Set the background frame color
-		float[] backgroundColor = main.getMainFragment().getBackgroundColor();
+    public float getFar() {
+        return far;
+    }
 
-		GLES20.glClearColor(backgroundColor[0], backgroundColor[1], backgroundColor[2], backgroundColor[3]);
+    @Override
+    public void onSurfaceCreated(GL10 unused, EGLConfig config) {
+        // Set the background frame color
+        float[] backgroundColor = main.getMainFragment().getBackgroundColor();
 
-		// Enable depth testing for hidden-surface elimination.
-		GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+        GLES20.glClearColor(backgroundColor[0], backgroundColor[1], backgroundColor[2], backgroundColor[3]);
 
-		// Enable blending for combining colors when there is transparency
-		GLES20.glEnable(GLES20.GL_BLEND);
-		GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+        // Enable depth testing for hidden-surface elimination.
+        GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 
-		// Lets create our 3D world components
-		camera = new Camera();
+        // Enable blending for combining colors when there is transparency
+        GLES20.glEnable(GLES20.GL_BLEND);
+        GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA);
 
-		// This component will draw the actual models using OpenGL
-		drawer = new Object3DBuilder();
-	}
+        // Lets create our 3D world components
+        camera = new Camera();
 
-	@Override
-	public void onSurfaceChanged(GL10 unused, int width, int height) {
-		this.width = width;
-		this.height = height;
+        // This component will draw the actual models using OpenGL
+        drawer = new Object3DBuilder();
+    }
 
-		// Adjust the viewport based on geometry changes, such as screen rotation
-		GLES20.glViewport(0, 0, width, height);
+    @Override
+    public void onSurfaceChanged(GL10 unused, int width, int height) {
+        this.width = width;
+        this.height = height;
 
-		// INFO: Set the camera position (View matrix)
-		// The camera has 3 vectors (the position, the vector where we are looking at, and the up position (sky)
-		Matrix.setLookAtM(modelViewMatrix, 0, camera.xPos, camera.yPos, camera.zPos, camera.xView, camera.yView, camera.zView, camera.xUp, camera.yUp, camera.zUp);
+        // Adjust the viewport based on geometry changes, such as screen rotation
+        GLES20.glViewport(0, 0, width, height);
 
-		// the projection matrix is the 3D virtual space (cube) that we want to project
-		float ratio = (float) width / height;
-		Matrix.frustumM(modelProjectionMatrix, 0, -ratio, ratio, -1, 1, getNear(), getFar());
+        // INFO: Set the camera position (View matrix)
+        // The camera has 3 vectors (the position, the vector where we are looking at, and the up position (sky)
+        Matrix.setLookAtM(modelViewMatrix, 0, camera.xPos, camera.yPos, camera.zPos, camera.xView, camera.yView, camera.zView, camera.xUp, camera.yUp, camera.zUp);
 
-		// Calculate the projection and view transformation
-		Matrix.multiplyMM(mvpMatrix, 0, modelProjectionMatrix, 0, modelViewMatrix, 0);
-	}
+        // the projection matrix is the 3D virtual space (cube) that we want to project
+        float ratio = (float) width / height;
+        Matrix.frustumM(modelProjectionMatrix, 0, -ratio, ratio, -1, 1, getNear(), getFar());
 
-	@Override
-	public void onDrawFrame(GL10 unused) {
+        // Calculate the projection and view transformation
+        Matrix.multiplyMM(mvpMatrix, 0, modelProjectionMatrix, 0, modelViewMatrix, 0);
+    }
 
-		// Draw background color
-		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+    @Override
+    public void onDrawFrame(GL10 unused) {
 
-		// recalculate mvp matrix according to where we are looking at now
-		if (camera.hasChanged()) {
-			Matrix.setLookAtM(modelViewMatrix, 0, camera.xPos, camera.yPos, camera.zPos, camera.xView, camera.yView,
-					camera.zView, camera.xUp, camera.yUp, camera.zUp);
-			// Log.d("Camera", "Changed! :"+camera.ToStringVector());
-			Matrix.multiplyMM(mvpMatrix, 0, modelProjectionMatrix, 0, modelViewMatrix, 0);
-			camera.setChanged(false);
-		}
+        // Draw background color
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
-		SceneLoader scene = main.getMainFragment().getScene();
-		if (scene == null) {
-			// scene not ready
-			return;
-		}
+        // recalculate mvp matrix according to where we are looking at now
+        if (camera.hasChanged()) {
+            Matrix.setLookAtM(modelViewMatrix, 0, camera.xPos, camera.yPos, camera.zPos, camera.xView, camera.yView,
+                    camera.zView, camera.xUp, camera.yUp, camera.zUp);
+            // Log.d("Camera", "Changed! :"+camera.ToStringVector());
+            Matrix.multiplyMM(mvpMatrix, 0, modelProjectionMatrix, 0, modelViewMatrix, 0);
+            camera.setChanged(false);
+        }
 
-		// camera should know about objects that collision with it
-		camera.setScene(scene);
+        SceneLoader scene = main.getMainFragment().getScene();
+        if (scene == null) {
+            // scene not ready
+            return;
+        }
 
-		// animate scene
-		scene.onDrawFrame();
+        // camera should know about objects that collision with it
+        camera.setScene(scene);
 
-		// draw light
-		if (scene.isDrawLighting()) {
+        // animate scene
+        scene.onDrawFrame();
 
-			Object3DImpl lightBulbDrawer = (Object3DImpl) drawer.getPointDrawer();
+        // draw light
+        if (scene.isDrawLighting()) {
 
-			float[] lightModelViewMatrix = lightBulbDrawer.getMvMatrix(lightBulbDrawer.getMMatrix(scene.getLightBulb()),modelViewMatrix);
+            Object3DImpl lightBulbDrawer = (Object3DImpl) drawer.getPointDrawer();
 
-			// Calculate position of the light in eye space to support lighting
-			Matrix.multiplyMV(lightPosInEyeSpace, 0, lightModelViewMatrix, 0, scene.getLightBulb().getPosition(), 0);
+            float[] lightModelViewMatrix = lightBulbDrawer.getMvMatrix(lightBulbDrawer.getMMatrix(scene.getLightBulb()), modelViewMatrix);
 
-			// Draw a point that represents the light bulb
-			lightBulbDrawer.draw(scene.getLightBulb(), modelProjectionMatrix, modelViewMatrix, -1, lightPosInEyeSpace);
-		}
+            // Calculate position of the light in eye space to support lighting
+            Matrix.multiplyMV(lightPosInEyeSpace, 0, lightModelViewMatrix, 0, scene.getLightBulb().getPosition(), 0);
 
-		List<Object3DData> objects = scene.getObjects();
-		for (int i=0; i<objects.size(); i++) {
-			try {
-				Object3DData objData = objects.get(i);
-				boolean changed = objData.isChanged();
+            // Draw a point that represents the light bulb
+            lightBulbDrawer.draw(scene.getLightBulb(), modelProjectionMatrix, modelViewMatrix, -1, lightPosInEyeSpace);
+        }
 
-				Object3D drawerObject = drawer.getDrawer(objData, scene.isDrawTextures(), scene.isDrawLighting());
+        List<Object3DData> objects = scene.getObjects();
+        for (int i = 0; i < objects.size(); i++) {
+            Object3DData objData = objects.get(i);
+            if (objData.isVisible()) {
+                try {
+                    //Object3DData objData = objects.get(i);
+                    boolean changed = objData.isChanged();
+                    Object3D drawerObject = drawer.getDrawer(objData, scene.isDrawTextures(), scene.isDrawLighting());
 
-				Integer textureId = textures.get(objData.getTextureData());
-				if (textureId == null && objData.getTextureData() != null) {
-					ByteArrayInputStream textureIs = new ByteArrayInputStream(objData.getTextureData());
-					textureId = GLUtil.loadTexture(textureIs);
-					textureIs.close();
-					textures.put(objData.getTextureData(), textureId);
-				}
+                    Integer textureId = textures.get(objData.getTextureData());
+                    if (textureId == null && objData.getTextureData() != null) {
+                        ByteArrayInputStream textureIs = new ByteArrayInputStream(objData.getTextureData());
+                        textureId = GLUtil.loadTexture(textureIs);
+                        textureIs.close();
+                        textures.put(objData.getTextureData(), textureId);
+                    }
 
-				if (scene.isDrawWireframe() && objData.getDrawMode() != GLES20.GL_POINTS
-						&& objData.getDrawMode() != GLES20.GL_LINES && objData.getDrawMode() != GLES20.GL_LINE_STRIP
-						&& objData.getDrawMode() != GLES20.GL_LINE_LOOP) {
-					try{
-						// Only draw wireframes for objects having faces (triangles)
-						Object3DData wireframe = wireframes.get(objData);
-						if (wireframe == null || changed) {
-							wireframe = Object3DBuilder.buildWireframe(objData);
-							wireframes.put(objData, wireframe);
-						}
-						drawerObject.draw(wireframe,modelProjectionMatrix,modelViewMatrix,wireframe.getDrawMode(),
-								wireframe.getDrawSize(),textureId != null? textureId:-1, lightPosInEyeSpace);
-					}catch(Error e){
-						Log.e("ModelRenderer",e.getMessage(),e);
-					}
-				} else if (scene.isDrawPoints() || (objData.getFaces() != null && !objData.getFaces().loaded())){
-					drawerObject.draw(objData, modelProjectionMatrix, modelViewMatrix
-							,GLES20.GL_POINTS, objData.getDrawSize(),
-							textureId != null ? textureId : -1, lightPosInEyeSpace);
-				} else {
-					drawerObject.draw(objData, modelProjectionMatrix, modelViewMatrix,
-							textureId != null ? textureId : -1, lightPosInEyeSpace);
-				}
+                    if (scene.isDrawWireframe() && objData.getDrawMode() != GLES20.GL_POINTS
+                            && objData.getDrawMode() != GLES20.GL_LINES && objData.getDrawMode() != GLES20.GL_LINE_STRIP
+                            && objData.getDrawMode() != GLES20.GL_LINE_LOOP) {
+                        try {
+                            // Only draw wireframes for objects having faces (triangles)
+                            Object3DData wireframe = wireframes.get(objData);
+                            if (wireframe == null || changed) {
+                                wireframe = Object3DBuilder.buildWireframe(objData);
+                                wireframes.put(objData, wireframe);
+                            }
+                            drawerObject.draw(wireframe, modelProjectionMatrix, modelViewMatrix, wireframe.getDrawMode(),
+                                    wireframe.getDrawSize(), textureId != null ? textureId : -1, lightPosInEyeSpace);
+                        } catch (Error e) {
+                            Log.e("ModelRenderer", e.getMessage(), e);
+                        }
+                    } else if (scene.isDrawPoints() || (objData.getFaces() != null && !objData.getFaces().loaded())) {
+                        drawerObject.draw(objData, modelProjectionMatrix, modelViewMatrix
+                                , GLES20.GL_POINTS, objData.getDrawSize(),
+                                textureId != null ? textureId : -1, lightPosInEyeSpace);
+                    } else {
+                        drawerObject.draw(objData, modelProjectionMatrix, modelViewMatrix,
+                                textureId != null ? textureId : -1, lightPosInEyeSpace);
+                    }
 
-				// Draw bounding box
-				if (scene.isDrawNormals()) {
-					Object3DData normalData = normals.get(objData);
-					if (normalData == null || changed) {
-						normalData = Object3DBuilder.buildFaceNormals(objData);
-						if (normalData != null) {
-							// it can be null if object isn't made of triangles
-							normals.put(objData, normalData);
-						}
-					}
-					if (normalData != null) {
-						Object3D normalsDrawer = drawer.getFaceNormalsDrawer();
-						normalsDrawer.draw(normalData, modelProjectionMatrix, modelViewMatrix, -1, null);
-					}
-				}
+                    // Draw bounding box
+                    if (scene.isDrawNormals()) {
+                        Object3DData normalData = normals.get(objData);
+                        if (normalData == null || changed) {
+                            normalData = Object3DBuilder.buildFaceNormals(objData);
+                            if (normalData != null) {
+                                // it can be null if object isn't made of triangles
+                                normals.put(objData, normalData);
+                            }
+                        }
+                        if (normalData != null) {
+                            Object3D normalsDrawer = drawer.getFaceNormalsDrawer();
+                            normalsDrawer.draw(normalData, modelProjectionMatrix, modelViewMatrix, -1, null);
+                        }
+                    }
 
-			} catch (IOException ex) {
-				Toast.makeText(main.getMainFragment().getActivity().getApplicationContext(),
-						"There was a problem creating 3D object", Toast.LENGTH_LONG).show();
-			}
-		}
-	}
+                } catch (IOException ex) {
+                    Toast.makeText(main.getMainFragment().getActivity().getApplicationContext(),
+                            "There was a problem creating 3D object", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
 
-	public int getWidth() {
-		return width;
-	}
+    public int getWidth() {
+        return width;
+    }
 
-	public int getHeight() {
-		return height;
-	}
+    public int getHeight() {
+        return height;
+    }
 
-	public float[] getModelProjectionMatrix() {
-		return modelProjectionMatrix;
-	}
+    public float[] getModelProjectionMatrix() {
+        return modelProjectionMatrix;
+    }
 
-	public float[] getModelViewMatrix() {
-		return modelViewMatrix;
-	}
+    public float[] getModelViewMatrix() {
+        return modelViewMatrix;
+    }
 
-	public Camera getCamera() {
-		return camera;
-	}
+    public Camera getCamera() {
+        return camera;
+    }
 }

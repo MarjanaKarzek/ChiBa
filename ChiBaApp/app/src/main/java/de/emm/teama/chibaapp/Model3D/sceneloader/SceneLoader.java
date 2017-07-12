@@ -9,6 +9,7 @@ import de.emm.teama.chibaapp.Model3D.model.Object3DData;
 
 import android.content.res.AssetManager;
 import android.os.SystemClock;
+import android.util.Log;
 
 public class SceneLoader
 {
@@ -35,7 +36,7 @@ public class SceneLoader
 
 	private boolean drawLighting = true;                        // Light toggle feature: whether to draw using lights
 
-	private float[] lightPosition = new float[]{0, 0, 3, 1};    // Initial light position
+	private float[] lightPosition = new float[]{0f, 0f, 3, 1};    // Initial light position
 
     private Object3DData selectedObject = null;                 // Object selected by the user
     boolean istLinks = false;
@@ -44,32 +45,54 @@ public class SceneLoader
 	// Light bulb 3d data
 	private final Object3DData lightPoint = Object3DBuilder.buildPoint(new float[4]).setId("light").setPosition(lightPosition);
 
-    public SceneLoader(MainFragment main, AssetManager assets, boolean usesAvatar, boolean usesBall)
+    public SceneLoader(MainFragment main, AssetManager assets, boolean usesAvatar, String animation)
     {
         this.parent = main;
+        if(usesAvatar) {
+            switch (animation) {
+                case "sunnyday":
+                    try {
+                        Object3DData tailWagging_frame1 = Object3DBuilder.loadObj(assets, "models/tailWagging", "tailWagging_Frame1.obj");
+                        tailWagging_frame1.centerAndScale(2.0f);
+                        tailWagging_frame1.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                        addObject(tailWagging_frame1);
 
-        if(usesAvatar)
-        {
-            try {
+                        Object3DData tailWagging_frame2 = Object3DBuilder.loadObj(assets, "models/tailWagging", "tailWagging_Frame2.obj");
+                        tailWagging_frame2.centerAndScale(2.0f);
+                        tailWagging_frame2.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                        addObject(tailWagging_frame2);
 
-                Object3DData chiba = Object3DBuilder.loadObj(assets, "models", "chiba.obj");
-                chiba.centerAndScale(2.0f);
-                chiba.setPosition(new float[]{-2.0f, 0f, 0f});
-                addObject(chiba);
+                        Object3DData tailWagging_frame3 = Object3DBuilder.loadObj(assets, "models/tailWagging", "tailWagging_Frame3.obj");
+                        tailWagging_frame3.centerAndScale(2.0f);
+                        tailWagging_frame3.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                        addObject(tailWagging_frame3);
 
-            } catch (Exception ex) {
+                        Object3DData tailWagging_frame4 = Object3DBuilder.loadObj(assets, "models/tailWagging", "tailWagging_Frame4.obj");
+                        tailWagging_frame4.centerAndScale(2.0f);
+                        tailWagging_frame4.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                        addObject(tailWagging_frame4);
+
+                        Object3DData tailWagging_frame5 = Object3DBuilder.loadObj(assets, "models/tailWagging", "tailWagging_Frame5.obj");
+                        tailWagging_frame5.centerAndScale(2.0f);
+                        tailWagging_frame5.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                        addObject(tailWagging_frame5);
+
+                        Object3DData tailWagging_frame6 = Object3DBuilder.loadObj(assets, "models/tailWagging", "tailWagging_Frame6.obj");
+                        tailWagging_frame6.centerAndScale(2.0f);
+                        tailWagging_frame6.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                        addObject(tailWagging_frame6);
+
+                        Object3DData tailWagging_frame7 = Object3DBuilder.loadObj(assets, "models/tailWagging", "tailWagging_Frame7.obj");
+                        tailWagging_frame7.centerAndScale(2.0f);
+                        tailWagging_frame7.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                        addObject(tailWagging_frame7);
+                    } catch (Exception ex) {
+                        Log.e(TAG, "SceneLoader: some object not found");
+                    }
+                    break;
+                default:
+                    Log.d(TAG, "SceneLoader: default selected");
             }
-
-            if(usesBall)
-                try {
-
-                    Object3DData ball = Object3DBuilder.loadObj(assets, "models", "BallAnimiert.obj");
-                    ball.centerAndScale(0.75f);
-                    ball.setPosition(new float[]{0f, -1.0f, 0f});
-                    addObject(ball);
-
-                } catch (Exception ex) {
-                }
         }
 	}
 
@@ -77,10 +100,37 @@ public class SceneLoader
 		return lightPoint;
 	}
 
-	public void onDrawFrame(){
-		animateLight();
+	int objectcounter = 0;
+    double lastTime = SystemClock.uptimeMillis();
+    int runtimeCounter = 0;
 
-        animateObject(0);
+	public void onDrawFrame(){
+        double currentTime = SystemClock.uptimeMillis();
+        if(currentTime - lastTime >= 115.0){
+            for(Object3DData object: objects){
+                if(objects.indexOf(object) == objectcounter)
+                    object.setVisible(true);
+                else
+                    object.setVisible(false);
+            }
+            objectcounter++;
+            if(objectcounter == objects.size()) {
+                objectcounter = 0;
+                runtimeCounter++;
+                if(runtimeCounter == 5) {
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    runtimeCounter=0;
+                }
+            }
+            lastTime = currentTime;
+            //animateLight();
+        }
+
+        //animateObject(0);
 	}
 
 	private void animateLight() {

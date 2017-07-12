@@ -72,6 +72,8 @@ public class Object3DData {
 	// Async Loader
 	private WavefrontLoader.ModelDimensions modelDimensions;
 
+	private boolean visible;
+
 	public Object3DData(FloatBuffer vertexArrayBuffer) {
 		this.vertexArrayBuffer = vertexArrayBuffer;
 		this.version = 1;
@@ -86,7 +88,16 @@ public class Object3DData {
 		this.faces = faces;  // parameter "faces" could be null in case of async loading
 		this.faceMats = faceMats;
 		this.materials = materials;
+        this.visible = true;
 	}
+
+	public boolean isVisible(){
+        return visible;
+    }
+
+    public void setVisible(boolean visibility){
+        visible = visibility;
+    }
 
 	public void setDimensions(WavefrontLoader.ModelDimensions modelDimensions) {
 		this.modelDimensions = modelDimensions;
