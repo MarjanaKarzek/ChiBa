@@ -16,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextClock;
 import android.widget.TextView;
 
@@ -27,9 +26,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
-import de.emm.teama.chibaapp.Model3D.model.Object3DBuilder;
-import de.emm.teama.chibaapp.Model3D.model.Object3DData;
 import de.emm.teama.chibaapp.Model3D.sceneloader.SceneLoader;
 import de.emm.teama.chibaapp.Model3D.view.ModelSurfaceView;
 import de.emm.teama.chibaapp.R;
@@ -43,7 +41,6 @@ import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
 
 public class MainFragment extends Fragment {
     private static final String TAG = "MainFragment";
-    private boolean usesAvatar;
 
     /* Enter into Android Immersive mode so the renderer is full screen or not */
     private boolean immersiveMode = true;
@@ -52,8 +49,9 @@ public class MainFragment extends Fragment {
     private float[] backgroundColor = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
 
     private GLSurfaceView gLView;
-
     private SceneLoader scene;
+    private boolean usesAvatar;
+    private String animation = "";
 
     private View fragmentHome;
     private String dateFormat = "d. MMMM yyyy";
@@ -80,7 +78,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        usesAvatar = database.getUserAvatarOptionState();
+
         Cursor data = database.getSystemInformation();
         if (data.getCount() != 0 && data.moveToNext()) {
             lastKnownCity = data.getString(1);
@@ -130,7 +128,6 @@ public class MainFragment extends Fragment {
 
             // Create gLView for 3D scenario
             gLView = new ModelSurfaceView(this);
-
             gLView.setId(new Integer(100000));
             LinearLayout.LayoutParams rlpGLView = new LinearLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -233,17 +230,31 @@ public class MainFragment extends Fragment {
             linearLayoutRoot.addView(eventListLayout);
             fragmentHome = linearLayoutRoot;
         }
+
         return fragmentHome;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        //TODO switch case for different animations
-
 
         // Create Scene for 3D scenario
-        scene = new SceneLoader(this, this.getActivity().getAssets(), usesAvatar, "sunnyday");
+        usesAvatar = database.getUserAvatarOptionState();
+
+        ArrayList<String> currentActiveEventHashtags = database.getHashtagsOfCurrentActiveEventsByPossibleEvents(displayedEvents);
+
+        if(currentActiveEventHashtags.isEmpty()) {
+            int id = lastKnownWeatherID / 100;
+            if(id <= 5)
+                animation = "rain";
+            else
+                animation = "sunny";
+        } else {
+            Random rand = new Random();
+            animation = currentActiveEventHashtags.get(rand.nextInt(currentActiveEventHashtags.size() - 1));
+        }
+
+        scene = new SceneLoader(this, this.getActivity().getAssets(), usesAvatar, animation);
     }
 
     private void getCurrentEventData() {

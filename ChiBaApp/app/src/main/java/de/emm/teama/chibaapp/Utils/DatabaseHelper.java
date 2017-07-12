@@ -9,9 +9,14 @@ import android.text.Editable;
 import android.util.Log;
 
 import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * Created by Marjana Karzek on 22.06.2017.
@@ -905,5 +910,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 avatarUse = true;
         }
         return avatarUse;
+    }
+
+    public ArrayList<String> getHashtagsOfCurrentActiveEventsByPossibleEvents(ArrayList<Integer> possibleEvents) {
+        Set<String> hashtagSet = new HashSet<String>();
+        Calendar currentDate = Calendar.getInstance();
+        String timeFormat = "kk:mm";
+        SimpleDateFormat simpleTimeFormat = new SimpleDateFormat(timeFormat, Locale.GERMANY);
+        for(int eventId: possibleEvents){
+            Cursor data = showEventByEventId(eventId);
+            if(data.getCount() != 0 && data.moveToNext()){
+                String[] startTimeInfo = data.getString(5).split(":");
+                String[] endTimeInfo = data.getString(6).split(":");
+                Calendar startTime = Calendar.getInstance();
+                startTime.set(Calendar.HOUR_OF_DAY,Integer.valueOf(startTimeInfo[0]));
+                startTime.set(Calendar.MINUTE,Integer.valueOf(startTimeInfo[1]));
+                Calendar endTime = Calendar.getInstance();
+                endTime.set(Calendar.HOUR_OF_DAY,Integer.valueOf(endTimeInfo[0]));
+                endTime.set(Calendar.MINUTE,Integer.valueOf(endTimeInfo[1]));
+                if(currentDate.after(startTime) && currentDate.before(endTime)){
+                    ArrayList<String> currentHashtags = showHashtagsByEventId(eventId);
+                    for(String hashtag: currentHashtags){
+                        hashtagSet.add(hashtag);
+                    }
+                }
+            }
+        }
+        Log.d(TAG, "getHashtagsOfCurrentActiveEventsByPossibleEvents: " + hashtagSet.toString());
+        return new ArrayList<String>(hashtagSet);
     }
 }

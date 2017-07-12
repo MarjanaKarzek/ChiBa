@@ -50,7 +50,7 @@ public class SceneLoader
         this.parent = main;
         if(usesAvatar) {
             switch (animation) {
-                case "sunnyday":
+                case "sunny":
                     try {
                         Object3DData tailWagging_frame1 = Object3DBuilder.loadObj(assets, "models/tailWagging", "tailWagging_Frame1.obj");
                         tailWagging_frame1.centerAndScale(2.0f);
@@ -90,8 +90,20 @@ public class SceneLoader
                         Log.e(TAG, "SceneLoader: some object not found");
                     }
                     break;
+                case "rain":
+                    break;
                 default:
-                    Log.d(TAG, "SceneLoader: default selected");
+                    Log.d(TAG, "SceneLoader: default scene selected");
+
+                    try {
+                        Object3DData chiba = Object3DBuilder.loadObj(assets, "models", "chiba.obj");
+                        chiba.centerAndScale(2.0f);
+                        chiba.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                        addObject(chiba);
+                    } catch (Exception ex) {
+                        Log.e(TAG, "SceneLoader: some object in default scene not found");
+                    }
+                    break;
             }
         }
 	}
@@ -129,9 +141,7 @@ public class SceneLoader
             lastTime = currentTime;
             //animateLight();
         }
-
-        //animateObject(0);
-	}
+    }
 
 	private void animateLight() {
 		if (!rotatingLight) return;
@@ -140,32 +150,6 @@ public class SceneLoader
 		float angleInDegrees = (360.0f / 5000.0f) * ((int) time);
         lightPoint.setRotationY(angleInDegrees);
 	}
-
-    private void animateObject(int animation) {
-        if (!rotatingObject || selectedObject == null) return;
-
-
-        if (selectedObject.getId().equals("BallAnimiert.obj"))
-        {
-            switch(animation)
-            {
-                case 0:
-                    rotateAroundY();
-                    break;
-                case 1:
-                    bouncing();
-                case 2:
-                    blah();
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    private void blah(){
-
-    }
 
     private void bouncing(){
 //        float gLViewWidth = parent.getgLView().getWidth();
