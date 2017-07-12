@@ -29,7 +29,7 @@ public class CityChangeDialogFragment extends DialogFragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.layout_appointment_detail_fragment, container);
+        View view = inflater.inflate(R.layout.layout_city_change_dialog_fragment, container);
         final CityChangeDialogFragmentListener activity = (CityChangeDialogFragmentListener) getActivity();
 
         RadioButton berlin = (RadioButton) view.findViewById(R.id.radioButtonOptionBerlin);
