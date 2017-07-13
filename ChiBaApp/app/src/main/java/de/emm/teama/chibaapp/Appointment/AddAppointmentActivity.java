@@ -273,15 +273,15 @@ public class AddAppointmentActivity extends AppCompatActivity {
                         String currentDateString;
                         do{
                             currentDateString = simpleDateFormat.format(calendarStartDate.getTime());
-                            Log.d(TAG, "onClick: current Date to be added to fullday matching: " + currentDateString);
+                            //Log.d(TAG, "onClick: current Date to be added to fullday matching: " + currentDateString);
                             database.insertFullDayEvent(currentDateString, eventId);
                             calendarStartDate.add(Calendar.DAY_OF_MONTH,1);
                         }while(!currentDateString.contentEquals(endDateString));
                     }
-
-                    if(startDateString.contains(simpleDateFormat.format(Calendar.getInstance().getTime()))){
-                        Log.d(TAG, "onClick: calling appointment schedule");
-                        ChiBaApplication.addAppointmentTimer(database.getEventIdByLastEvent(),startTimeString,assignedHashtags);
+                    else if(startDateString.contains(simpleDateFormat.format(Calendar.getInstance().getTime()))){
+                        //Log.d(TAG, "onClick: calling appointment schedule");
+                        if(calendarStartTime.after(Calendar.getInstance()))
+                            ChiBaApplication.addAppointmentTimer(database.getEventIdByLastEvent(),startTimeString,assignedHashtags);
                     }
 
                     Intent intent = new Intent(context, MainActivity.class);

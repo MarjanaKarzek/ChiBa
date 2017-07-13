@@ -359,12 +359,13 @@ public class EditAppointmentActivity extends AppCompatActivity {
                         String currentDateString;
                         do{
                             currentDateString = simpleDateFormat.format(calendarStartDate.getTime());
-                            Log.d(TAG, "onClick: current Date to be added to fullday matching: " + currentDateString);
+                            //Log.d(TAG, "onClick: current Date to be added to fullday matching: " + currentDateString);
                             database.insertFullDayEvent(currentDateString, eventId);
                             calendarStartDate.add(Calendar.DAY_OF_MONTH,1);
                         }while(!currentDateString.contentEquals(endDateString));
                     }else if(startDateString.contains(simpleDateFormat.format(Calendar.getInstance().getTime()))){
-                        ChiBaApplication.editAppointmentTimer(database.getEventIdByLastEvent(),startTimeString,assignedHashtags);
+                        if(calendarStartTime.after(Calendar.getInstance()))
+                            ChiBaApplication.editAppointmentTimer(database.getEventIdByLastEvent(),startTimeString,assignedHashtags);
                     }
 
                     Intent intent = new Intent(context, MainActivity.class);
