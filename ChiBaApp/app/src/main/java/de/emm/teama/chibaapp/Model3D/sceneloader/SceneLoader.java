@@ -2,6 +2,7 @@ package de.emm.teama.chibaapp.Model3D.sceneloader;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import de.emm.teama.chibaapp.Model3D.model.Object3DBuilder;
 import de.emm.teama.chibaapp.Model3D.model.Object3DData;
 
 import android.content.res.AssetManager;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.util.Log;
 
@@ -49,49 +51,46 @@ public class SceneLoader
     public SceneLoader(MainFragment main, AssetManager assets, boolean usesAvatar, String animation)
     {
         this.parent = main;
+
+        animation = "sunny";
+
         if(usesAvatar) {
             switch (animation) {
                 case "sunny":
                     try {
-                        Object3DData tailWagging_frame1 = Object3DBuilder.loadObj(assets, "models/tailWagging", "tailWagging_Frame1.obj");
-                        tailWagging_frame1.centerAndScale(2.0f);
-                        tailWagging_frame1.setPosition(new float[]{-1.0f, -0.5f, 0f});
-                        addObject(tailWagging_frame1);
-
-                        Object3DData tailWagging_frame2 = Object3DBuilder.loadObj(assets, "models/tailWagging", "tailWagging_Frame2.obj");
-                        tailWagging_frame2.centerAndScale(2.0f);
-                        tailWagging_frame2.setPosition(new float[]{-1.0f, -0.5f, 0f});
-                        addObject(tailWagging_frame2);
-
-                        Object3DData tailWagging_frame3 = Object3DBuilder.loadObj(assets, "models/tailWagging", "tailWagging_Frame3.obj");
-                        tailWagging_frame3.centerAndScale(2.0f);
-                        tailWagging_frame3.setPosition(new float[]{-1.0f, -0.5f, 0f});
-                        addObject(tailWagging_frame3);
-
-                        Object3DData tailWagging_frame4 = Object3DBuilder.loadObj(assets, "models/tailWagging", "tailWagging_Frame4.obj");
-                        tailWagging_frame4.centerAndScale(2.0f);
-                        tailWagging_frame4.setPosition(new float[]{-1.0f, -0.5f, 0f});
-                        addObject(tailWagging_frame4);
-
-                        Object3DData tailWagging_frame5 = Object3DBuilder.loadObj(assets, "models/tailWagging", "tailWagging_Frame5.obj");
-                        tailWagging_frame5.centerAndScale(2.0f);
-                        tailWagging_frame5.setPosition(new float[]{-1.0f, -0.5f, 0f});
-                        addObject(tailWagging_frame5);
-
-                        Object3DData tailWagging_frame6 = Object3DBuilder.loadObj(assets, "models/tailWagging", "tailWagging_Frame6.obj");
-                        tailWagging_frame6.centerAndScale(2.0f);
-                        tailWagging_frame6.setPosition(new float[]{-1.0f, -0.5f, 0f});
-                        addObject(tailWagging_frame6);
-
-                        Object3DData tailWagging_frame7 = Object3DBuilder.loadObj(assets, "models/tailWagging", "tailWagging_Frame7.obj");
-                        tailWagging_frame7.centerAndScale(2.0f);
-                        tailWagging_frame7.setPosition(new float[]{-1.0f, -0.5f, 0f});
-                        addObject(tailWagging_frame7);
+                        String[] assetsArray = assets.list("models/tailWagging");
+                        int counter = 1;
+                        for (String asset: assetsArray) {
+                            if(asset.endsWith(".obj")){
+                                String filename = "tailWagging_Frame" + counter + ".obj";
+                                Object3DData rain = Object3DBuilder.loadObj(assets, "models/tailWagging", filename);
+                                rain.centerAndScale(2.0f);
+                                rain.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                                addObject(rain);
+                                counter ++;
+                            }
+                        }
                     } catch (Exception ex) {
                         Log.e(TAG, "SceneLoader: some object not found");
                     }
                     break;
                 case "rain":
+                    try {
+                        String[] assetsArray = assets.list("models/umbrella");
+                        int counter = 1;
+                        for (String asset: assetsArray) {
+                            if(asset.endsWith(".obj")){
+                                String filename = "umbrella_Frame" + counter + ".obj";
+                                Object3DData rain = Object3DBuilder.loadObj(assets, "models/umbrella", filename);
+                                rain.centerAndScale(2.0f);
+                                rain.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                                addObject(rain);
+                                counter ++;
+                            }
+                        }
+                    } catch (Exception ex) {
+                        Log.e(TAG, "SceneLoader: some object not found");
+                    }
                     break;
                 default:
                     Log.d(TAG, "SceneLoader: default scene selected");

@@ -1,6 +1,7 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib umbrella.mtlg newRigging:skinCluster1Set newRigging:tweakSet1
+mtllib umbrella.mtl
+g newRigging:skinCluster1Set newRigging:tweakSet1
 v 1.935162 3.206395 0.123858
 v 1.789110 3.467352 0.195608
 v 1.776502 3.746411 0.118360
