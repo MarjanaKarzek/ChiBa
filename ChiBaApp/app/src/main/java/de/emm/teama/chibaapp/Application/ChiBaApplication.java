@@ -65,7 +65,7 @@ public class ChiBaApplication extends Application {
                 date.set(Calendar.HOUR_OF_DAY, Integer.valueOf(starttime[0]));
                 date.set(Calendar.MINUTE, Integer.valueOf(starttime[1]));
                 date.add(Calendar.MINUTE, -30);
-                if(today.before(date)) {
+                if (today.before(date)) {
                     Date time = date.getTime();
                     Timer timer = new Timer();
                     appointmentTimers.put(eventId, timer);
@@ -95,7 +95,7 @@ public class ChiBaApplication extends Application {
     }
 
     public static void deleteApplicationTimer(int eventId) {
-        if(appointmentTimers.containsKey(eventId)) {
+        if (appointmentTimers.containsKey(eventId)) {
             appointmentTimers.get(eventId).cancel();
             appointmentTimers.remove(eventId);
             Log.d(TAG, "deleteApplicationTimer: Timer deleted for " + eventId);
@@ -104,7 +104,7 @@ public class ChiBaApplication extends Application {
 
     public static void editAppointmentTimer(int eventId, String startTimeString, ArrayList<String> assignedHashtags) {
         deleteApplicationTimer(eventId);
-        addAppointmentTimer(eventId,startTimeString,assignedHashtags);
+        addAppointmentTimer(eventId, startTimeString, assignedHashtags);
     }
 
     private void setUpTimerForToDos() {
@@ -308,7 +308,7 @@ public class ChiBaApplication extends Application {
                             .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.chiba_profile))
                             .setContentTitle("ToDo Erinnerung")
                             .setContentText(text)
-                            .setStyle(new NotificationCompat.BigTextStyle ()
+                            .setStyle(new NotificationCompat.BigTextStyle()
                                     .bigText(text))
                             .addAction(R.drawable.ic_home, "nein, danke", pendingApplicationIntentAction1)
                             .addAction(R.drawable.ic_home, "ja, ok", pendingApplicationIntentAction2);
@@ -338,16 +338,18 @@ public class ChiBaApplication extends Application {
 
         private void setupReminders() {
             for (String hashtag : hashtags) {
-                reminders.put(hashtag,database.showRemindersByHashtagString(hashtag));
+                reminders.put(hashtag, database.showRemindersByHashtagString(hashtag));
             }
         }
 
         @Override
         public void run() {
-            int randomHashtag = random.nextInt(reminders.size());
-            int randomReminder = random.nextInt(reminders.get(hashtags.get(randomHashtag)).size());
-            String reminderTag = reminders.get(hashtags.get(randomHashtag)).get(randomReminder);
-            createPushNotification("Hallo " + database.getUserName() + ", für deinen Termin " + database.getEventTitleByEventId(eventId) + " vergiss nicht folgendes: " + reminderTag);
+            if (reminders.size() > 0) {
+                int randomHashtag = random.nextInt(reminders.size());
+                int randomReminder = random.nextInt(reminders.get(hashtags.get(randomHashtag)).size());
+                String reminderTag = reminders.get(hashtags.get(randomHashtag)).get(randomReminder);
+                createPushNotification("Hallo " + database.getUserName() + ", für deinen Termin " + database.getEventTitleByEventId(eventId) + " vergiss nicht folgendes: " + reminderTag);
+            }
         }
 
         public void createPushNotification(String text) {
