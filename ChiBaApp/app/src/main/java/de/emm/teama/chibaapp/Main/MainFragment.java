@@ -1,5 +1,8 @@
 package de.emm.teama.chibaapp.Main;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.opengl.GLSurfaceView;
@@ -13,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -185,7 +189,7 @@ public class MainFragment extends Fragment implements CityChangeDialogFragment.C
                     Fragment prevAppointmentDetailDialog = getFragmentManager().findFragmentByTag("appointment_detail_fragment");
                     if (prevCityChangeDialog != null)
                         transaction.remove(prevCityChangeDialog);
-                    if(prevAppointmentDetailDialog != null)
+                    if (prevAppointmentDetailDialog != null)
                         transaction.remove(prevAppointmentDetailDialog);
                     transaction.addToBackStack(null);
 
@@ -203,7 +207,6 @@ public class MainFragment extends Fragment implements CityChangeDialogFragment.C
             rlpTextTemperature.topMargin = 215;
             rlpTextTemperature.rightMargin = 50;
             textTemperature.setTextColor(getContext().getColor(R.color.colorBlackish));
-
 
             //List Area
             View eventListLayout = inflater.inflate(R.layout.fragment_home, container, false);
@@ -256,6 +259,19 @@ public class MainFragment extends Fragment implements CityChangeDialogFragment.C
         return fragmentHome;
     }
 
+    public static void openApp(Context context, String packageName) {
+        PackageManager manager = context.getPackageManager();
+        Intent i = manager.getLaunchIntentForPackage(packageName);
+        if (i == null) {
+            Log.d(TAG, "openApp: package not found");
+            //throw new PackageManager.NameNotFoundException();
+        }
+        else {
+            i.addCategory(Intent.CATEGORY_LAUNCHER);
+            context.startActivity(i);
+        }
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -265,9 +281,9 @@ public class MainFragment extends Fragment implements CityChangeDialogFragment.C
 
         ArrayList<String> currentActiveEventHashtags = database.getHashtagsOfCurrentActiveEventsByPossibleEvents(displayedEvents);
 
-        if(currentActiveEventHashtags.isEmpty()) {
+        if (currentActiveEventHashtags.isEmpty()) {
             int id = lastKnownWeatherID / 100;
-            if(id <= 5)
+            if (id <= 5)
                 animation = "rain";
             else
                 animation = "sunny";
@@ -350,7 +366,7 @@ public class MainFragment extends Fragment implements CityChangeDialogFragment.C
                     json.getJSONObject("sys").getLong("sunrise") * 1000,
                     json.getJSONObject("sys").getLong("sunset") * 1000);
 
-            database.setSystemInfoData(textCity.getText().toString(),textTemperature.getText().toString());
+            database.setSystemInfoData(textCity.getText().toString(), textTemperature.getText().toString());
         } catch (Exception e) {
             Log.e("SimpleWeather", "One or more fields not found in the JSON data");
             textCity.setText(lastKnownCity);
@@ -397,8 +413,8 @@ public class MainFragment extends Fragment implements CityChangeDialogFragment.C
 
     @Override
     public void onReturnValue(String city) {
-        Log.d(TAG, "onReturnValue: city change to " +  city);
-        database.setSystemInfoData(city,lastKnownTemperature);
+        Log.d(TAG, "onReturnValue: city change to " + city);
+        database.setSystemInfoData(city, lastKnownTemperature);
         lastKnownCity = city;
         textCity.setText(city);
     }
