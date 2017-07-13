@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 
+import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -260,6 +261,7 @@ public class MainFragment extends Fragment implements CityChangeDialogFragment.C
     }
 
     public static void openApp(Context context, String packageName) {
+        Log.d(TAG, "openApp: ");
         PackageManager manager = context.getPackageManager();
         Intent i = manager.getLaunchIntentForPackage(packageName);
         if (i == null) {

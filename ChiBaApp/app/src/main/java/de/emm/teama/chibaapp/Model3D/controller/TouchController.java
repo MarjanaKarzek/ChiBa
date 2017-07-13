@@ -263,9 +263,9 @@ public class TouchController {
 			Log.i(TAG, "Selected object " + objectToSelect.getId() + " at distance " + objectToSelectDistance);
 			if (scene.getSelectedObject() == objectToSelect) {
 				scene.setSelectedObject(null);
-			} else {
+            } else {
 				scene.setSelectedObject(objectToSelect);
-			}
+            }
 		}
 	}
 

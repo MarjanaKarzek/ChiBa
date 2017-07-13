@@ -1,5 +1,7 @@
 package de.emm.teama.chibaapp.Model3D.sceneloader;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,20 +29,19 @@ public class SceneLoader
 
 	private boolean drawNormals = false;
 
-	/* Whether to draw using textures */
 	private boolean drawTextures = true;
 
-	/* Light toggle feature: we have 3 states: no light, light, light + rotation */
-	private boolean rotatingLight = false;
-    private boolean rotatingObject = true;
+	private boolean rotatingLight = false;                      // Light toggle feature: we have 3 states: no light, light, light + rotation
 
 	private boolean drawLighting = true;                        // Light toggle feature: whether to draw using lights
 
-	private float[] lightPosition = new float[]{0f, 0f, 3, 1};    // Initial light position
+	private float[] lightPosition = new float[]{0f, 0f, 3, 1};  // Initial light position
 
     private Object3DData selectedObject = null;                 // Object selected by the user
-    boolean istLinks = false;
-    boolean istOben = false;
+
+    double lastTime = SystemClock.uptimeMillis();
+    int runtimeCounter = 0;
+    int objectcounter = 0;
 
 	// Light bulb 3d data
 	private final Object3DData lightPoint = Object3DBuilder.buildPoint(new float[4]).setId("light").setPosition(lightPosition);
@@ -105,16 +106,13 @@ public class SceneLoader
                     }
                     break;
             }
+
         }
 	}
 
 	public Object3DData getLightBulb() {
 		return lightPoint;
 	}
-
-	int objectcounter = 0;
-    double lastTime = SystemClock.uptimeMillis();
-    int runtimeCounter = 0;
 
 	public void onDrawFrame(){
         double currentTime = SystemClock.uptimeMillis();
@@ -150,51 +148,6 @@ public class SceneLoader
 		float angleInDegrees = (360.0f / 5000.0f) * ((int) time);
         lightPoint.setRotationY(angleInDegrees);
 	}
-
-    private void bouncing(){
-//        float gLViewWidth = parent.getgLView().getWidth();
-//        float gLViewHeight = parent.getgLView().getHeight();
-//        float radius = (selectedObject.getDimensions().getWidth() / 2 );
-
-        float posX = selectedObject.getPositionX();
-        float posY = selectedObject.getPositionY();
-        float posZ = selectedObject.getPositionZ();
-
-        if(posX < 3f && !istLinks) {
-            // rechts
-            posX += 0.02f;
-
-        } else {
-            // links
-            posX = posX - 0.02f;
-            istLinks = true;
-
-            if(posX < -3f)
-                istLinks = false;
-        }
-
-        if(posY < 3f && !istOben)
-            // oben
-            posY += 0.02f;
-        else {
-            // unten
-            posY = posY - 0.02f;
-            istOben = true;
-
-            if(posY < -3f)
-                istOben = false;
-
-        }
-
-        selectedObject.setPosition(new float[]{posX, posY, posZ});
-    }
-
-    private void rotateAroundY(){
-        // Drehung um die Y-Achse
-        long time = SystemClock.uptimeMillis() % 5000L;
-        float angleInDegrees = (360.0f / 5000.0f) * ((int) time);
-        selectedObject.setRotationY(angleInDegrees);
-    }
 
 	public synchronized void addObject(Object3DData obj) {
 		List<Object3DData> newList = new ArrayList<Object3DData>(objects);
@@ -237,5 +190,7 @@ public class SceneLoader
 
     public void setSelectedObject(Object3DData selectedObject) {
         this.selectedObject = selectedObject;
+
+        MainFragment.openApp(parent.getContext(), "com.HTWEMM.ChiBa");
     }
 }
