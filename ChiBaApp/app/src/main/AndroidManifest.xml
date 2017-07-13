@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="de.emm.teama.chibaapp">
+    package="de.emm.teama.chibaapp"
+    android:versionCode="2">
 
     <!-- Tell the system this app requires OpenGL ES 2.0.-->
     <uses-feature android:glEsVersion="0x00020000" android:required="true" />
