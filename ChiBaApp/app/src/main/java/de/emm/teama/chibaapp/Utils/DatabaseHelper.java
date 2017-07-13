@@ -298,6 +298,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentEventValues.put(COLUMN_EVENTS_ENDTIME, endtime);
         contentEventValues.put(COLUMN_EVENTS_LOCATION, location);
 
+        Log.d(TAG, "addEvent: hashtags in database " + hashtags.toString());
         long result = db.insert(TABLE_NAME_EVENTS, null, contentEventValues);
         if (result == -1)
             return false;
@@ -395,6 +396,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_EVENTS_LOCATION + " = '" + location + "' " +
                 " WHERE " + COLUMN_EVENTS_ID + " = " + eventId;
         db.execSQL(query);
+        Log.d(TAG, "updateEvent: to be assigned hashtags in database: "+hashtags.toString());
+
         deleteAssignedHashtagsByEventId(eventId);
         insertAssignedHashtags(eventId,hashtags);
         return true;
@@ -470,13 +473,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (data.getCount() != 0) {
             while (data.moveToNext()) {
                 hashtagIds.add(data.getString(0));
+                Log.d(TAG, "showHashtagsByEventId: retrieved id " + data.getString(0));
             }
         }
         data.close();
+        Log.d(TAG, "showHashtagsByEventId: hashtag ids: " + hashtagIds.toString());
 
         for(String id: hashtagIds){
             hashtags.add(showHashtagNameById(id));
         }
+        Log.d(TAG, "showHashtagsByEventId: hashtags: " + hashtags.toString());
 
         return hashtags;
     }
@@ -516,25 +522,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return hashtag;
     }
 
-    public boolean insertAssignedHashtags(int eventId, ArrayList<String> hashtags){
+    public void insertAssignedHashtags(int eventId, ArrayList<String> hashtags){
         SQLiteDatabase db = this.getWritableDatabase();
         if(hashtags.size() > 0) {
-            ContentValues contentEventHashtagValues = new ContentValues();
             for (String hashtag : hashtags) {
+                ContentValues contentEventHashtagValues = new ContentValues();
                 Log.d(TAG, "insertAssignedHashtags: hashtag name: " + hashtag);
                 int hashtagId = getHashtagIdByName(hashtag);
+                Log.d(TAG, "insertAssignedHashtags: hashtag id " + hashtagId);
                 contentEventHashtagValues.put(COLUMN_EVENTMATCHING_EVENT_ID, eventId);
                 contentEventHashtagValues.put(COLUMN_EVENTMATCHING_HASHTAG_ID, hashtagId);
+                db.insert(TABLE_NAME_EVENTMATCHING, null, contentEventHashtagValues);
             }
-
-            long result = db.insert(TABLE_NAME_EVENTMATCHING, null, contentEventHashtagValues);
-            if (result == -1)
-                return false;
-            else
-                return true;
         }
-        else
-            return true;
     }
 
     public void deleteAssignedHashtagsByEventId(int eventId){

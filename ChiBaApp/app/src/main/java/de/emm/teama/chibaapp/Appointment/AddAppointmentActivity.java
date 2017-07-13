@@ -262,6 +262,7 @@ public class AddAppointmentActivity extends AppCompatActivity {
                     String endDateString = endDate.getText().toString();
                     String startTimeString = startTime.getText().toString();
                     String endTimeString = endTime.getText().toString();
+                    Log.d(TAG, "onClick: assigned hashtag of new appointment " + assignedHashtags.toString());
 
                     boolean insertData = database.addEvent(titleString, fulldayBoolean, startDateString, endDateString, startTimeString, endTimeString, locationString, assignedHashtags);
                     int successState = 0;

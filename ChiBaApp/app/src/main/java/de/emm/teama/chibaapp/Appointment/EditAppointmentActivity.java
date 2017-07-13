@@ -347,6 +347,7 @@ public class EditAppointmentActivity extends AppCompatActivity {
                     String endDateString = endDate.getText().toString();
                     String startTimeString = startTime.getText().toString();
                     String endTimeString = endTime.getText().toString();
+                    Log.d(TAG, "onClick: current assigned hashtags of edited appointment " + assignedHashtags.toString());
 
                     boolean insertData = database.updateEvent(eventId, titleString, fulldayBoolean, startDateString, endDateString, startTimeString, endTimeString, locationString, assignedHashtags);
                     int successState = 0;
