@@ -52,10 +52,78 @@ public class SceneLoader
     {
         this.parent = main;
 
-        animation = "sunny";
-
         if(usesAvatar) {
             switch (animation) {
+                case "ball":
+                    try {
+                        Object3DData ball = Object3DBuilder.loadObj(assets, "models/ball", "ball_Frame.obj");
+                        ball.centerAndScale(2.0f);
+                        ball.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                        addObject(ball);
+                    } catch (Exception ex) {
+                        Log.e(TAG, "SceneLoader: some object in default scene not found");
+                    }
+                    break;
+                case "book":
+                    try {
+                        Object3DData book = Object3DBuilder.loadObj(assets, "models/book", "book_Frame.obj");
+                        book.centerAndScale(2.0f);
+                        book.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                        addObject(book);
+                    } catch (Exception ex) {
+                        Log.e(TAG, "SceneLoader: some object in default scene not found");
+                    }
+                    break;
+                case "computerWork":
+                    try {
+                        Object3DData computerWork = Object3DBuilder.loadObj(assets, "models/computerWork", "computerWork_Frame.obj");
+                        computerWork.centerAndScale(2.0f);
+                        computerWork.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                        addObject(computerWork);
+                    } catch (Exception ex) {
+                        Log.e(TAG, "SceneLoader: some object in default scene not found");
+                    }
+                    break;
+                case "computerWorkGlasses":
+                    try {
+                        Object3DData computerWorkGlasses = Object3DBuilder.loadObj(assets, "models/computerWorkGlasses", "computerWorkGlasses_Frame.obj");
+                        computerWorkGlasses.centerAndScale(2.0f);
+                        computerWorkGlasses.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                        addObject(computerWorkGlasses);
+                    } catch (Exception ex) {
+                        Log.e(TAG, "SceneLoader: some object in default scene not found");
+                    }
+                    break;
+                case "emptyBowl":
+                    try {
+                        Object3DData emptyBowl = Object3DBuilder.loadObj(assets, "models/emptyBowl", "emptyBowl_Frame.obj");
+                        emptyBowl.centerAndScale(2.0f);
+                        emptyBowl.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                        addObject(emptyBowl);
+                    } catch (Exception ex) {
+                        Log.e(TAG, "SceneLoader: some object in default scene not found");
+                    }
+                    break;
+                case "fullBowl":
+                    try {
+                        Object3DData fullBowl = Object3DBuilder.loadObj(assets, "models/fullBowl", "fullBowl_Frame.obj");
+                        fullBowl.centerAndScale(2.0f);
+                        fullBowl.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                        addObject(fullBowl);
+                    } catch (Exception ex) {
+                        Log.e(TAG, "SceneLoader: some object in default scene not found");
+                    }
+                    break;
+                case "sunglasses":
+                    try {
+                        Object3DData glasses = Object3DBuilder.loadObj(assets, "models/sunglasses", "sunglasses_Frame.obj");
+                        glasses.centerAndScale(2.0f);
+                        glasses.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                        addObject(glasses);
+                    } catch (Exception ex) {
+                        Log.e(TAG, "SceneLoader: some object in default scene not found");
+                    }
+                    break;
                 case "sunny":
                     try {
                         String[] assetsArray = assets.list("models/tailWagging");
