@@ -578,25 +578,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    private boolean insertAssignedHashtagsOfToDo(int todoId, ArrayList<String> hashtags) {
+    private void insertAssignedHashtagsOfToDo(int todoId, ArrayList<String> hashtags) {
         SQLiteDatabase db = this.getWritableDatabase();
         if(hashtags.size() > 0) {
-            ContentValues contentToDoHashtagValues = new ContentValues();
             for (String hashtag : hashtags) {
                 Log.d(TAG, "insertAssignedHashtags: hashtag name: " + hashtag);
+                ContentValues contentToDoHashtagValues = new ContentValues();
                 int hashtagId = getHashtagIdByName(hashtag);
                 contentToDoHashtagValues.put(COLUMN_TODOMATCHING_TODO_ID, todoId);
                 contentToDoHashtagValues.put(COLUMN_TODOMATCHING_HASHTAG_ID, hashtagId);
+                db.insert(TABLE_NAME_TODOMATCHING, null, contentToDoHashtagValues);
             }
-
-            long result = db.insert(TABLE_NAME_TODOMATCHING, null, contentToDoHashtagValues);
-            if (result == -1)
-                return false;
-            else
-                return true;
         }
-        else
-            return true;
     }
 
     private void deleteAssignedHashtagsByToDoId(int todoId) {
