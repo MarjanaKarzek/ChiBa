@@ -291,7 +291,7 @@ public class MainFragment extends Fragment implements CityChangeDialogFragment.C
                 animation = "sunny";
         } else {
             Random rand = new Random();
-            animation = currentActiveEventHashtags.get(rand.nextInt(currentActiveEventHashtags.size() - 1));
+            animation = currentActiveEventHashtags.get(rand.nextInt(currentActiveEventHashtags.size()));
         }
 
         scene = new SceneLoader(this, this.getActivity().getAssets(), usesAvatar, animation);
