@@ -28,7 +28,6 @@ import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
 public class ToDoListFragment extends Fragment {
     private static final String TAG = "ToDoListFragment";
 
-    private ListView todoList;
     private ToDoListAdapter adapter;
     private ArrayList<Integer> currentToDos = new ArrayList<Integer>();
     private View view;

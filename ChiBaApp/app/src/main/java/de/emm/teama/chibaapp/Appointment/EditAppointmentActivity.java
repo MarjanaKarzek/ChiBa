@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -166,6 +167,10 @@ public class EditAppointmentActivity extends AppCompatActivity {
         title.setText(currentEventTitle);
         location = (EditText) findViewById(R.id.addAppointmentEditTextLocation);
         location.setText(currentLocation);
+
+        title.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        searchfield.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        location.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
         //Delete Button
         Button deleteButton = (Button) findViewById(R.id.editAppointmentDeleteButton);

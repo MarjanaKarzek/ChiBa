@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -104,6 +105,11 @@ public class EditToDoActivity extends AppCompatActivity {
         duration.setText(currentDuration);
         location = (EditText) findViewById(R.id.editToDoEditTextLocation);
         location.setText(currentLocation);
+
+        title.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        duration.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        searchfield.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        location.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
         Button deleteButton = (Button) findViewById(R.id.editToDoDeleteButton);
         deleteButton.setOnClickListener(new View.OnClickListener() {

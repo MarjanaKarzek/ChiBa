@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -130,6 +131,10 @@ public class AddAppointmentActivity extends AppCompatActivity {
         //Remaining Form Fields Initialization
         title = (EditText) findViewById(R.id.addAppointmentEditTextTitle);
         location = (EditText) findViewById(R.id.addAppointmentEditTextLocation);
+
+        title.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        searchfield.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        location.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
     }
 
     private void setupSearchField() {
