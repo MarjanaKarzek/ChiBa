@@ -54,7 +54,9 @@ public class SceneLoader
 
         if(usesAvatar) {
             switch (animation) {
-                case "ball":
+                case "Ballsport":
+                case "Fitness":
+                case "Schwimmen":
                     try {
                         Object3DData ball = Object3DBuilder.loadObj(assets, "models/ball", "ball_Frame.obj");
                         ball.centerAndScale(2.0f);
@@ -64,7 +66,11 @@ public class SceneLoader
                         Log.e(TAG, "SceneLoader: some object in default scene not found");
                     }
                     break;
-                case "book":
+                case "Lernen":
+                case "Klausur":
+                case "Prüfungsanmeldung":
+                case "Kursbelegung":
+                case "Unterlagen":
                     try {
                         Object3DData book = Object3DBuilder.loadObj(assets, "models/book", "book_Frame.obj");
                         book.centerAndScale(2.0f);
@@ -74,7 +80,8 @@ public class SceneLoader
                         Log.e(TAG, "SceneLoader: some object in default scene not found");
                     }
                     break;
-                case "computerWork":
+                case "Laptop":
+                case "Lerngruppe":
                     try {
                         Object3DData computerWork = Object3DBuilder.loadObj(assets, "models/computerWork", "computerWork_Frame.obj");
                         computerWork.centerAndScale(2.0f);
@@ -84,9 +91,10 @@ public class SceneLoader
                         Log.e(TAG, "SceneLoader: some object in default scene not found");
                     }
                     break;
-                case "computerWorkGlasses":
+                case "Arbeit":
+                case "Hausaufgaben":
                     try {
-                        Object3DData computerWorkGlasses = Object3DBuilder.loadObj(assets, "models/computerWorkGlasses", "computerWorkGlasses_Frame.obj");
+                        Object3DData computerWorkGlasses = Object3DBuilder.loadObj(assets, "models/computerWorkGlasses", "computerWorkGlasses.obj");
                         computerWorkGlasses.centerAndScale(2.0f);
                         computerWorkGlasses.setPosition(new float[]{-1.0f, -0.5f, 0f});
                         addObject(computerWorkGlasses);
@@ -94,7 +102,7 @@ public class SceneLoader
                         Log.e(TAG, "SceneLoader: some object in default scene not found");
                     }
                     break;
-                case "emptyBowl":
+                case "Einkaufen":
                     try {
                         Object3DData emptyBowl = Object3DBuilder.loadObj(assets, "models/emptyBowl", "emptyBowl_Frame.obj");
                         emptyBowl.centerAndScale(2.0f);
@@ -104,7 +112,10 @@ public class SceneLoader
                         Log.e(TAG, "SceneLoader: some object in default scene not found");
                     }
                     break;
-                case "fullBowl":
+                case "Restaurant":
+                case "Brunch":
+                case "Business Lunch":
+                case "Mahlzeit":
                     try {
                         Object3DData fullBowl = Object3DBuilder.loadObj(assets, "models/fullBowl", "fullBowl_Frame.obj");
                         fullBowl.centerAndScale(2.0f);
@@ -114,17 +125,19 @@ public class SceneLoader
                         Log.e(TAG, "SceneLoader: some object in default scene not found");
                     }
                     break;
-                case "sunglasses":
-                    try {
-                        Object3DData glasses = Object3DBuilder.loadObj(assets, "models/sunglasses", "sunglasses_Frame.obj");
-                        glasses.centerAndScale(2.0f);
-                        glasses.setPosition(new float[]{-1.0f, -0.5f, 0f});
-                        addObject(glasses);
-                    } catch (Exception ex) {
-                        Log.e(TAG, "SceneLoader: some object in default scene not found");
-                    }
-                    break;
-                case "sunny":
+                case "Geburtstag":
+                case "Jahrestag":
+                case "Muttertag":
+                case "Vatertag":
+                case "Valentinstag":
+                case "Weihnachten":
+                case "Halloween":
+                case "Silvester":
+                case "Chanukka":
+                case "Chinesisches Neujahr":
+                case "Ostern":
+                case "Sommersonnenwende":
+                case "Party":
                     try {
                         String[] assetsArray = assets.list("models/tailWagging");
                         int counter = 1;
@@ -142,7 +155,17 @@ public class SceneLoader
                         Log.e(TAG, "SceneLoader: some object not found");
                     }
                     break;
-                case "rain":
+                case "Sonne":
+                    try {
+                        Object3DData glasses = Object3DBuilder.loadObj(assets, "models/sunglasses", "sunglasses_Frame.obj");
+                        glasses.centerAndScale(2.0f);
+                        glasses.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                        addObject(glasses);
+                    } catch (Exception ex) {
+                        Log.e(TAG, "SceneLoader: some object in default scene not found");
+                    }
+                    break;
+                case "Regen":
                     try {
                         String[] assetsArray = assets.list("models/umbrella");
                         int counter = 1;
@@ -162,9 +185,10 @@ public class SceneLoader
                     break;
                 default:
                     Log.d(TAG, "SceneLoader: default scene selected");
+                    // "Kino", "Wäsche waschen", "Geschirr spühlen", "Bügeln", "Staub wischen", "Staub saugen"
 
                     try {
-                        Object3DData chiba = Object3DBuilder.loadObj(assets, "models", "chiba.obj");
+                        Object3DData chiba = Object3DBuilder.loadObj(assets, "models/chiba", "chiba.obj");
                         chiba.centerAndScale(2.0f);
                         chiba.setPosition(new float[]{-1.0f, -0.5f, 0f});
                         addObject(chiba);

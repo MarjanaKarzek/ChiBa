@@ -286,9 +286,9 @@ public class MainFragment extends Fragment implements CityChangeDialogFragment.C
         if (currentActiveEventHashtags.isEmpty()) {
             int id = lastKnownWeatherID / 100;
             if (id <= 5)
-                animation = "rain";
+                animation = "Regen";
             else
-                animation = "sunny";
+                animation = "Sonne";
         } else {
             Random rand = new Random();
             animation = currentActiveEventHashtags.get(rand.nextInt(currentActiveEventHashtags.size()));
