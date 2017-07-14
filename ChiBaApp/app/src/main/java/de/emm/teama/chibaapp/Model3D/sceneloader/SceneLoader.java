@@ -58,7 +58,7 @@ public class SceneLoader
                     try {
                         Object3DData ball = Object3DBuilder.loadObj(assets, "models/ball", "ball_Frame.obj");
                         ball.centerAndScale(2.0f);
-                        ball.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                        ball.setPosition(new float[]{-1.0f, -0.5f, 1.0f});
                         addObject(ball);
                     } catch (Exception ex) {
                         Log.e(TAG, "SceneLoader: some object in default scene not found");
