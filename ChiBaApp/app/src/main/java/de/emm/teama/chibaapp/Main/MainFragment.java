@@ -384,8 +384,16 @@ public class MainFragment extends Fragment implements CityChangeDialogFragment.C
             long currentTime = new Date().getTime();
             if (currentTime >= sunrise && currentTime < sunset) {
                 icon = getActivity().getString(R.string.weather_sunny);
+                Log.d(TAG, "setWeatherIcon: weatherId" + actualId);
+                Log.d(TAG, "setWeatherIcon: weatherId" + sunrise);
+                Log.d(TAG, "setWeatherIcon: weatherId" + currentTime);
+                Log.d(TAG, "setWeatherIcon: weatherId" + sunset);
             } else {
                 icon = getActivity().getString(R.string.weather_clear_night);
+                Log.d(TAG, "setWeatherIcon: weatherId" + actualId);
+                Log.d(TAG, "setWeatherIcon: weatherId" + sunrise);
+                Log.d(TAG, "setWeatherIcon: weatherId" + currentTime);
+                Log.d(TAG, "setWeatherIcon: weatherId" + sunset);
             }
         } else {
             switch (id) {
