@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib tailWagging_frame29.mtl
+mtllib tailWagging.mtl
 g newRigging:skinCluster1Set newRigging:tweakSet1
 v 0.257962 3.211670 -1.927234
 v 0.319246 3.473922 -1.778754

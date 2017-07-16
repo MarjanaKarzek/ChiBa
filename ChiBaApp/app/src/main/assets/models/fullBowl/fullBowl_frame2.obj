@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib fullBowl_frame2.mtl
+mtllib fullBowl.mtl
 g default
 v -0.352732 7.521269 0.024604
 v -0.516763 7.771244 0.213234

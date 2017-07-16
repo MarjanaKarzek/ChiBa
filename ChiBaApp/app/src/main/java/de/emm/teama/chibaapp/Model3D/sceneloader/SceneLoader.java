@@ -58,10 +58,18 @@ public class SceneLoader
                 case "Fitness":
                 case "Schwimmen":
                     try {
-                        Object3DData ball = Object3DBuilder.loadObj(assets, "models/ball", "ball_Frame.obj");
-                        ball.centerAndScale(2.0f);
-                        ball.setPosition(new float[]{-1.0f, -0.5f, 1.0f});
-                        addObject(ball);
+                        String[] assetsArray = assets.list("models/ball");
+                        int counter = 1;
+                        for (String asset: assetsArray) {
+                            if(asset.endsWith(".obj")){
+                                String filename = "ball_frame" + counter + ".obj";
+                                Object3DData object = Object3DBuilder.loadObj(assets, "models/ball", filename);
+                                object.centerAndScale(2.0f);
+                                object.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                                addObject(object);
+                                counter ++;
+                            }
+                        }
                     } catch (Exception ex) {
                         Log.e(TAG, "SceneLoader: some object in default scene not found");
                     }
@@ -72,10 +80,18 @@ public class SceneLoader
                 case "Kursbelegung":
                 case "Unterlagen":
                     try {
-                        Object3DData book = Object3DBuilder.loadObj(assets, "models/book", "book_Frame.obj");
-                        book.centerAndScale(2.0f);
-                        book.setPosition(new float[]{-1.0f, -0.5f, 0f});
-                        addObject(book);
+                        String[] assetsArray = assets.list("models/book");
+                        int counter = 1;
+                        for (String asset: assetsArray) {
+                            if(asset.endsWith(".obj")){
+                                String filename = "book_frame" + counter + ".obj";
+                                Object3DData object = Object3DBuilder.loadObj(assets, "models/book", filename);
+                                object.centerAndScale(2.0f);
+                                object.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                                addObject(object);
+                                counter ++;
+                            }
+                        }
                     } catch (Exception ex) {
                         Log.e(TAG, "SceneLoader: some object in default scene not found");
                     }
@@ -83,10 +99,18 @@ public class SceneLoader
                 case "Laptop":
                 case "Lerngruppe":
                     try {
-                        Object3DData computerWork = Object3DBuilder.loadObj(assets, "models/computerWork", "computerWork_Frame.obj");
-                        computerWork.centerAndScale(2.0f);
-                        computerWork.setPosition(new float[]{-1.0f, -0.5f, 0f});
-                        addObject(computerWork);
+                        String[] assetsArray = assets.list("models/computerWork");
+                        int counter = 1;
+                        for (String asset: assetsArray) {
+                            if(asset.endsWith(".obj")){
+                                String filename = "computerWork_frame" + counter + ".obj";
+                                Object3DData object = Object3DBuilder.loadObj(assets, "models/computerWork", filename);
+                                object.centerAndScale(2.0f);
+                                object.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                                addObject(object);
+                                counter ++;
+                            }
+                        }
                     } catch (Exception ex) {
                         Log.e(TAG, "SceneLoader: some object in default scene not found");
                     }
@@ -94,20 +118,36 @@ public class SceneLoader
                 case "Arbeit":
                 case "Hausaufgaben":
                     try {
-                        Object3DData computerWorkGlasses = Object3DBuilder.loadObj(assets, "models/computerWorkGlasses", "computerWorkGlasses.obj");
-                        computerWorkGlasses.centerAndScale(2.0f);
-                        computerWorkGlasses.setPosition(new float[]{-1.0f, -0.5f, 0f});
-                        addObject(computerWorkGlasses);
+                        String[] assetsArray = assets.list("models/computerWorkGlasses");
+                        int counter = 1;
+                        for (String asset: assetsArray) {
+                            if(asset.endsWith(".obj")){
+                                String filename = "computerWorkGlasses_frame" + counter + ".obj";
+                                Object3DData object = Object3DBuilder.loadObj(assets, "models/computerWorkGlasses", filename);
+                                object.centerAndScale(2.0f);
+                                object.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                                addObject(object);
+                                counter ++;
+                            }
+                        }
                     } catch (Exception ex) {
                         Log.e(TAG, "SceneLoader: some object in default scene not found");
                     }
                     break;
                 case "Einkaufen":
                     try {
-                        Object3DData emptyBowl = Object3DBuilder.loadObj(assets, "models/emptyBowl", "emptyBowl_Frame.obj");
-                        emptyBowl.centerAndScale(2.0f);
-                        emptyBowl.setPosition(new float[]{-1.0f, -0.5f, 0f});
-                        addObject(emptyBowl);
+                        String[] assetsArray = assets.list("models/emptyBowl");
+                        int counter = 1;
+                        for (String asset: assetsArray) {
+                            if(asset.endsWith(".obj")){
+                                String filename = "emptyBowl_frame" + counter + ".obj";
+                                Object3DData object = Object3DBuilder.loadObj(assets, "models/emptyBowl", filename);
+                                object.centerAndScale(2.0f);
+                                object.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                                addObject(object);
+                                counter ++;
+                            }
+                        }
                     } catch (Exception ex) {
                         Log.e(TAG, "SceneLoader: some object in default scene not found");
                     }
@@ -117,10 +157,18 @@ public class SceneLoader
                 case "Business Lunch":
                 case "Mahlzeit":
                     try {
-                        Object3DData fullBowl = Object3DBuilder.loadObj(assets, "models/fullBowl", "fullBowl_Frame.obj");
-                        fullBowl.centerAndScale(2.0f);
-                        fullBowl.setPosition(new float[]{-1.0f, -0.5f, 0f});
-                        addObject(fullBowl);
+                        String[] assetsArray = assets.list("models/fullBowl");
+                        int counter = 1;
+                        for (String asset: assetsArray) {
+                            if(asset.endsWith(".obj")){
+                                String filename = "fullBowl_frame" + counter + ".obj";
+                                Object3DData object = Object3DBuilder.loadObj(assets, "models/fullBowl", filename);
+                                object.centerAndScale(2.0f);
+                                object.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                                addObject(object);
+                                counter ++;
+                            }
+                        }
                     } catch (Exception ex) {
                         Log.e(TAG, "SceneLoader: some object in default scene not found");
                     }
@@ -157,10 +205,18 @@ public class SceneLoader
                     break;
                 case "Sonne":
                     try {
-                        Object3DData glasses = Object3DBuilder.loadObj(assets, "models/sunglasses", "sunglasses_frame1.obj");
-                        glasses.centerAndScale(2.0f);
-                        glasses.setPosition(new float[]{-1.0f, -0.5f, 0f});
-                        addObject(glasses);
+                        String[] assetsArray = assets.list("models/sunglasses");
+                        int counter = 1;
+                        for (String asset: assetsArray) {
+                            if(asset.endsWith(".obj")){
+                                String filename = "sunglasses_frame" + counter + ".obj";
+                                Object3DData rain = Object3DBuilder.loadObj(assets, "models/sunglasses", filename);
+                                rain.centerAndScale(2.0f);
+                                rain.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                                addObject(rain);
+                                counter ++;
+                            }
+                        }
                     } catch (Exception ex) {
                         Log.e(TAG, "SceneLoader: some object in default scene not found");
                     }

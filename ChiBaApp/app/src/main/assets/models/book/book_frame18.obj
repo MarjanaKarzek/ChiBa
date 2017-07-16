@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib book_frame18.mtl
+mtllib book.mtl
 g StidyGlasses_Computer_Sitting:Sitting:newRigging:skinCluster1Set StidyGlasses_Computer_Sitting:Sitting:newRigging:tweakSet1
 v -0.508257 0.722577 -0.884859
 v -0.584377 0.946248 -1.081721

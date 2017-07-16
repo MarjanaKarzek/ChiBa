@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib computerWork_frame9.mtl
+mtllib computerWork.mtl
 g Sitting:newRigging:skinCluster1Set Sitting:newRigging:tweakSet1
 v 0.836973 0.722577 -0.583760
 v 1.026417 0.946248 -0.676820

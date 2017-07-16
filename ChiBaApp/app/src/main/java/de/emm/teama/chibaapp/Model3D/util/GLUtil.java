@@ -110,7 +110,7 @@ public final class GLUtil {
 		GLUtil.checkGlError("glGenTextures");
 
 		if (textureHandle[0] != 0) {
-			Log.i("GLUtil", "Handler: " + textureHandle[0]);
+//			Log.i("GLUtil", "Handler: " + textureHandle[0]);
 
 			final BitmapFactory.Options options = new BitmapFactory.Options();
 			// By default, Android applies pre-scaling to bitmaps depending on the resolution of your device and which

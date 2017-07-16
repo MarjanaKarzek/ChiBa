@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib ball_frame26.mtl
+mtllib ball.mtl
 g default
 v 8.868609 6.134247 -3.130090
 v 8.782884 6.134247 -3.215811

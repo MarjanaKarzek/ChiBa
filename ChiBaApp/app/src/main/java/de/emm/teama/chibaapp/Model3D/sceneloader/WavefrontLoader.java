@@ -169,8 +169,8 @@ public class WavefrontLoader {
 						continue;
 					else if (line.charAt(0) == 'o') // object group
 						continue;
-					else
-						System.out.println("Ignoring line " + lineNum + " : " + line);
+//					else
+//						System.out.println("Ignoring line " + lineNum + " : " + line);
 				}
 			}
 		} catch (IOException e) {
@@ -187,8 +187,8 @@ public class WavefrontLoader {
 			}
 		}
 
-		Log.i("WavefrontLoader","Number of vertices:"+numVerts);
-		Log.i("WavefrontLoader","Number of faces:"+numFaces);
+//		Log.i("WavefrontLoader","Number of vertices:"+numVerts);
+//		Log.i("WavefrontLoader","Number of faces:"+numFaces);
 	}
 
 	/* Allocate buffers for pushing the model data */
@@ -275,8 +275,8 @@ public class WavefrontLoader {
 						continue;
 					else if (line.charAt(0) == 'o') // object group
 						continue;
-					else
-						System.out.println("Ignoring line " + lineNum + " : " + line);
+//					else
+//						System.out.println("Ignoring line " + lineNum + " : " + line);
 				}
 			}
 		} catch (IOException e) {
@@ -340,7 +340,7 @@ public class WavefrontLoader {
     private boolean addTexCoord(String line, boolean isFirstTC) {
 		if (isFirstTC) {
 			hasTCs3D = checkTC3D(line);
-			System.out.println("Using 3D tex coords: " + hasTCs3D);
+//			System.out.println("Using 3D tex coords: " + hasTCs3D);
 		}
 
 		Tuple3 texCoord = readTCTuple(line);
@@ -561,7 +561,7 @@ public class WavefrontLoader {
 		 * Parse the MTL file line-by-line, building Material objects which are collected in the materials ArrayList.
 		 */
 		{
-			Log.v("materials", "Reading material...");
+//			Log.v("materials", "Reading material...");
 			try {
 				String line;
 				Material currMaterial = null; // current material
@@ -577,7 +577,7 @@ public class WavefrontLoader {
 
 						// start collecting info for new material
 						String name = line.substring(7);
-						Log.d("Loader", "New material found: " + name);
+//						Log.d("Loader", "New material found: " + name);
 						currMaterial = new Material(name);
 					} else if (line.startsWith("map_Kd ")) { // texture filename
 						// String fileName = new File(file.getParent(), line.substring(7)).getAbsolutePath();
@@ -603,8 +603,8 @@ public class WavefrontLoader {
 						// not implemented
 					} else if (line.charAt(0) == '#') // comment line
 						continue;
-					else
-						System.out.println("Ignoring MTL line: " + line);
+//					else
+//						System.out.println("Ignoring MTL line: " + line);
 
 				}
 				if (currMaterial != null) {
