@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Inventory : MonoBehaviour {
 
     public Image[] guiItemImages;
-    private Dictionary<InventoryItem, int> items = new Dictionary<InventoryItem, int>();
+    public Dictionary<InventoryItem, int> items = new Dictionary<InventoryItem, int>();
 
     private void Start()
     {
@@ -20,7 +20,6 @@ public class Inventory : MonoBehaviour {
         for(int i = 0; i<guiCount; i++)
         {
             guiItemImages[i].enabled = false;
-           // guiItemImages[i].GetComponentInChildren<Text>().text = "";
         }
 
         int index = 0;
@@ -28,7 +27,6 @@ public class Inventory : MonoBehaviour {
         {
             guiItemImages[index].enabled = true;
             guiItemImages[index].sprite = current.Key.sprite;
-            //guiItemImages[index].GetComponentInChildren<Text>().text = current.Value.ToString();
             index++;
         }
     }

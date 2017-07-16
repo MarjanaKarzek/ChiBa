@@ -1,0 +1,166 @@
+fileFormatVersion: 2
+guid: 4bef5d4122cb6c54b8b21a15d5d4344c
+timeCreated: 1500049633
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: bottom
+    100002: headRe:left
+    100004: pCone3
+    100006: polySurface14
+    100008: //RootNode
+    100010: SonnenbrilleClosed1:back
+    100012: SonnenbrilleClosed1:bottom
+    100014: SonnenbrilleClosed:back
+    100016: SonnenbrilleClosed:bottom
+    100018: SonnenbrilleClosed:polySurface1
+    100020: SonnenbrilleClosed:polySurface10
+    100022: SonnenbrilleClosed:polySurface10 1
+    100024: SonnenbrilleClosed:polySurface11
+    100026: SonnenbrilleClosed:polySurface12
+    100028: SonnenbrilleClosed:polySurface13
+    100030: SonnenbrilleClosed:polySurface14
+    100032: SonnenbrilleClosed:polySurface2
+    100034: SonnenbrilleClosed:polySurface3
+    100036: SonnenbrilleClosed:polySurface3 1
+    100038: SonnenbrilleClosed:polySurface4
+    100040: SonnenbrilleClosed:polySurface4 1
+    100042: SonnenbrilleClosed:polySurface5
+    100044: SonnenbrilleClosed:polySurface6
+    100046: SonnenbrilleClosed:polySurface7
+    100048: SonnenbrilleClosed:pPipe7
+    100050: SonnenbrilleClosed:transform1
+    100052: SonnenbrilleClosed:transform10
+    100054: SonnenbrilleClosed:transform11
+    100056: SonnenbrilleClosed:transform12
+    100058: SonnenbrilleClosed:transform13
+    100060: SonnenbrilleClosed:transform14
+    100062: SonnenbrilleClosed:transform15
+    100064: SonnenbrilleClosed:transform2
+    100066: SonnenbrilleClosed:transform3
+    100068: SonnenbrilleClosed:transform4
+    100070: SonnenbrilleClosed:transform5
+    100072: SonnenbrilleClosed:transform6
+    100074: SonnenbrilleClosed:transform7
+    100076: SonnenbrilleClosed:transform8
+    100078: SonnenbrilleClosed:transform9
+    100080: transform1
+    400000: bottom
+    400002: headRe:left
+    400004: pCone3
+    400006: polySurface14
+    400008: //RootNode
+    400010: SonnenbrilleClosed1:back
+    400012: SonnenbrilleClosed1:bottom
+    400014: SonnenbrilleClosed:back
+    400016: SonnenbrilleClosed:bottom
+    400018: SonnenbrilleClosed:polySurface1
+    400020: SonnenbrilleClosed:polySurface10
+    400022: SonnenbrilleClosed:polySurface10 1
+    400024: SonnenbrilleClosed:polySurface11
+    400026: SonnenbrilleClosed:polySurface12
+    400028: SonnenbrilleClosed:polySurface13
+    400030: SonnenbrilleClosed:polySurface14
+    400032: SonnenbrilleClosed:polySurface2
+    400034: SonnenbrilleClosed:polySurface3
+    400036: SonnenbrilleClosed:polySurface3 1
+    400038: SonnenbrilleClosed:polySurface4
+    400040: SonnenbrilleClosed:polySurface4 1
+    400042: SonnenbrilleClosed:polySurface5
+    400044: SonnenbrilleClosed:polySurface6
+    400046: SonnenbrilleClosed:polySurface7
+    400048: SonnenbrilleClosed:pPipe7
+    400050: SonnenbrilleClosed:transform1
+    400052: SonnenbrilleClosed:transform10
+    400054: SonnenbrilleClosed:transform11
+    400056: SonnenbrilleClosed:transform12
+    400058: SonnenbrilleClosed:transform13
+    400060: SonnenbrilleClosed:transform14
+    400062: SonnenbrilleClosed:transform15
+    400064: SonnenbrilleClosed:transform2
+    400066: SonnenbrilleClosed:transform3
+    400068: SonnenbrilleClosed:transform4
+    400070: SonnenbrilleClosed:transform5
+    400072: SonnenbrilleClosed:transform6
+    400074: SonnenbrilleClosed:transform7
+    400076: SonnenbrilleClosed:transform8
+    400078: SonnenbrilleClosed:transform9
+    400080: transform1
+    2300000: pCone3
+    2300002: polySurface14
+    3300000: pCone3
+    3300002: polySurface14
+    4300000: pCone3
+    4300002: polySurface14
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 1
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

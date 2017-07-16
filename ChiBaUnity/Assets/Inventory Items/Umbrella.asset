@@ -9,9 +9,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f8e60e8f17a19e4e98953cc9d170ed0, type: 3}
-  m_Name: Computer
+  m_Name: Umbrella
   m_EditorClassIdentifier: 
-  itemName: Computer
-  sprite: {fileID: 21300000, guid: a0128f56dfc055c409b4cf426fae3095, type: 3}
+  itemName: Umbrella
+  sprite: {fileID: 21300000, guid: efbd4f178a147ec49870c99dd3f2248c, type: 3}
   picSound: {fileID: 0}
-  prefab: {fileID: 1033980657435130, guid: 376f4972164135b4194ffa9849a76a79, type: 2}
+  prefab: {fileID: 1745317165701082, guid: 70b7084d3d8592a4c9e2449298c94bf8, type: 2}
