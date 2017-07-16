@@ -51,7 +51,6 @@ public class SceneLoader
     public SceneLoader(MainFragment main, AssetManager assets, boolean usesAvatar, String animation)
     {
         this.parent = main;
-        animation = "Regen";
 
         if(usesAvatar) {
             switch (animation) {
@@ -144,7 +143,7 @@ public class SceneLoader
                         int counter = 1;
                         for (String asset: assetsArray) {
                             if(asset.endsWith(".obj")){
-                                String filename = "tailWagging_Frame" + counter + ".obj";
+                                String filename = "tailWagging_frame" + counter + ".obj";
                                 Object3DData rain = Object3DBuilder.loadObj(assets, "models/tailWagging", filename);
                                 rain.centerAndScale(2.0f);
                                 rain.setPosition(new float[]{-1.0f, -0.5f, 0f});
@@ -158,7 +157,7 @@ public class SceneLoader
                     break;
                 case "Sonne":
                     try {
-                        Object3DData glasses = Object3DBuilder.loadObj(assets, "models/sunglasses", "sunglasses_Frame.obj");
+                        Object3DData glasses = Object3DBuilder.loadObj(assets, "models/sunglasses", "sunglasses_frame1.obj");
                         glasses.centerAndScale(2.0f);
                         glasses.setPosition(new float[]{-1.0f, -0.5f, 0f});
                         addObject(glasses);
@@ -168,18 +167,18 @@ public class SceneLoader
                     break;
                 case "Regen":
                     try {
-                        //String[] assetsArray = assets.list("models/umbrella");
-                        //int counter = 1;
-                        //for (String asset: assetsArray) {
-                            //if(asset.endsWith(".obj")){
-                                String filename = "umbrella_Frame.obj"; //+ counter + ".obj";
+                        String[] assetsArray = assets.list("models/umbrella");
+                        int counter = 1;
+                        for (String asset: assetsArray) {
+                            if(asset.endsWith(".obj")){
+                                String filename = "umbrella_frame" + counter + ".obj";
                                 Object3DData rain = Object3DBuilder.loadObj(assets, "models/umbrella", filename);
                                 rain.centerAndScale(2.0f);
                                 rain.setPosition(new float[]{-1.0f, -0.5f, 0f});
                                 addObject(rain);
-                                //counter ++;
-                            //}
-                        //}
+                                counter ++;
+                            }
+                        }
                     } catch (Exception ex) {
                         Log.e(TAG, "SceneLoader: some object not found");
                     }
