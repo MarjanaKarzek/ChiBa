@@ -379,11 +379,10 @@ public class Object3DData {
 
         FloatBuffer vertexBuffer = getVertexArrayBuffer() != null ? getVertexArrayBuffer() : getVertexBuffer();
         if (vertexBuffer == null) {
-            Log.v("Object3DData", "Scaling for '" + getId() + "' I found that there is no vertex data");
+            Log.v("Object3DData", "Scaling for '" + getId() + "No vertex data found.");
             return this;
         }
 
-//        Log.i("Object3DData", "Calculating dimensions for '" + getId() + "...");
         for (int i = 0; i < vertexBuffer.capacity(); i += 3) {
             if (vertexBuffer.get(i) > rightPt)
                 rightPt = vertexBuffer.get(i);
@@ -404,8 +403,6 @@ public class Object3DData {
         float yc = (topPt + bottomPt) / 2.0f;
         float zc = (nearPt + farPt) / 2.0f;
 
-        // this.setOriginalPosition(new float[]{-xc,-yc,-zc});
-
         // calculate largest dimension
         float height = topPt - bottomPt;
         float depth = nearPt - farPt;
@@ -414,18 +411,12 @@ public class Object3DData {
             largest = height;
         if (depth > largest)
             largest = depth;
-//        Log.i("Object3DData", "Largest dimension ["+largest+"]");
-
-        // scale object
 
         // calculate a scale factor
         float scaleFactor = 1.0f;
-        // System.out.println("Largest dimension: " + largest);
         if (largest != 0.0f)
             scaleFactor = (maxSize / largest);
-//        Log.i("Object3DData", "Centering & scaling '" + getId() + "' to (" + xc + "," + yc + "," + zc + ") scale: '" + scaleFactor + "'");
 
-        // this.setOriginalScale(new float[]{scaleFactor,scaleFactor,scaleFactor});
 
         // modify the model's vertices
         for (int i = 0; i < vertexBuffer.capacity(); i += 3) {

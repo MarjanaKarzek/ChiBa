@@ -18,11 +18,12 @@ import android.util.Log;
  *
  * @author Natalie Grasser
  * @version 1.0
- * @since 2017-04-23, modified 2017-06-28
+ * @since 2017-06-28
  *
  * <p>
  * Based on
  * Authos: Andres Oviedo
+ * Date: 2017-04-23
  * Title: Android 3D Model Viewer
  * Version: 1.3.1
  * Availability: https://github.com/andresoviedo/android-3D-model-viewer
@@ -71,8 +72,8 @@ public class SceneLoader
     public SceneLoader(MainFragment main, AssetManager assets, boolean usesAvatar, String animation)
     {
         this.parent = main;
-        //Tests with Ballsport, Lernen, Laptop, Arbeit, Einkaufen, Restaurant, Geburtstag, Sonne, Regen, ""
-        //animation = "";
+        // Tests with Ballsport, Lernen, Laptop, Arbeit, Einkaufen, Restaurant, Geburtstag, Sonne, Regen, ""
+        // animation = "Ballsport";
 
         if(usesAvatar) {
             switch (animation) {
@@ -88,7 +89,6 @@ public class SceneLoader
                         for (String asset: assetsArray) {
                             if(asset.endsWith(".obj")){
                                 String filename = "ball_frame" + counter + ".obj";
-                                Log.d(TAG, "SceneLoader: reading file " + filename);
                                 Object3DData object = Object3DBuilder.loadObj(assets, "models/ball", filename);
                                 object.centerAndScale(2.0f);
                                 object.setPosition(new float[]{-1.0f, -0.5f, 0f});
@@ -115,7 +115,6 @@ public class SceneLoader
                         for (String asset: assetsArray) {
                             if(asset.endsWith(".obj")){
                                 String filename = "book_frame" + counter + ".obj";
-                                Log.d(TAG, "SceneLoader: reading file " + filename);
                                 Object3DData object = Object3DBuilder.loadObj(assets, "models/book", filename);
                                 object.centerAndScale(2.0f);
                                 object.setPosition(new float[]{-1.0f, -0.5f, 0f});
@@ -139,7 +138,6 @@ public class SceneLoader
                         for (String asset: assetsArray) {
                             if(asset.endsWith(".obj")){
                                 String filename = "computerWork_frame" + counter + ".obj";
-                                Log.d(TAG, "SceneLoader: reading file " + filename);
                                 Object3DData object = Object3DBuilder.loadObj(assets, "models/computerWork", filename);
                                 object.centerAndScale(2.0f);
                                 object.setPosition(new float[]{-1.0f, -0.5f, 0f});
@@ -162,7 +160,6 @@ public class SceneLoader
                         for (String asset: assetsArray) {
                             if(asset.endsWith(".obj")){
                                 String filename = "computerWorkGlasses_frame" + counter + ".obj";
-                                Log.d(TAG, "SceneLoader: reading file " + filename);
                                 Object3DData object = Object3DBuilder.loadObj(assets, "models/computerWorkGlasses", filename);
                                 object.centerAndScale(2.0f);
                                 object.setPosition(new float[]{-1.0f, -0.5f, 0f});
@@ -185,7 +182,6 @@ public class SceneLoader
                         for (String asset: assetsArray) {
                             if(asset.endsWith(".obj")){
                                 String filename = "emptyBowl_frame" + counter + ".obj";
-                                Log.d(TAG, "SceneLoader: reading file " + filename);
                                 Object3DData object = Object3DBuilder.loadObj(assets, "models/emptyBowl", filename);
                                 object.centerAndScale(2.0f);
                                 object.setPosition(new float[]{-1.0f, -0.5f, 0f});
@@ -211,7 +207,6 @@ public class SceneLoader
                         for (String asset: assetsArray) {
                             if(asset.endsWith(".obj")){
                                 String filename = "fullBowl_frame" + counter + ".obj";
-                                Log.d(TAG, "SceneLoader: reading file " + filename);
                                 Object3DData object = Object3DBuilder.loadObj(assets, "models/fullBowl", filename);
                                 object.centerAndScale(2.0f);
                                 object.setPosition(new float[]{-1.0f, -0.5f, 0f});
@@ -246,11 +241,10 @@ public class SceneLoader
                         for (String asset: assetsArray) {
                             if(asset.endsWith(".obj")){
                                 String filename = "tailWagging_frame" + counter + ".obj";
-                                Log.d(TAG, "SceneLoader: reading file " + filename);
-                                Object3DData rain = Object3DBuilder.loadObj(assets, "models/tailWag", filename);
-                                rain.centerAndScale(2.0f);
-                                rain.setPosition(new float[]{-1.0f, -0.5f, 0f});
-                                addObject(rain);
+                                Object3DData object = Object3DBuilder.loadObj(assets, "models/tailWag", filename);
+                                object.centerAndScale(2.0f);
+                                object.setPosition(new float[]{-1.0f, -0.5f, 0f});
+                                addObject(object);
                                 counter ++;
                             }
                         }
@@ -268,7 +262,6 @@ public class SceneLoader
                         for (String asset: assetsArray) {
                             if(asset.endsWith(".obj")){
                                 String filename = "sunglasses_frame" + counter + ".obj";
-                                Log.d(TAG, "SceneLoader: reading file " + filename);
                                 Object3DData rain = Object3DBuilder.loadObj(assets, "models/sunglasses", filename);
                                 rain.centerAndScale(2.0f);
                                 rain.setPosition(new float[]{-1.0f, -0.5f, 0f});
@@ -291,7 +284,6 @@ public class SceneLoader
                         for (String asset: assetsArray) {
                             if(asset.endsWith(".obj")){
                                 String filename = "umbrella_Frame" + counter + ".obj";
-                                Log.d(TAG, "SceneLoader: reading file " + filename);
                                 Object3DData rain = Object3DBuilder.loadObj(assets, "models/umbrella", filename);
                                 rain.centerAndScale(2.0f);
                                 rain.setPosition(new float[]{-1.0f, -0.5f, 0f});
@@ -305,8 +297,6 @@ public class SceneLoader
                     }
                     break;
                 default:
-                    Log.d(TAG, "SceneLoader: default scene selected");
-                    // "Kino", "Wäsche waschen", "Geschirr spühlen", "Bügeln", "Staub wischen", "Staub saugen"
 
                     loopable = false;
                     rewindable = false;
@@ -356,6 +346,16 @@ public class SceneLoader
         }
         else
             objects.get(0).setVisible(true);
+    }
+
+    private float[] rotateAroundY(Object3DData obj, float angle) {
+        float[] rotation = obj.getRotation();
+
+        float x = (float) (rotation[2] * Math.sin(angle) + rotation[0] * Math.cos(angle));
+        float y = rotation[1];
+        float z = (float) (rotation[2] * Math.cos(angle) - rotation[0] * Math.sin(angle));
+
+        return new float[]{x, y, z};
     }
 
 	private void animateLight() {
