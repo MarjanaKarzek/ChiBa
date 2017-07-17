@@ -7,7 +7,7 @@ public class Shooting : MonoBehaviour {
     public InventoryItem computer;
     public InventoryItem sunglasses;
     public InventoryItem umbrella;
-    public InventoryItem readingglasses;
+    public InventoryItem ball;
 
     private Inventory inventory;
 
@@ -42,12 +42,12 @@ public class Shooting : MonoBehaviour {
             inventory.RemoveItem(umbrella);
         }
 
-        else if (currentItems.ContainsKey(readingglasses))
+        else if (currentItems.ContainsKey(ball))
         {
-            GameObject obj = Instantiate(readingglasses.prefab, transform.position, transform.rotation);
+            GameObject obj = Instantiate(ball.prefab, transform.position, transform.rotation);
             obj.transform.position = new Vector3(Random.Range(-200.0f, 200.0f), 700, Random.Range(-200.0f, 200.0f));
 
-            inventory.RemoveItem(readingglasses);
+            inventory.RemoveItem(ball);
         }
     }
 }

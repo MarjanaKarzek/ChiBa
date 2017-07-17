@@ -1,10 +1,14 @@
 fileFormatVersion: 2
 guid: d0ce6410296dbbb47b8fae4bc258deed
-timeCreated: 1499627835
+timeCreated: 1500308176
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - computer: {fileID: 11400000, guid: 5ff542045af337b4487f55e7b11fc8ad, type: 2}
+  - sunglasses: {fileID: 11400000, guid: 207b5f2779bf0ef41b0175ffd07dfabe, type: 2}
+  - umbrella: {instanceID: 0}
+  - ball: {fileID: 11400000, guid: e8dbef5399b83bc4cba9b59ddd19ff78, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

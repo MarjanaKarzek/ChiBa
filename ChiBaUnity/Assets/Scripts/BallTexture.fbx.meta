@@ -1,10 +1,31 @@
 fileFormatVersion: 2
-guid: 7052b1a57862b8f4c8b3a6510470e7a7
-timeCreated: 1499086226
+guid: 1b826e18bfcc5494aa32fe9cfbaea369
+timeCreated: 1500311404
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    100000: Ball:Ball1
+    100002: Ball:bottom
+    100004: Ball:walk1:newRigging:bottom
+    100006: Ball:walk1:newRigging:headRe:left
+    100008: Ball:walk1:newRigging:left
+    100010: Ball:walk1:newRigging:pCone3
+    100012: //RootNode
+    400000: Ball:Ball1
+    400002: Ball:bottom
+    400004: Ball:walk1:newRigging:bottom
+    400006: Ball:walk1:newRigging:headRe:left
+    400008: Ball:walk1:newRigging:left
+    400010: Ball:walk1:newRigging:pCone3
+    400012: //RootNode
+    2300000: Ball:Ball1
+    2300002: Ball:walk1:newRigging:pCone3
+    3300000: Ball:Ball1
+    3300002: Ball:walk1:newRigging:pCone3
+    4300000: Ball:Ball1
+    4300002: Ball:walk1:newRigging:pCone3
+    9500000: //RootNode
   materials:
     importMaterials: 1
     materialName: 1

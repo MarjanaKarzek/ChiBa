@@ -1,0 +1,157 @@
+fileFormatVersion: 2
+guid: 2a6aa245d6a7cbe4280623d67973fe9c
+timeCreated: 1500313811
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: polySurface1
+    100004: polySurface16
+    100006: polySurface2
+    100008: polySurface3
+    100010: polySurface4
+    100012: polySurface5
+    100014: polySurface7
+    100016: polySurface8
+    100018: SofaFertig1:back
+    100020: SofaFertig1:bottom
+    100022: SofaFertig:back
+    100024: SofaFertig:bottom
+    100026: SofaFertig:pCube1
+    100028: SofaFertig:pCube2
+    100030: SofaFertig:pCube3
+    100032: SofaFertig:pCube4
+    100034: SofaFertig:pCube5
+    100036: SofaFertig:pCube6
+    100038: SofaFertig:pCube7
+    100040: SofaFertig:pCube8
+    100042: SofaFertig:pCube9
+    100044: SofaFertig:transform1
+    100046: SofaFertig:transform2
+    100048: SofaFertig:transform3
+    100050: SofaFertig:transform4
+    100052: SofaFertig:transform5
+    100054: SofaFertig:transform6
+    100056: SofaFertig:transform7
+    100058: SofaFertig:transform8
+    100060: transform1
+    100062: transform2
+    100064: transform3
+    100066: transform4
+    100068: transform5
+    100070: transform6
+    100072: transform7
+    100074: transform8
+    400000: //RootNode
+    400002: polySurface1
+    400004: polySurface16
+    400006: polySurface2
+    400008: polySurface3
+    400010: polySurface4
+    400012: polySurface5
+    400014: polySurface7
+    400016: polySurface8
+    400018: SofaFertig1:back
+    400020: SofaFertig1:bottom
+    400022: SofaFertig:back
+    400024: SofaFertig:bottom
+    400026: SofaFertig:pCube1
+    400028: SofaFertig:pCube2
+    400030: SofaFertig:pCube3
+    400032: SofaFertig:pCube4
+    400034: SofaFertig:pCube5
+    400036: SofaFertig:pCube6
+    400038: SofaFertig:pCube7
+    400040: SofaFertig:pCube8
+    400042: SofaFertig:pCube9
+    400044: SofaFertig:transform1
+    400046: SofaFertig:transform2
+    400048: SofaFertig:transform3
+    400050: SofaFertig:transform4
+    400052: SofaFertig:transform5
+    400054: SofaFertig:transform6
+    400056: SofaFertig:transform7
+    400058: SofaFertig:transform8
+    400060: transform1
+    400062: transform2
+    400064: transform3
+    400066: transform4
+    400068: transform5
+    400070: transform6
+    400072: transform7
+    400074: transform8
+    2300000: polySurface16
+    3300000: polySurface16
+    4300000: polySurface16
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 1
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

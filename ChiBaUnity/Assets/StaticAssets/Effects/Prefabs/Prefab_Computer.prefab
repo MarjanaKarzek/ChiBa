@@ -30,7 +30,7 @@ GameObject:
   - component: {fileID: 114426522376634154}
   - component: {fileID: 114359508369747018}
   m_Layer: 0
-  m_Name: Computer (1)
+  m_Name: Prefab_Computer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -146,7 +146,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0ce6410296dbbb47b8fae4bc258deed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryItem: {fileID: 0}
+  computer: {fileID: 0}
+  sunglasses: {fileID: 0}
+  umbrella: {fileID: 0}
+  ball: {fileID: 0}
 --- !u!114 &114426522376634154
 MonoBehaviour:
   m_ObjectHideFlags: 1

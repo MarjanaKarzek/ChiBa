@@ -5,7 +5,7 @@ using UnityEngine;
 public class FadeMainScene : MonoBehaviour {
 
     private CanvasGroup fadeGroup;
-    private float fadeInSpeed = 0.33f;
+    private float fadeInSpeed = 0.15f;
 
     private void Start()
     {

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Name: Umbrella
   m_EditorClassIdentifier: 
   itemName: Umbrella
-  sprite: {fileID: 21300000, guid: efbd4f178a147ec49870c99dd3f2248c, type: 3}
+  sprite: {fileID: 21300000, guid: 407d7c9e170e05a4f816e75b531087aa, type: 3}
   picSound: {fileID: 0}
-  prefab: {fileID: 1745317165701082, guid: 70b7084d3d8592a4c9e2449298c94bf8, type: 2}
+  prefab: {fileID: 1760219399879568, guid: 70b7084d3d8592a4c9e2449298c94bf8, type: 2}

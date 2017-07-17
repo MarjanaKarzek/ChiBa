@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Name: Computer
   m_EditorClassIdentifier: 
   itemName: Computer
-  sprite: {fileID: 21300000, guid: a0128f56dfc055c409b4cf426fae3095, type: 3}
+  sprite: {fileID: 21300000, guid: f9f270f830b3b8241aed41ce374d61db, type: 3}
   picSound: {fileID: 0}
   prefab: {fileID: 1033980657435130, guid: 376f4972164135b4194ffa9849a76a79, type: 2}

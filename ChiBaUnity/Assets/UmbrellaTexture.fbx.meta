@@ -1,10 +1,22 @@
 fileFormatVersion: 2
-guid: 7052b1a57862b8f4c8b3a6510470e7a7
-timeCreated: 1499086226
+guid: b939f60fcd686d445954ff948b94c019
+timeCreated: 1500311454
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    100000: bottom
+    100002: left
+    100004: pTorus6
+    100006: //RootNode
+    400000: bottom
+    400002: left
+    400004: pTorus6
+    400006: //RootNode
+    2300000: pTorus6
+    3300000: pTorus6
+    4300000: pTorus6
+    9500000: //RootNode
   materials:
     importMaterials: 1
     materialName: 1
