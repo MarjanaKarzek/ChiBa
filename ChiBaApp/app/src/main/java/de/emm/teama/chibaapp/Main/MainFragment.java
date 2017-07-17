@@ -287,8 +287,10 @@ public class MainFragment extends Fragment implements CityChangeDialogFragment.C
             int id = lastKnownWeatherID / 100;
             if (id <= 5)
                 animation = "Regen";
-            else
+            else if (id == 800 && (Calendar.getInstance().getTimeInMillis() >= lastKnownSunrise && Calendar.getInstance().getTimeInMillis() < lastKnownSunset))
                 animation = "Sonne";
+            else
+                animation = "";
         } else {
             Random rand = new Random();
             animation = currentActiveEventHashtags.get(rand.nextInt(currentActiveEventHashtags.size()));

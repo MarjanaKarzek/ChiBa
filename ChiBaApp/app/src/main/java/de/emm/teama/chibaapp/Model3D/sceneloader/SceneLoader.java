@@ -58,7 +58,7 @@ public class SceneLoader
     {
         this.parent = main;
         //Tests with Ballsport, Lernen, Laptop, Arbeit, Einkaufen, Restaurant, Geburtstag, Sonne, Regen, ""
-        animation = "";
+        //animation = "";
 
         if(usesAvatar) {
             switch (animation) {
