@@ -28,7 +28,15 @@ import de.emm.teama.chibaapp.Utils.ActionReceiver;
 import de.emm.teama.chibaapp.Utils.DatabaseHelper;
 
 /**
- * Created by Marjana Karzek on 02.07.2017.
+ * <h1>ChiBa Application Class</h1>
+ * This class sets up the database on application start and checks whether user and system exist.
+ * It sets up and maintains timer for notifications for todos and appointments.
+ * <p>
+ * In the comments find log entries to be used for debugging purposes.
+ *
+ * @author  Marjana Karzek
+ * @version 3.0
+ * @since   2017-07-02
  */
 public class ChiBaApplication extends Application {
     public static DatabaseHelper database;
@@ -37,6 +45,11 @@ public class ChiBaApplication extends Application {
     private static Context context;
 
     @Override
+    /**
+     * On creation of the application this method gets called.
+     * It initalizes database and checks for user and system.
+     * Afterwards it initalizes the timers for existing todos and events.
+     */
     public void onCreate() {
         super.onCreate();
         this.context = getApplicationContext();
@@ -46,12 +59,14 @@ public class ChiBaApplication extends Application {
         setUpTimerForAppointments();
     }
 
+    /**
+     * This method sets up the timers for existing appointments on create and schedules them.
+     */
     private void setUpTimerForAppointments() {
         Calendar today = Calendar.getInstance();
         String dateFormat = "d. MMMM yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.GERMANY);
 
-        //Setup notifications for all appointments of that day, that are not fullday
         Cursor data = database.showEventsByStartDateWithoutFullDay(simpleDateFormat.format(today.getTime()));
         if (data.getCount() != 0) {
             while (data.moveToNext()) {
@@ -73,11 +88,14 @@ public class ChiBaApplication extends Application {
         }
     }
 
+    /**
+     * This method adds a new timer for a newly added appointment and schedules it.
+     * @param eventId This parameter is used to retrieve information from the database.
+     * @param startTimeString This parameter is used to schedule the notification a half hour earlier.
+     * @param hashtags This parameter is used to remind the user properly.
+     */
     public static void addAppointmentTimer(int eventId, String startTimeString, ArrayList<String> hashtags) {
         //Log.d(TAG, "addAppointmentTimer: Adding new scheduled notification");
-        String dateFormat = "d. MMMM yyyy";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.GERMANY);
-
         String[] starttime = startTimeString.split(":");
         Calendar date = Calendar.getInstance();
         date.set(Calendar.HOUR_OF_DAY, Integer.valueOf(starttime[0]));
@@ -91,6 +109,10 @@ public class ChiBaApplication extends Application {
         appointmentTimers.get(eventId).schedule(new ScheduledAppointmentNotification(eventId, hashtags, context, (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE), context.getResources()), time);
     }
 
+    /**
+     * This method deletes the timer associated with the appointment that got deleted itself.
+     * @param eventId This parameter is used to delete the correct timer.
+     */
     public static void deleteApplicationTimer(int eventId) {
         if (appointmentTimers.containsKey(eventId)) {
             appointmentTimers.get(eventId).cancel();
@@ -99,11 +121,23 @@ public class ChiBaApplication extends Application {
         }
     }
 
+    /**
+     * This method edits the timer of an edited appointment to match its new start time.
+     * For this it delets the old timer and inserts a new one.
+     * @param eventId This parameter is used to find the correct timer.
+     * @param startTimeString This parameter is used to schedule the timer to the new start time
+     * @param assignedHashtags This parameter is used to remind the user properly.
+     */
     public static void editAppointmentTimer(int eventId, String startTimeString, ArrayList<String> assignedHashtags) {
         deleteApplicationTimer(eventId);
         addAppointmentTimer(eventId, startTimeString, assignedHashtags);
     }
 
+    /**
+     * This method sets up the timer to check free time slots for todos and schedules them every hour.
+     * If the application gets started at the beginning of a new hour, it creats a single notification.
+     * It is assumed that todos can still be done when maximum 10 minutes are over by the notifications schedule time.
+     */
     private void setUpTimerForToDos() {
         //Log.d(TAG, "setUpTimerForToDos: scheduling notifications");
         Timer timer = new Timer();
@@ -122,6 +156,17 @@ public class ChiBaApplication extends Application {
         timer.schedule(new ScheduledToDoNotification(this, (NotificationManager) getSystemService(NOTIFICATION_SERVICE), getResources()), date, period);
     }
 
+    /**
+     * <h1>Scheduled To-Do Notification Class</h1>
+     * This class checks whether the current time slot is free and finds a matching to-do.
+     * On run it initalizes the to-do notification.
+     * <p>
+     * In the comments find log entries to be used for debugging purposes.
+     *
+     * @author  Marjana Karzek
+     * @version 2.0
+     * @since   2017-07-08
+     */
     private static class ScheduledToDoNotification extends TimerTask {
         private Random random = new Random();
         private Context context;
@@ -149,6 +194,14 @@ public class ChiBaApplication extends Application {
                                       "nee",
                                       "später"};
 
+        /**
+         * The constructor for the class ScheduledToDoNotification.
+         * Initalizes context, notifyMgr, resources and the pending intent for the cancel option of the to-do.
+         *
+         * @param context This parameter is used to initalize the field context.
+         * @param notifyMgr This parameter is used to initalize the field notifyMgr.
+         * @param resources This parameter is used to initalize the field resources.
+         */
         public ScheduledToDoNotification(Context context, NotificationManager notifyMgr, Resources resources) {
             this.context = context;
             this.notifyMgr = notifyMgr;
@@ -162,6 +215,53 @@ public class ChiBaApplication extends Application {
             applicationIntentAction2.setAction("action2");
         }
 
+        /**
+         * This method calculates which hours are available.
+         * Available hours for to-dos are in between 8 and 21 o'clock.
+         * The method excludes hours that are in between the do not disturb time slot.
+         */
+        private void getCurrentAvailableHours() {
+            availableHours.clear();
+            availableHours.add(8);
+            availableHours.add(9);
+            availableHours.add(10);
+            availableHours.add(11);
+            availableHours.add(12);
+            availableHours.add(13);
+            availableHours.add(14);
+            availableHours.add(15);
+            availableHours.add(16);
+            availableHours.add(17);
+            availableHours.add(18);
+            availableHours.add(19);
+            availableHours.add(20);
+            availableHours.add(21);
+            if (database.getUserDoNotDisturbOptionState()) {
+                String starttimeString = database.getUserDoNotDisturbStartTime();
+                String endtimeString = database.getUserDoNotDisturbEndTime();
+
+                String[] starttime = starttimeString.split(":");
+                String[] endtime = endtimeString.split(":");
+
+                int starthour = Integer.valueOf(starttime[0]);
+                int endhour = Integer.valueOf(endtime[0]);
+                int endminute = Integer.valueOf(endtime[1]);
+
+                do {
+                    availableHours.remove(starthour);
+                    starthour++;
+                    if (starthour == 24)
+                        starthour = 0;
+                } while (starthour != endhour);
+                if (endminute > 0)
+                    availableHours.remove(endhour);
+            }
+        }
+
+        /**
+         * This method first figures out which time slots are free and which are blocked.
+         * If there are any fullday events, all slots are blocked.
+         */
         private void getFreeTimeSlots() {
             currentFreeTimeSlots.clear();
             for (int hour : availableHours) {
@@ -219,44 +319,11 @@ public class ChiBaApplication extends Application {
             }
         }
 
-        private void getCurrentAvailableHours() {
-            availableHours.clear();
-            availableHours.add(8);
-            availableHours.add(9);
-            availableHours.add(10);
-            availableHours.add(11);
-            availableHours.add(12);
-            availableHours.add(13);
-            availableHours.add(14);
-            availableHours.add(15);
-            availableHours.add(16);
-            availableHours.add(17);
-            availableHours.add(18);
-            availableHours.add(19);
-            availableHours.add(20);
-            availableHours.add(21);
-            if (database.getUserDoNotDisturbOptionState()) {
-                String starttimeString = database.getUserDoNotDisturbStartTime();
-                String endtimeString = database.getUserDoNotDisturbEndTime();
-
-                String[] starttime = starttimeString.split(":");
-                String[] endtime = endtimeString.split(":");
-
-                int starthour = Integer.valueOf(starttime[0]);
-                int endhour = Integer.valueOf(endtime[0]);
-                int endminute = Integer.valueOf(endtime[1]);
-
-                do {
-                    availableHours.remove(starthour);
-                    starthour++;
-                    if (starthour == 24)
-                        starthour = 0;
-                } while (starthour != endhour);
-                if (endminute > 0)
-                    availableHours.remove(endhour);
-            }
-        }
-
+        /**
+         * This method gets called on the scheduled time.
+         * According to the free time slots it figures out which to-do could match the current slot.
+         * It gets a random one and sends the notification.
+         */
         public void run() {
             getCurrentAvailableHours();
             if (availableHours.contains(Calendar.getInstance().HOUR_OF_DAY)) {
@@ -289,6 +356,12 @@ public class ChiBaApplication extends Application {
             //else Log.d(TAG, "run: not scheduled yet");
         }
 
+        /**
+         * This method generates a random text for a notification.
+         * It sets up the notification and publishes it.
+         *
+         * @param selectedToDo This parameter is used to display a matching text in the notification.
+         */
         public void createPushNotification(String selectedToDo) {
             int randomText = random.nextInt(textChoices.length);
             int randomYes = random.nextInt(yesChoices.length);
@@ -309,6 +382,16 @@ public class ChiBaApplication extends Application {
         }
     }
 
+    /**
+     * <h1>Scheduled Appointment Notification Class</h1>
+     * This class sets up a random notification for e scheduled appointment.
+     * <p>
+     * In the comments find log entries to be used for debugging purposes.
+     *
+     * @author  Marjana Karzek
+     * @version 1.0
+     * @since   2017-07-10
+     */
     private static class ScheduledAppointmentNotification extends TimerTask {
         private Context context;
         private NotificationManager notifyMgr;
@@ -319,6 +402,16 @@ public class ChiBaApplication extends Application {
         private HashMap<String, ArrayList<String>> reminders = new HashMap<String, ArrayList<String>>();
         private Random random = new Random();
 
+        /**
+         * The constructor for the class ScheduledAppointmentNotification.
+         * Initializes its fields and sets up the matching reminders.
+         *
+         * @param eventId This parameter is used to initalize the field eventId.
+         * @param hashtags This parameter is used to initalize the field hashtags.
+         * @param context This parameter is used to initalize the field context.
+         * @param notifyMgr This parameter is used to initalize the field notifyMgr.
+         * @param resources This parameter is used to initalize the field resources.
+         */
         public ScheduledAppointmentNotification(int eventId, ArrayList<String> hashtags, Context context, NotificationManager notifyMgr, Resources resources) {
             this.context = context;
             this.notifyMgr = notifyMgr;
@@ -329,6 +422,9 @@ public class ChiBaApplication extends Application {
             setupReminders();
         }
 
+        /**
+         * This method sets up the reminders for this event notification.
+         */
         private void setupReminders() {
             for (String hashtag : hashtags) {
                 reminders.put(hashtag, database.showRemindersByHashtagString(hashtag));
@@ -336,6 +432,10 @@ public class ChiBaApplication extends Application {
         }
 
         @Override
+        /**
+         * This method gets called on the scheduled time.
+         * According to the provided reminders it sets up a notification text.
+         */
         public void run() {
             if (reminders.size() > 0) {
                 int randomHashtag = random.nextInt(reminders.size());
@@ -345,6 +445,11 @@ public class ChiBaApplication extends Application {
             }
         }
 
+        /**
+         * This method sets up a notification with the given text.
+         *
+         * @param text This parameter is used for the notification text.
+         */
         public void createPushNotification(String text) {
             NotificationCompat.Builder builder =
                     new NotificationCompat.Builder(context)
