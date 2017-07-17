@@ -23,33 +23,44 @@ import android.opengl.Matrix;
 import android.util.Log;
 import android.widget.Toast;
 
+/**
+ * <h1>ModelRenderer Class</h1>
+ * This class implements the generic GLSurfaceView.Renderer interface and is responsible for OpenGL calls to render a frame.
+ * <p>
+ *
+ * @author Andres Oviedo, modified by Natalie Grasser
+ * @version 1.0
+ * @since 2017-04-23, modified 2017-06-28
+ * Title: Android 3D Model Viewer
+ * Availability: https://github.com/andresoviedo/android-3D-model-viewer
+ *
+ */
+
 public class ModelRenderer implements GLSurfaceView.Renderer {
 
     private final static String TAG = ModelRenderer.class.getName();
 
-    private ModelSurfaceView main;        // 3D window (parent component)
-    private int width;                    // width of the screen
-    private int height;                    // height of the screen
-    private Camera camera;                // Out point of view handler
+    private ModelSurfaceView main;      // 3D window (parent component)
+    private int width;                  // width of the screen
+    private int height;                 // height of the screen
+    private Camera camera;              // Out point of view handler
 
     private float near = 1f;            // frustrum - nearest pixel
     private float far = 10f;            // frustrum - fartest pixel
 
     private Object3DBuilder drawer;
 
-    private Map<Object3DData, Object3DData> wireframes = new HashMap<Object3DData, Object3DData>();    // The wireframe associated shape (it should be made of lines only)
+    private Map<Object3DData, Object3DData> wireframes = new HashMap<Object3DData, Object3DData>();     // The wireframe associated shape (it should be made of lines only)
     private Map<byte[], Integer> textures = new HashMap<byte[], Integer>();    // The loaded textures
     private Map<Object3DData, Object3DData> normals = new HashMap<Object3DData, Object3DData>();        // The corresponding opengl bounding boxes
 
-    // 3D matrices to project our 3D world
+    /* 3D matrices to project our 3D world */
     private final float[] modelProjectionMatrix = new float[16];
     private final float[] modelViewMatrix = new float[16];
 
-    private final float[] mvpMatrix = new float[16];                        // mvpMatrix is an abbreviation for "Model View Projection Matrix"
+    private final float[] mvpMatrix = new float[16];                            // mvpMatrix is an abbreviation for "Model View Projection Matrix"
 
-    private final float[] lightPosInEyeSpace = new float[4];                // light position required to render with lighting
-
-    private List<Object3DData> objects;
+    private final float[] lightPosInEyeSpace = new float[4];                    // light position required to render with lighting
 
     /**
      * Construct a new renderer for the specified surface view
@@ -72,7 +83,6 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         // Set the background frame color
         float[] backgroundColor = main.getMainFragment().getBackgroundColor();
-
         GLES20.glClearColor(backgroundColor[0], backgroundColor[1], backgroundColor[2], backgroundColor[3]);
 
         // Enable depth testing for hidden-surface elimination.
@@ -125,19 +135,13 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
         }
 
         SceneLoader scene = main.getMainFragment().getScene();
-        if (scene == null) {
-            // scene not ready
-            return;
-        }
+        if (scene == null) {return;}    // scene not ready
 
-        // camera should know about objects that collision with it
-        camera.setScene(scene);
+        camera.setScene(scene);         // camera for the scene
 
-        // animate scene
-        scene.onDrawFrame();
+        scene.onDrawFrame();            // animate scene
 
-        // draw light
-        if (scene.isDrawLighting()) {
+        if (scene.isDrawLighting()) {   // draw light
 
             Object3DImpl lightBulbDrawer = (Object3DImpl) drawer.getPointDrawer();
 
@@ -155,7 +159,6 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
             Object3DData objData = objects.get(i);
             if (objData.isVisible()) {
                 try {
-                    //Object3DData objData = objects.get(i);
                     boolean changed = objData.isChanged();
                     Object3D drawerObject = drawer.getDrawer(objData, scene.isDrawTextures(), scene.isDrawLighting());
 
@@ -171,7 +174,6 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
                             && objData.getDrawMode() != GLES20.GL_LINES && objData.getDrawMode() != GLES20.GL_LINE_STRIP
                             && objData.getDrawMode() != GLES20.GL_LINE_LOOP) {
                         try {
-                            // Only draw wireframes for objects having faces (triangles)
                             Object3DData wireframe = wireframes.get(objData);
                             if (wireframe == null || changed) {
                                 wireframe = Object3DBuilder.buildWireframe(objData);
@@ -191,13 +193,11 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
                                 textureId != null ? textureId : -1, lightPosInEyeSpace);
                     }
 
-                    // Draw bounding box
                     if (scene.isDrawNormals()) {
                         Object3DData normalData = normals.get(objData);
                         if (normalData == null || changed) {
                             normalData = Object3DBuilder.buildFaceNormals(objData);
                             if (normalData != null) {
-                                // it can be null if object isn't made of triangles
                                 normals.put(objData, normalData);
                             }
                         }
@@ -215,6 +215,11 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
         }
     }
 
+    /**
+     * Getter methods for width and height of the screen.
+     * As well as model projection matrix, model view matrix and camera.
+     *
+     * */
     public int getWidth() {
         return width;
     }

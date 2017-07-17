@@ -1,32 +1,3 @@
-// WavefrontLoader.java
-// Andrew Davison, February 2007, ad@fivedots.coe.psu.ac.th
-
-/* Load the OBJ model from MODEL_DIR, centering and scaling it.
- The scale comes from the sz argument in the constructor, and
- is implemented by changing the vertices of the loaded model.
-
- The model can have vertices, normals and tex coordinates, and
- refer to materials in a MTL file.
-
- The OpenGL commands for rendering the model are stored in 
- a display list (modelDispList), which is drawn by calls to
- draw().
-
- Information about the model is printed to stdout.
-
- Based on techniques used in the OBJ loading code in the
- JautOGL multiplayer racing game by Evangelos Pournaras 
- (http://today.java.net/pub/a/today/2006/10/10/
- development-of-3d-multiplayer-racing-game.html 
- and https://jautogl.dev.java.net/), and the 
- Asteroids tutorial by Kevin Glass 
- (http://www.cokeandcode.com/asteroidstutorial)
-
- CHANGES (Feb 2007)
- - a global flipTexCoords boolean
- - drawToList() sets and uses flipTexCoords
- */
-
 package de.emm.teama.chibaapp.Model3D.sceneloader;
 
 import java.io.BufferedReader;
@@ -53,6 +24,35 @@ import android.content.res.AssetManager;
 import android.opengl.GLES20;
 import android.util.Log;
 
+/**
+ * @author Andrew Davison
+ * @since February 2007
+ * Title: WavefrontLoader.java
+ * Contact: ad@fivedots.coe.psu.ac.th
+ * <p>
+ *     Load the OBJ model from MODEL_DIR, centering and scaling it.
+ *     The scale comes from the sz argument in the constructor, and
+ *     is implemented by changing the vertices of the loaded model.
+ *
+ *     The model can have vertices, normals and tex coordinates, and
+ *     refer to materials in a MTL file.
+ *
+ *     The OpenGL commands for rendering the model are stored in
+ *     a display list (modelDispList), which is drawn by calls to
+ *     draw().
+ *
+ *     Information about the model is printed to stdout.
+ *
+ *     Based on techniques used in the OBJ loading code in the
+ *     JautOGL multiplayer racing game by Evangelos Pournaras
+ *     (http://today.java.net/pub/a/today/2006/10/10/
+ *     development-of-3d-multiplayer-racing-game.html
+ *     and https://jautogl.dev.java.net/), and the
+ *     Asteroids tutorial by Kevin Glass
+ *     (http://www.cokeandcode.com/asteroidstutorial)
+ *
+ * */
+
 public class WavefrontLoader {
 
 	private static final float DUMMY_Z_TC = -5.0f;
@@ -60,16 +60,14 @@ public class WavefrontLoader {
 	private boolean hasTCs3D = false;
 
 	private ArrayList<Tuple3> texCoords;
-	// whether the model uses 3D or 2D tex coords
-	// whether tex coords should be flipped around the y-axis
 
-	private Faces faces; // model faces
-	private FaceMaterials faceMats; // materials used by faces
-	private Materials materials; // materials defined in MTL file
-	private ModelDimensions modelDims; // model dimensions
+	private Faces faces;                    // model faces
+	private FaceMaterials faceMats;         // materials used by faces
+	private Materials materials;            // materials defined in MTL file
+	private ModelDimensions modelDims;      // model dimensions
 
-	private String modelNm; // without path or ".OBJ" extension
-	private float maxSize; // for scaling the model
+	private String modelNm;                 // without path or ".OBJ" extension
+	private float maxSize;                  // for scaling the model
 
 	// metadata
 	int numVerts = 0;
@@ -97,6 +95,8 @@ public class WavefrontLoader {
 		modelDims = new ModelDimensions();
 	}
 
+	/**
+     * Getter methods for vertex buffer, normal buffer, texture coordinates, face materials, materials and dimensions.*/
 	public FloatBuffer getVerts() {
 		return vertsBuffer;
 	}
@@ -125,7 +125,8 @@ public class WavefrontLoader {
 		return modelDims;
 	}
 
-	/* Count verts, normals, faces etc and reserve buffers to save the data. */
+	/**
+     *  Count verts, normals, faces etc and reserve buffers to save the data. */
 	public void analyzeModel(InputStream is) {
 		int lineNum = 0;
 		String line;
@@ -140,13 +141,13 @@ public class WavefrontLoader {
 				line = line.trim();
 				if (line.length() > 0) {
 
-					if (line.startsWith("v ")) { // vertex
+					if (line.startsWith("v ")) {            // vertex
 						numVerts++;
-					} else if (line.startsWith("vt")) { // tex coord
+					} else if (line.startsWith("vt")) {     // tex coord
 						numTextures++;
-					} else if (line.startsWith("vn")) {// normal
+					} else if (line.startsWith("vn")) {     // normal
 						numNormals++;
-					} else if (line.startsWith("f ")) { // face
+					} else if (line.startsWith("f ")) {     // face
 						final int faceSize;
 						if (line.contains("  ")) {
 							faceSize = line.split(" +").length - 1;
@@ -156,21 +157,21 @@ public class WavefrontLoader {
 						numFaces += (faceSize - 2);
 						// (faceSize-2)x3 = converting polygon to triangles
 						numVertsReferences += (faceSize - 2) * 3;
-					} else if (line.startsWith("mtllib ")) // build material
+					} else if (line.startsWith("mtllib "))  // build material
 					{
 						materials = new Materials(line.substring(7));
 
-					} else if (line.startsWith("usemtl ")) {// use material
-					} else if (line.charAt(0) == 'g') { // group name
+					} else if (line.startsWith("usemtl ")) {    // use material
+					} else if (line.charAt(0) == 'g') {         // group name
 						// not implemented
-					} else if (line.charAt(0) == 's') { // smoothing group
+					} else if (line.charAt(0) == 's') {         // smoothing group
 						// not implemented
-					} else if (line.charAt(0) == '#') // comment line
+					} else if (line.charAt(0) == '#')           // comment line
 						continue;
-					else if (line.charAt(0) == 'o') // object group
+					else if (line.charAt(0) == 'o')             // object group
 						continue;
-//					else
-//						System.out.println("Ignoring line " + lineNum + " : " + line);
+					else
+						System.out.println("Ignoring line " + lineNum + " : " + line);
 				}
 			}
 		} catch (IOException e) {
@@ -186,12 +187,10 @@ public class WavefrontLoader {
 				}
 			}
 		}
-
-//		Log.i("WavefrontLoader","Number of vertices:"+numVerts);
-//		Log.i("WavefrontLoader","Number of faces:"+numFaces);
 	}
 
-	/* Allocate buffers for pushing the model data */
+	/**
+     * Allocate buffers for pushing the model data */
 	public void allocateBuffers() {
 		// size = 3 (x,y,z) * 4 (bytes per float)
 		vertsBuffer = createNativeByteBuffer(numVerts*3*4).asFloatBuffer();
@@ -201,8 +200,9 @@ public class WavefrontLoader {
 		faces = new Faces(numFaces, buffer, vertsBuffer, normalsBuffer, texCoords);
 	}
 
+	/**
+     * Method to load the model.*/
 	public void loadModel(InputStream is) {
-		// String fnm = MODEL_DIR + modelNm + ".obj";
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new InputStreamReader(is));
@@ -219,17 +219,18 @@ public class WavefrontLoader {
 
 	}
 
+	/**
+     * Method to initialize vertex byte buffer for shape coordinates and use the device hardware's native byte order.
+     * */
 	private static ByteBuffer createNativeByteBuffer(int length) {
-		// initialize vertex byte buffer for shape coordinates
 		ByteBuffer bb = ByteBuffer.allocateDirect(length);
-		// use the device hardware's native byte order
 		bb.order(ByteOrder.nativeOrder());
 		return bb;
 	}
 
-	/* parse the OBJ file line-by-line */
+	/* Method to parse the OBJ file line-by-line */
 	private void readModel(BufferedReader br) {
-		boolean isLoaded = true; // hope things will go okay
+		boolean isLoaded = true;
 
 		int lineNum = 0;
 		String line;
@@ -247,36 +248,33 @@ public class WavefrontLoader {
 				line = line.trim();
 				if (line.length() > 0) {
 
-					if (line.startsWith("v ")) { // vertex
+					if (line.startsWith("v ")) {                    // vertex
 						isLoaded = addVert(vertsBuffer, vertNumber++ * 3, line, isFirstCoord, modelDims) && isLoaded;
 						if (isFirstCoord)
 							isFirstCoord = false;
-					} else if (line.startsWith("vt")) { // tex coord
+					} else if (line.startsWith("vt")) {             // tex coord
 						isLoaded = addTexCoord(line, isFirstTC) && isLoaded;
 						if (isFirstTC)
 							isFirstTC = false;
-					} else if (line.startsWith("vn")) // normal
+					} else if (line.startsWith("vn"))               // normal
 						isLoaded = addVert(normalsBuffer, normalNumber++ * 3,line, isFirstCoord, null) && isLoaded;
-					else if (line.startsWith("f ")) { // face
+					else if (line.startsWith("f ")) {               // face
 						isLoaded = faces.addFace(line) && isLoaded;
 						numFaces++;
-					} else if (line.startsWith("mtllib ")) // build material
-					{
-						// materials = new Materials(new File(modelFile.getParent(),
-						// line.substring(7)).getAbsolutePath());
-						// materials = new Materials(line.substring(7));
-					} else if (line.startsWith("usemtl ")) // use material
+					} else if (line.startsWith("mtllib ")){         // build material
+
+                    } else if (line.startsWith("usemtl "))          // use material
 						faceMats.addUse(numFaces, line.substring(7));
-					else if (line.charAt(0) == 'g') { // group name
+					else if (line.charAt(0) == 'g') {               // group name
 						// not implemented
-					} else if (line.charAt(0) == 's') { // smoothing group
+					} else if (line.charAt(0) == 's') {             // smoothing group
 						// not implemented
-					} else if (line.charAt(0) == '#') // comment line
+					} else if (line.charAt(0) == '#')               // comment line
 						continue;
-					else if (line.charAt(0) == 'o') // object group
+					else if (line.charAt(0) == 'o')                 // object group
 						continue;
-//					else
-//						System.out.println("Ignoring line " + lineNum + " : " + line);
+					else
+						System.out.println("Ignoring line " + lineNum + " : " + line);
 				}
 			}
 		} catch (IOException e) {
@@ -286,7 +284,6 @@ public class WavefrontLoader {
 
 		if (!isLoaded) {
 			Log.e("WavefrontLoader","Error loading model");
-			// throw new RuntimeException("Error loading model");
 		}
 	}
 
@@ -340,7 +337,6 @@ public class WavefrontLoader {
     private boolean addTexCoord(String line, boolean isFirstTC) {
 		if (isFirstTC) {
 			hasTCs3D = checkTC3D(line);
-//			System.out.println("Using 3D tex coords: " + hasTCs3D);
 		}
 
 		Tuple3 texCoord = readTCTuple(line);
@@ -375,9 +371,11 @@ public class WavefrontLoader {
 			System.out.println(e.getMessage());
 		}
 
-		return null; // means an error occurred
+		return null;
 	}
 
+	/**
+     * Helper Class to provide tuples. */
 	public static class Tuple3 {
 		private float x, y, z;
 
@@ -417,14 +415,14 @@ public class WavefrontLoader {
 
 	}
 
+	/**
+     * Helper Class to set the correct model dimensions.*/
 	public static class ModelDimensions {
-		// edge coordinates
-		private float leftPt, rightPt; // on x-axis
-		private float topPt, bottomPt; // on y-axis
-		private float farPt, nearPt; // on z-axis
+		private float leftPt, rightPt;  // on x-axis
+		private float topPt, bottomPt;  // on y-axis
+		private float farPt, nearPt;    // on z-axis
 
-		// for reporting
-		private DecimalFormat df = new DecimalFormat("0.##"); // 2 dp
+		private DecimalFormat df = new DecimalFormat("0.##");
 
 		public ModelDimensions() {
 			leftPt = 0.0f;
@@ -433,11 +431,10 @@ public class WavefrontLoader {
 			bottomPt = 0.0f;
 			farPt = 0.0f;
 			nearPt = 0.0f;
-		} // end of ModelDimensions()
+		}
 
-		public void set(float x, float y, float z)
-		// initialize the model's edge coordinates
-		{
+        /* Initialization for the model's edge coordinates */
+		public void set(float x, float y, float z) {
 			rightPt = x;
 			leftPt = x;
 
@@ -446,10 +443,10 @@ public class WavefrontLoader {
 
 			nearPt = z;
 			farPt = z;
-		} // end of set()
+		}
 
-		public void update(float x, float y, float z)
-		// update the edge coordinates using vert
+        /* Method for updating the edge coordinates using vert.*/
+        public void update(float x, float y, float z)
 		{
 			if (x > rightPt)
 				rightPt = x;
@@ -465,9 +462,7 @@ public class WavefrontLoader {
 				nearPt = z;
 			if (z < farPt)
 				farPt = z;
-		} // end of update()
-
-		// ------------- use the edge coordinates ----------------------------
+		}
 
 		public float getWidth() {
 			return (rightPt - leftPt);
@@ -492,45 +487,25 @@ public class WavefrontLoader {
 				largest = depth;
 
 			return largest;
-		} // end of getLargest()
+		}
 
 		public Tuple3 getCenter() {
 			float xc = (rightPt + leftPt) / 2.0f;
 			float yc = (topPt + bottomPt) / 2.0f;
 			float zc = (nearPt + farPt) / 2.0f;
 			return new Tuple3(xc, yc, zc);
-		} // end of getCenter()
-
-		public void reportDimensions() {
-			Tuple3 center = getCenter();
-
-			System.out.println("x Coords: " + df.format(leftPt) + " to " + df.format(rightPt));
-			System.out.println("  Mid: " + df.format(center.getX()) + "; Width: " + df.format(getWidth()));
-
-			System.out.println("y Coords: " + df.format(bottomPt) + " to " + df.format(topPt));
-			System.out.println("  Mid: " + df.format(center.getY()) + "; Height: " + df.format(getHeight()));
-
-			System.out.println("z Coords: " + df.format(nearPt) + " to " + df.format(farPt));
-			System.out.println("  Mid: " + df.format(center.getZ()) + "; Depth: " + df.format(getDepth()));
-		} // end of reportDimensions()
+		}
 
 	}
 
 	public static class Materials {
 
-		public Map<String, Material> materials;
-		// stores the Material objects built from the MTL file data
-
-		// private File file;
-		private String mfnm;
+		public Map<String, Material> materials;     // stores the Material objects built from the MTL file data
+		private String mfnm;                        // private File file;
 
 		public Materials(String mtlFnm) {
-			// TODO: this map is now linked because we want to get only the first texture
-			// when multiple textures are supported, change this to be a simple HashMap
 			materials = new LinkedHashMap<String, Material>();
-
 			this.mfnm = mtlFnm;
-			// file = new File(mtlFnm);
 		}
 
 		public void readMaterials(File currentDir, String assetsDir, AssetManager am) {
@@ -554,57 +529,54 @@ public class WavefrontLoader {
 				Log.e("WavefrontLoader", e.getMessage(), e);
 			}
 
-		} // end of Materials()
+		}
 
-		private void readMaterials(BufferedReader br)
 		/*
-		 * Parse the MTL file line-by-line, building Material objects which are collected in the materials ArrayList.
-		 */
-		{
-//			Log.v("materials", "Reading material...");
+		 * The functionality to parse the MTL file line-by-line, building Material objects which are collected in the materials ArrayList
+		 * is the main task of this method.
+		 * */
+		private void readMaterials(BufferedReader br) {
 			try {
 				String line;
-				Material currMaterial = null; // current material
+				Material currMaterial = null;               // current material
 
 				while (((line = br.readLine()) != null)) {
 					line = line.trim();
 					if (line.length() == 0)
 						continue;
 
-					if (line.startsWith("newmtl ")) { // new material
-						if (currMaterial != null) // save previous material
+					if (line.startsWith("newmtl ")) {       // new material
+						if (currMaterial != null)           // save previous material
 							materials.put(currMaterial.getName(), currMaterial);
 
 						// start collecting info for new material
 						String name = line.substring(7);
-//						Log.d("Loader", "New material found: " + name);
 						currMaterial = new Material(name);
-					} else if (line.startsWith("map_Kd ")) { // texture filename
-						// String fileName = new File(file.getParent(), line.substring(7)).getAbsolutePath();
+					} else if (line.startsWith("map_Kd ")) {        // texture filename
 						String textureFilename = line.substring(7);
 						Log.d("Loader", "New texture found: " + textureFilename);
 						currMaterial.setTexture(textureFilename);
-					} else if (line.startsWith("Ka ")) // ambient colour
+					} else if (line.startsWith("Ka "))              // ambient colour
 						currMaterial.setKa(readTuple3(line));
-					else if (line.startsWith("Kd ")) // diffuse colour
+					else if (line.startsWith("Kd "))                // diffuse colour
 						currMaterial.setKd(readTuple3(line));
-					else if (line.startsWith("Ks ")) // specular colour
+					else if (line.startsWith("Ks "))                // specular colour
 						currMaterial.setKs(readTuple3(line));
-					else if (line.startsWith("Ns ")) { // shininess
+					else if (line.startsWith("Ns ")) {              // shininess
 						float val = Float.valueOf(line.substring(3)).floatValue();
 						currMaterial.setNs(val);
-					} else if (line.charAt(0) == 'd') { // alpha
+					} else if (line.charAt(0) == 'd') {             // alpha
 						float val = Float.valueOf(line.substring(2)).floatValue();
 						currMaterial.setD(val);
-					} else if (line.startsWith("Tr ")) { // Transparency (inverted)
+					} else if (line.startsWith("Tr ")) {            // Transparency (inverted)
 						float val = Float.valueOf(line.substring(3)).floatValue();
 						currMaterial.setD(1 - val);
-					} else if (line.startsWith("illum ")) { // illumination model
+					} else if (line.startsWith("illum ")) {         // illumination model
 						// not implemented
-					} else if (line.charAt(0) == '#') // comment line
+					} else if (line.charAt(0) == '#')               // comment line
 						continue;
-//					else
-//						System.out.println("Ignoring MTL line: " + line);
+					else
+						System.out.println("Ignoring MTL line: " + line);
 
 				}
 				if (currMaterial != null) {
@@ -613,15 +585,14 @@ public class WavefrontLoader {
 			} catch (Exception e) {
 				Log.e("materials", e.getMessage(), e);
 			}
-		} // end of readMaterials()
+		}
 
-		private Tuple3 readTuple3(String line)
-		/*
-		 * The line starts with an MTL word such as Ka, Kd, Ks, and the three floats (x, y, z) separated by spaces
-		 */
-		{
+        /*
+         * The line starts with an MTL word such as Ka, Kd, Ks, and the three floats (x, y, z) separated by spaces
+         */
+		private Tuple3 readTuple3(String line) {
 			StringTokenizer tokens = new StringTokenizer(line, " ");
-			tokens.nextToken(); // skip MTL word
+			tokens.nextToken();
 
 			try {
 				float x = Float.parseFloat(tokens.nextToken());
@@ -633,20 +604,8 @@ public class WavefrontLoader {
 				System.out.println(e.getMessage());
 			}
 
-			return null; // means an error occurred
-		} // end of readTuple3()
-
-		public void showMaterials()
-		// list all the Material objects
-		{
-			Log.i("WavefrontLoader","No. of materials: " + materials.size());
-			Material m;
-			for (int i = 0; i < materials.size(); i++) {
-				m = (Material) materials.get(i);
-				m.showMaterial();
-				// System.out.println();
-			}
-		} // end of showMaterials()
+			return null;
+		}
 
 		public Material getMaterial(String name) {
 			return materials.get(name);
@@ -657,49 +616,25 @@ public class WavefrontLoader {
 	public static class Material {
 		private String name;
 
-		// colour info
-		private Tuple3 ka, kd, ks; // ambient, diffuse, specular colours
-		private float ns; // shininess
-		private float d; // alpha
+        private Tuple3 ka, kd, ks;  // ambient, diffuse, specular colours
+		private float ns;           // shininess
+		private float d;            // alpha
 
-		// texture info
 		private String texFnm;
 		private String texture;
 
 		public Material(String nm) {
-			name = nm;
+            name = nm;
 
-			d = 1.0f;
-			ns = 0.0f;
-			ka = null;
-			kd = null;
-			ks = null;
+            d = 1.0f;
+            ns = 0.0f;
+            ka = null;
+            kd = null;
+            ks = null;
 
-			texFnm = null;
-			texture = null;
-		} // end of Material()
-
-		public void showMaterial() {
-			System.out.println(name);
-			if (ka != null)
-				System.out.println("  Ka: " + ka.toString());
-			if (kd != null)
-				System.out.println("  Kd: " + kd.toString());
-			if (ks != null)
-				System.out.println("  Ks: " + ks.toString());
-			if (ns != 0.0f)
-				System.out.println("  Ns: " + ns);
-			if (d != 1.0f)
-				System.out.println("  d: " + d);
-			if (texFnm != null)
-				System.out.println("  Texture file: " + texFnm);
-		} // end of showMaterial()
-
-		public boolean hasName(String nm) {
-			return name.equals(nm);
-		}
-
-		// --------- set/get methods for colour info --------------
+            texFnm = null;
+            texture = null;
+        }
 
 		public void setD(float val) {
 			d = val;
@@ -748,8 +683,6 @@ public class WavefrontLoader {
 			return ks;
 		}
 
-		// --------- set/get methods for texture info --------------
-
 		public void setTexture(String t) {
 			texture = t;
 		}
@@ -768,30 +701,16 @@ public class WavefrontLoader {
 		private static final float DUMMY_Z_TC = -5.0f;
 
 		public final int totalFaces;
-		/**
-		 * indices for verticesused by each face
-		 */
-		public IntBuffer facesVertIdxs;
-		/**
-		 * indices for tex coords used by each face
-		 */
-		public ArrayList<int[]> facesTexIdxs;
-		/**
-		 * indices for normals used by each face
-		 */
-		public ArrayList<int[]> facesNormIdxs;
+		public IntBuffer facesVertIdxs;         // indices for verticesused by each face
+		public ArrayList<int[]> facesTexIdxs;   // indices for tex coords used by each face
+		public ArrayList<int[]> facesNormIdxs;  // indices for normals used by each face
 
 		private FloatBuffer normals;
 		private ArrayList<Tuple3> texCoords;
 
-		// Total number of vertices references. That is, each face references 3 or more vectors. This is the sum for all
-		// faces
 		private int facesLoadCounter;
 		private int faceVertexLoadCounter = 0;
 		private int verticesReferencesCount;
-
-		// for reporting
-		// private DecimalFormat df = new DecimalFormat("0.##"); // 2 dp
 
 		Faces(int totalFaces, IntBuffer buffer, FloatBuffer vs, FloatBuffer ns, ArrayList<Tuple3> ts) {
 			this.totalFaces = totalFaces;
@@ -801,25 +720,21 @@ public class WavefrontLoader {
 			facesVertIdxs = buffer;
 			facesTexIdxs = new ArrayList<int[]>();
 			facesNormIdxs = new ArrayList<int[]>();
-		} // end of Faces()
+		}
 
 		public int getSize(){
 			return totalFaces;
 		}
 
-		/**
-		 * @return <code>true</code> if all faces are loaded
-		 */
+		/* This method returns true if all faces are loaded. */
 		public boolean loaded(){
 			return facesLoadCounter == totalFaces;
 		}
 
-		/**
-		 * get this face's indicies from line "f v/vt/vn ..." with vt or vn index values perhaps being absent.
-		 */
+		/* Thes method gets the face's indicies from line "f v/vt/vn ..." with vt or vn index values perhaps being absent. */
 		public boolean addFace(String line) {
 			try {
-				line = line.substring(2); // skip the "f "
+				line = line.substring(2);
 				String[] tokens = null;
 				if (line.contains("  ")){
 					tokens = line.split(" +");
@@ -827,18 +742,14 @@ public class WavefrontLoader {
 				else{
 					tokens = line.split(" ");
 				}
-				int numTokens = tokens.length; // number of v/vt/vn tokens
-				// create arrays to hold the v, vt, vn indicies
+				int numTokens = tokens.length;
 
 				int vt[] = null;
 				int vn[] = null;
 
 
 				for (int i = 0, faceIndex = 0; i < numTokens; i++, faceIndex++) {
-
-					// convert to triangles all polygons
-					if (faceIndex > 2){
-						// Converting polygon to triangle
+                    if (faceIndex > 2){
 						faceIndex = 0;
 
 						facesLoadCounter++;
@@ -851,33 +762,23 @@ public class WavefrontLoader {
 
 						i -= 2;
 					}
-
-					// convert to triangles all polygons
-					String faceToken = null;
+                    String faceToken = null;
 					if (WavefrontLoader.this.triangleMode == GLES20.GL_TRIANGLE_FAN) {
 						if (faceIndex == 0){
-							// In FAN mode all faces shares the initial vertex
-							faceToken = tokens[0];// get a v/vt/vn
+							faceToken = tokens[0];
 						}else{
-							faceToken = tokens[i]; // get a v/vt/vn
+							faceToken = tokens[i];
 						}
 					}
 					else {
-						// GL.GL_TRIANGLES | GL.GL_TRIANGLE_STRIP
-						faceToken = tokens[i]; // get a v/vt/vn
+						faceToken = tokens[i];
 					}
-					// token
-					// System.out.println(faceToken);
 
 					String[] faceTokens = faceToken.split("/");
-					int numSeps = faceTokens.length; // how many '/'s are there in
-					// the token
+					int numSeps = faceTokens.length;
 
 					int vertIdx = Integer.parseInt(faceTokens[0]);
-					/*if (vertIdx > 65535){
-						Log.e("WavefrontLoader","Ignoring face because its out of range (>65535)");
-						continue;
-					}*/
+
 					if (numSeps > 1){
 						if (vt == null)	vt = new int[3];
 						try{
@@ -894,15 +795,12 @@ public class WavefrontLoader {
 							vn[faceIndex] = 0;
 						}
 					}
-					// add 0's if the vt or vn index values are missing;
-					// 0 is a good choice since real indices start at 1
 
 					if (WavefrontLoader.INDEXES_START_AT_1) {
 						vertIdx--;
 						if (vt != null)	vt[faceIndex] = vt[faceIndex] - 1;
 						if (vn != null) vn[faceIndex] = vn[faceIndex] - 1;
 					}
-					// store the indices for this face
 					facesVertIdxs.put(faceVertexLoadCounter++,vertIdx);
 				}
 				if (vt != null)  facesTexIdxs.add(vt);
@@ -920,7 +818,6 @@ public class WavefrontLoader {
 
 
 		public int getVerticesReferencesCount() {
-			// we have only triangles
 			return getSize()*3;
 		}
 
@@ -929,59 +826,29 @@ public class WavefrontLoader {
 	}
 
 	public static class FaceMaterials {
-		// the face index (integer) where a material is first used
 		private HashMap<Integer, String> faceMats;
-
-		// for reporting
-		private HashMap<String, Integer> matCount;
-
-		// how many times a material (string) is used
+        private HashMap<String, Integer> matCount;
 
 		public FaceMaterials() {
 			faceMats = new HashMap<Integer, String>();
 			matCount = new HashMap<String, Integer>();
-		} // end of FaceMaterials()
+		}
 
 		public void addUse(int faceIdx, String matName) {
-			// store the face index and the material it uses
-			if (faceMats.containsKey(faceIdx)) // face index already present
+			if (faceMats.containsKey(faceIdx))                  // face index already present
 				System.out.println("Face index " + faceIdx + " changed to use material " + matName);
 			faceMats.put(faceIdx, matName);
 
-			// store how many times matName has been used by faces
 			if (matCount.containsKey(matName)) {
 				int i = (Integer) matCount.get(matName) + 1;
 				matCount.put(matName, i);
 			} else
 				matCount.put(matName, 1);
-		} // end of addUse()
+		}
 
 		public String findMaterial(int faceIdx) {
 			return (String) faceMats.get(faceIdx);
 		}
-
-		public void showUsedMaterials()
-		/*
-		 * List all the materials used by faces, and the number of faces that have used them.
-		 */
-		{
-			System.out.println("No. of materials used: " + faceMats.size());
-
-			// build an iterator of material names
-			Set<String> keys = matCount.keySet();
-			Iterator<String> iter = keys.iterator();
-
-			// cycle through the hashmap showing the count for each material
-			String matName;
-			int count;
-			while (iter.hasNext()) {
-				matName = iter.next();
-				count = (Integer) matCount.get(matName);
-
-				System.out.print(matName + ": " + count);
-				System.out.println();
-			}
-		} // end of showUsedMaterials()
 
 		public boolean isEmpty() {
 			return faceMats.isEmpty() || this.matCount.isEmpty();

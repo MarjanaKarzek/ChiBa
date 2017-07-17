@@ -8,6 +8,20 @@ import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.util.Log;
 
+/**
+ * <h1>GLUtil Class</h1>
+ * <p>
+ * Utility class to handle OpenGL vertex shader, fragment shader and attributes.
+ * <p>
+ *
+ * @author Andres Oviedo
+ * @version 1.3.1
+ * @since 2017-04-23
+ * Title: Android 3D Model Viewer
+ * Availability: https://github.com/andresoviedo/android-3D-model-viewer
+ *
+ */
+
 public final class GLUtil {
 
 	private static final String TAG = "GLUtil";
@@ -70,10 +84,7 @@ public final class GLUtil {
 
 	/**
 	 * Utility method for compiling a OpenGL shader.
-	 * 
 	 * <p>
-	 * <strong>Note:</strong> When developing shaders, use the checkGlError() method to debug shader coding errors.
-	 * </p>
 	 * 
 	 * @param type
 	 *            - Vertex or fragment shader type.
@@ -101,17 +112,16 @@ public final class GLUtil {
 		return shader;
 	}
 
+	/**
+     * Utility method to load texture onto Object3DData object within ModelRenderer.
+     * */
 	public static int loadTexture(final InputStream is) {
-//		Log.v("GLUtil", "Loading texture '" + is + "' from stream...");
-
 		final int[] textureHandle = new int[1];
 
 		GLES20.glGenTextures(1, textureHandle, 0);
 		GLUtil.checkGlError("glGenTextures");
 
 		if (textureHandle[0] != 0) {
-//			Log.i("GLUtil", "Handler: " + textureHandle[0]);
-
 			final BitmapFactory.Options options = new BitmapFactory.Options();
 			// By default, Android applies pre-scaling to bitmaps depending on the resolution of your device and which
 			// resource folder you placed the image in. We don’t want Android to scale our bitmap at all, so to be sure,

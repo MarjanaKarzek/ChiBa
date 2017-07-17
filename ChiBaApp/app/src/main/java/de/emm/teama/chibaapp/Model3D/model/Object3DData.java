@@ -18,9 +18,14 @@ import android.opengl.GLES20;
 import android.util.Log;
 
 /**
- * This is the basic 3D data necessary to build the 3D object
- * 
- * @author andres
+ * <h1>Object3DData Class </h1>
+ * This class represents the basic 3D data necessary to build the 3D object.
+ *
+ * @author Andres Oviedo, modified by Natalie Grasser
+ * @version 1.3.1
+ * @since 2017-04-23, modified 2017-06-28
+ * Title: Android 3D Model Viewer
+ * Availability: https://github.com/andresoviedo/android-3D-model-viewer
  *
  */
 public class Object3DData {

@@ -3,11 +3,17 @@ package de.emm.teama.chibaapp.Model3D.util;
 import android.opengl.Matrix;
 
 /**
- * Utility class to calculate 3D stuff
- * 
- * @author andresoviedo
+ * <h1>Math3DUtils Class</h1>
+ * Utility class to calculate 3D math problems.
+ * <p>
+ * @author Andres Oviedo
+ * @version 1.3.1
+ * @since 2017-04-23
+ * Title: Android 3D Model Viewer
+ * Availability: https://github.com/andresoviedo/android-3D-model-viewer
  *
  */
+
 public class Math3DUtils {
 
 	/**

@@ -1,8 +1,5 @@
 package de.emm.teama.chibaapp.Model3D.sceneloader;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,9 +8,26 @@ import de.emm.teama.chibaapp.Model3D.model.Object3DBuilder;
 import de.emm.teama.chibaapp.Model3D.model.Object3DData;
 
 import android.content.res.AssetManager;
-import android.os.Environment;
 import android.os.SystemClock;
 import android.util.Log;
+
+/**
+ * <h1>SceneLoader Class</h1>
+ * This class implements the scene for the OpenGL implementation.
+ * <p>
+ *
+ * @author Natalie Grasser
+ * @version 1.0
+ * @since 2017-04-23, modified 2017-06-28
+ *
+ * <p>
+ * Based on
+ * Authos: Andres Oviedo
+ * Title: Android 3D Model Viewer
+ * Version: 1.3.1
+ * Availability: https://github.com/andresoviedo/android-3D-model-viewer
+ *
+ */
 
 public class SceneLoader
 {

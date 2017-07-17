@@ -12,9 +12,15 @@ import android.os.SystemClock;
 import android.util.Log;
 
 /**
- * Abstract class that implements all calls to opengl to draw objects
+ * <h1>Object3DImpl Class </h1>
+ * Abstract class that implements all calls to opengl to draw objects.
+ * Subclasses must provide vertex shader and specify whether the shaders supports specific features.
  *
- * Subclasses must provide vertex shader and specify whether the shaders supports specific features
+ * @author Andres Oviedo, modified by Natalie Grasser
+ * @version 1.3.1
+ * @since 2017-04-23, modified 2017-06-28
+ * Title: Android 3D Model Viewer
+ * Availability: https://github.com/andresoviedo/android-3D-model-viewer
  *
  */
 public abstract class Object3DImpl implements Object3D {
@@ -292,17 +298,13 @@ public abstract class Object3DImpl implements Object3D {
 
 		if (drawModeList != null) {
 			if (drawOrderBuffer == null) {
-//				Log.d(obj.getId(),"Drawing single polygons using arrays...");
 				for (int j=0; j<drawModeList.size(); j++) {
 					int[] polygon = drawModeList.get(j);
-					int drawModePolygon = polygon[0];
-					int vertexPos = polygon[1];
-					int drawSizePolygon = polygon[2];
+//					int drawModePolygon = polygon[0];
+//					int vertexPos = polygon[1];
+//					int drawSizePolygon = polygon[2];
 					if (drawMode == GLES20.GL_LINE_LOOP && polygon[2] > 3) {
-						// is this wireframe?
-						// Log.v("Object3DImpl","Drawing wireframe for '" + obj.getId() + "' (" + drawSizePolygon + ")...");
 						for (int i = 0; i < polygon[2] - 2; i++) {
-							// Log.v("Object3DImpl","Drawing wireframe triangle '" + i + "' for '" + obj.getId() + "'...");
 							GLES20.glDrawArrays(drawMode, polygon[1] + i, 3);
 						}
 					} else {
@@ -310,7 +312,6 @@ public abstract class Object3DImpl implements Object3D {
 					}
 				}
 			} else {
-				// Log.d(obj.getId(),"Drawing single polygons using elements...");
 				for (int i=0; i<drawModeList.size(); i++) {
 					int[] drawPart = drawModeList.get(i);
 					int drawModePolygon = drawPart[0];
@@ -323,13 +324,10 @@ public abstract class Object3DImpl implements Object3D {
 		} else {
 			if (drawOrderBuffer != null) {
 				if (drawSize <= 0) {
-					// String mode = drawMode == GLES20.GL_POINTS ? "Points" : drawMode == GLES20.GL_LINES? "Lines": "Triangles?";
-					// Log.d(obj.getId(),"Drawing all elements with mode '"+mode+"'...");
 					drawOrderBuffer.position(0);
 					GLES20.glDrawElements(drawMode, drawOrderBuffer.capacity(), GLES20.GL_UNSIGNED_INT,
 							drawOrderBuffer);
 				} else {
-					//Log.d(obj.getId(),"Drawing single elements of size '"+drawSize+"'...");
 					for (int i = 0; i < drawOrderBuffer.capacity(); i += drawSize) {
 						drawOrderBuffer.position(i);
 						GLES20.glDrawElements(drawMode, drawSize, GLES20.GL_UNSIGNED_INT, drawOrderBuffer);
@@ -348,10 +346,8 @@ public abstract class Object3DImpl implements Object3D {
 						}
 						drawCount = (int)((Math.sin(rotation-this.shift+ Math.PI / 2 * 3)+1)/2f*drawCount);
 					}
-					// Log.d(obj.getId(),"Drawing all triangles using arrays... counter("+drawCount+")");
 					GLES20.glDrawArrays(drawMode, 0, drawCount);
 				} else {
-					//Log.d(obj.getId(),"Drawing single triangles using arrays...");
 					for (int i = 0; i < vertexBuffer.capacity() / COORDS_PER_VERTEX; i += drawSize) {
 						GLES20.glDrawArrays(drawMode, i, drawSize);
 					}
@@ -362,7 +358,7 @@ public abstract class Object3DImpl implements Object3D {
 }
 
 /* Draw a single point in space */
-class Object3DV0 extends Object3DImpl {
+class Object3DsinglePoint extends Object3DImpl {
 	// @formatter:off
 	private static final String pointVertexShader =
 			"uniform mat4 u_MVPMatrix;      \n"
@@ -383,13 +379,13 @@ class Object3DV0 extends Object3DImpl {
 					+ "}                              \n";
 	// @formatter:on
 
-	public Object3DV0() {
+	public Object3DsinglePoint() {
 		super("V0", pointVertexShader, pointFragmentShader, "a_Position");
 	}
 }
 
 /* Draw using single color */
-class Object3DV1 extends Object3DImpl {
+class Object3DsingleColor extends Object3DImpl {
 
 	// @formatter:off
 	private final static String vertexShaderCode =
@@ -410,9 +406,7 @@ class Object3DV1 extends Object3DImpl {
 					"}";
 	// @formatter:on
 
-	public Object3DV1() {
-		super("V1", vertexShaderCode, fragmentShaderCode, "a_Position");
-	}
+	public Object3DsingleColor() { super("V1", vertexShaderCode, fragmentShaderCode, "a_Position"); }
 
 	@Override
 	protected boolean supportsColors() {
@@ -421,7 +415,7 @@ class Object3DV1 extends Object3DImpl {
 }
 
 /* Drawer using colors, textures & lights */
-class Object3DV6 extends Object3DImpl {
+class Object3DfullObject extends Object3DImpl {
 	// @formatter:off
 	private final static String vertexShaderCode =
 			"uniform mat4 u_MVPMatrix;\n" +
@@ -474,7 +468,7 @@ class Object3DV6 extends Object3DImpl {
 					"}";
 	// @formatter:on
 
-	public Object3DV6() {
+	public Object3DfullObject() {
 		super("V6", vertexShaderCode, fragmentShaderCode, "a_Position", "a_Color", "a_TexCoordinate", "a_Normal");
 	}
 

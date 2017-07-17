@@ -9,11 +9,15 @@ import de.emm.teama.chibaapp.Model3D.sceneloader.SceneLoader;
 import java.util.List;
 
 /**
- * Class Name: CCamera
- * Created by: Allen Sherrod (Programming Ace of www.UltimateGameProgramming.com).
- * Description: This class represents a camera in a 3D scene.
+ * <h1>Camera Class </h1>
+ * This class represents the basic 3D data necessary to build the 3D object.
  *
- * http://stackoverflow.com/questions/14607640/rotating-a-vector-in-3d-space
+ * @author Allen Sherrod
+ * @since modified 2017-06-28
+ * Title: CCamera
+ * Description: This class represents a camera in a 3D scene.
+ * Availability: Programming Ace of www.UltimateGameProgramming.com
+ *
  */
 
 public class Camera {
@@ -112,10 +116,12 @@ public class Camera {
 		zUp = zArriba + zPos;
 	}
 
+	/**
+     * Moving the camera requires a little more then adding 1 to the z or subracting 1.
+     *
+     * */
 	public void MoveCameraZ(float direction) {
-		// Moving the camera requires a little more then adding 1 to the z or
-		// subracting 1.
-		// First we need to get the direction at which we are looking.
+        //First we need to get the direction at which we are looking.
 		float xLookDirection = 0, yLookDirection = 0, zLookDirection = 0;
 
 		// The look direction is the view minus the position (where we are).
@@ -165,12 +171,10 @@ public class Camera {
 		List<Object3DData> objects = scene.getObjects();
 		for (int i = 0; objects != null && i < objects.size(); i++) {
 			BoundingBox boundingBox = objects.get(i).getBoundingBox();
-			// Log.d("Camera","BoundingBox? "+boundingBox);
 			if (boundingBox != null && boundingBox.insideBounds(
 					buffer[0] / buffer[3]
 					, buffer[1] / buffer[3]
 					, buffer[2] / buffer[3] )) {
-//				Log.d("Camera", "Inside bounds of '" + objects.get(i).getId() + "'");
 				return true;
 			}
 		}

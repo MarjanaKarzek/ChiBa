@@ -22,23 +22,27 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
+/**
+ * <h1>Object3DBuilder Class </h1>
+ * This class provides the functionality to build the 3D object.
+ *
+ * @author Andres Oviedo, modified by Natalie Grasser
+ * @version 1.3.1
+ * @since 2017-04-23, modified 2017-06-28
+ * Title: Android 3D Model Viewer
+ * Availability: https://github.com/andresoviedo/android-3D-model-viewer
+ *
+ */
+
 public final class Object3DBuilder {
-
-	public interface Callback {
-		void onLoadError(Exception ex);
-
-		void onLoadComplete(Object3DData data);
-
-		void onBuildComplete(Object3DData data);
-	}
 
 	private static final int COORDS_PER_VERTEX = 3;
 
 	private static float[] DEFAULT_COLOR = {1.0f, 1.0f, 0, 1.0f};
 
-	private Object3DV0 object3dv0;
-	private Object3DV1 object3dv1;
-    private Object3DV6 object3dv6;
+	private Object3DsinglePoint object3DsinglePoint;
+	private Object3DsingleColor object3DsingleColor;
+    private Object3DfullObject object3DfullObject;
 
 	public static Object3DData buildPoint(float[] point) {
 		return new Object3DData(createNativeByteBuffer(point.length * 4).asFloatBuffer().put(point))
@@ -76,9 +80,9 @@ public final class Object3DBuilder {
 
 	public Object3D getDrawer(Object3DData obj, boolean usingTextures, boolean usingLights) throws IOException {
 
-		if (object3dv1 == null) {
-			object3dv1 = new Object3DV1();
-            object3dv6 = new Object3DV6();
+		if (object3DsingleColor == null) {
+			object3DsingleColor = new Object3DsingleColor();
+            object3DfullObject = new Object3DfullObject();
 		}
 
         if (usingTextures && usingLights
@@ -87,9 +91,9 @@ public final class Object3DBuilder {
                 && obj.getTextureCoordsArrayBuffer() != null
                 && obj.getVertexNormalsArrayBuffer() != null
                 && obj.getVertexNormalsArrayBuffer() != null) {
-            return object3dv6;
+            return object3DfullObject;
 		} else {
-			return object3dv1;
+			return object3DsingleColor;
 		}
 	}
 
@@ -299,14 +303,14 @@ public final class Object3DBuilder {
 	}
 
 	public Object3D getFaceNormalsDrawer() {
-		return object3dv1;
+		return object3DsingleColor;
 	}
 
 	public Object3D getPointDrawer() {
-		if (object3dv0 == null) {
-			object3dv0 = new Object3DV0();
+		if (object3DsinglePoint == null) {
+			object3DsinglePoint = new Object3DsinglePoint();
 		}
-		return object3dv0;
+		return object3DsinglePoint;
 	}
 
 	/**

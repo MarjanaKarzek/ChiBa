@@ -1,7 +1,16 @@
 package de.emm.teama.chibaapp.Model3D.entities;
 
 /**
- * @author andresoviedo
+ * <h1>BoundingBox Class</h1>
+ * This class implements the scene for the OpenGL implementation.
+ * <p>
+ *
+ * @author Andres Oviedo, modified Natalie Grasser
+ * @version 1.3.1
+ * @since 2017-04-23, modified 2017-06-28
+ * Title: Android 3D Model Viewer
+ * Availability: https://github.com/andresoviedo/android-3D-model-viewer
+ *
  */
 
 public final class BoundingBox {
