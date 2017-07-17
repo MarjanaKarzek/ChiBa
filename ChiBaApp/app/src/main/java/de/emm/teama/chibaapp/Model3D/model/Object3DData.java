@@ -88,7 +88,7 @@ public class Object3DData {
 		this.faces = faces;  // parameter "faces" could be null in case of async loading
 		this.faceMats = faceMats;
 		this.materials = materials;
-        this.visible = true;
+        this.visible = false;
 	}
 
 	public boolean isVisible(){

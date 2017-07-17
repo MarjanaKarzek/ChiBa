@@ -217,7 +217,7 @@ public final class Object3DBuilder {
                     IOUtils.copy(fis, bos);
                     fis.close();
 					textureData = bos.toByteArray();
-					bos.close();
+                    bos.close();
 				}
 			} else {
 				Log.i("Object3DBuilder", "Found material(s) but no texture");
@@ -230,6 +230,7 @@ public final class Object3DBuilder {
 		if (textureData != null) {
 			ArrayList<Tuple3> texCoords = obj.getTexCoords();
 			if (texCoords != null && texCoords.size() > 0) {
+                Log.d("Object3DBuilder", "generateArrays: reading texture");
 
 				FloatBuffer textureCoordsBuffer = createNativeByteBuffer(texCoords.size() * 2 * 4).asFloatBuffer();
 				for (Tuple3 texCor : texCoords) {

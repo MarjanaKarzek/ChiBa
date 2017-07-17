@@ -41,9 +41,15 @@ public class SceneLoader
 
     private Object3DData selectedObject = null;                 // Object selected by the user
 
-    double lastTime = SystemClock.uptimeMillis();
-    int runtimeCounter = 0;
-    int objectcounter = 0;
+    private double lastTime = SystemClock.uptimeMillis();
+    private int runtimeCounter = 0;
+    private int objectcounter = 0;
+    private int previousobject = 1;
+    private int loopdirection = 1;
+    private double speed;
+    private boolean rewindable;
+    private boolean loopable;
+
 
 	// Light bulb 3d data
 	private final Object3DData lightPoint = Object3DBuilder.buildPoint(new float[4]).setId("light").setPosition(lightPosition);
@@ -51,27 +57,35 @@ public class SceneLoader
     public SceneLoader(MainFragment main, AssetManager assets, boolean usesAvatar, String animation)
     {
         this.parent = main;
+        //Tests with Ballsport, Lernen, Laptop, Arbeit, Einkaufen, Restaurant, Geburtstag, Sonne, Regen, ""
+        animation = "";
 
         if(usesAvatar) {
             switch (animation) {
                 case "Ballsport":
                 case "Fitness":
                 case "Schwimmen":
+                    loopable = true;
+                    rewindable = false;
+                    speed = 115.0;
                     try {
                         String[] assetsArray = assets.list("models/ball");
                         int counter = 1;
                         for (String asset: assetsArray) {
                             if(asset.endsWith(".obj")){
                                 String filename = "ball_frame" + counter + ".obj";
+                                Log.d(TAG, "SceneLoader: reading file " + filename);
                                 Object3DData object = Object3DBuilder.loadObj(assets, "models/ball", filename);
                                 object.centerAndScale(2.0f);
                                 object.setPosition(new float[]{-1.0f, -0.5f, 0f});
                                 addObject(object);
+                                //objects.get(counter-1).setVisible(false);
                                 counter ++;
                             }
                         }
                     } catch (Exception ex) {
-                        Log.e(TAG, "SceneLoader: some object in default scene not found");
+                        Log.e(TAG, "SceneLoader: some object in ball scene not found");
+                        ex.printStackTrace();
                     }
                     break;
                 case "Lernen":
@@ -79,12 +93,16 @@ public class SceneLoader
                 case "Prüfungsanmeldung":
                 case "Kursbelegung":
                 case "Unterlagen":
+                    loopable = true;
+                    rewindable = true;
+                    speed = 115.0;
                     try {
                         String[] assetsArray = assets.list("models/book");
                         int counter = 1;
                         for (String asset: assetsArray) {
                             if(asset.endsWith(".obj")){
                                 String filename = "book_frame" + counter + ".obj";
+                                Log.d(TAG, "SceneLoader: reading file " + filename);
                                 Object3DData object = Object3DBuilder.loadObj(assets, "models/book", filename);
                                 object.centerAndScale(2.0f);
                                 object.setPosition(new float[]{-1.0f, -0.5f, 0f});
@@ -93,17 +111,22 @@ public class SceneLoader
                             }
                         }
                     } catch (Exception ex) {
-                        Log.e(TAG, "SceneLoader: some object in default scene not found");
+                        Log.e(TAG, "SceneLoader: some object in book scene not found");
+                        ex.printStackTrace();
                     }
                     break;
                 case "Laptop":
                 case "Lerngruppe":
+                    loopable = true;
+                    rewindable = true;
+                    speed = 115.0;
                     try {
                         String[] assetsArray = assets.list("models/computerWork");
                         int counter = 1;
                         for (String asset: assetsArray) {
                             if(asset.endsWith(".obj")){
                                 String filename = "computerWork_frame" + counter + ".obj";
+                                Log.d(TAG, "SceneLoader: reading file " + filename);
                                 Object3DData object = Object3DBuilder.loadObj(assets, "models/computerWork", filename);
                                 object.centerAndScale(2.0f);
                                 object.setPosition(new float[]{-1.0f, -0.5f, 0f});
@@ -112,17 +135,21 @@ public class SceneLoader
                             }
                         }
                     } catch (Exception ex) {
-                        Log.e(TAG, "SceneLoader: some object in default scene not found");
+                        Log.e(TAG, "SceneLoader: some object in computerWork scene not found");
+                        ex.printStackTrace();
                     }
                     break;
                 case "Arbeit":
                 case "Hausaufgaben":
+                    loopable = false;
+                    rewindable = false;
                     try {
                         String[] assetsArray = assets.list("models/computerWorkGlasses");
                         int counter = 1;
                         for (String asset: assetsArray) {
                             if(asset.endsWith(".obj")){
                                 String filename = "computerWorkGlasses_frame" + counter + ".obj";
+                                Log.d(TAG, "SceneLoader: reading file " + filename);
                                 Object3DData object = Object3DBuilder.loadObj(assets, "models/computerWorkGlasses", filename);
                                 object.centerAndScale(2.0f);
                                 object.setPosition(new float[]{-1.0f, -0.5f, 0f});
@@ -131,16 +158,21 @@ public class SceneLoader
                             }
                         }
                     } catch (Exception ex) {
-                        Log.e(TAG, "SceneLoader: some object in default scene not found");
+                        Log.e(TAG, "SceneLoader: some object in default computerWorkGlasses not found");
+                        ex.printStackTrace();
                     }
                     break;
                 case "Einkaufen":
+                    loopable = true;
+                    rewindable = true;
+                    speed = 115.0;
                     try {
                         String[] assetsArray = assets.list("models/emptyBowl");
                         int counter = 1;
                         for (String asset: assetsArray) {
                             if(asset.endsWith(".obj")){
                                 String filename = "emptyBowl_frame" + counter + ".obj";
+                                Log.d(TAG, "SceneLoader: reading file " + filename);
                                 Object3DData object = Object3DBuilder.loadObj(assets, "models/emptyBowl", filename);
                                 object.centerAndScale(2.0f);
                                 object.setPosition(new float[]{-1.0f, -0.5f, 0f});
@@ -149,19 +181,24 @@ public class SceneLoader
                             }
                         }
                     } catch (Exception ex) {
-                        Log.e(TAG, "SceneLoader: some object in default scene not found");
+                        Log.e(TAG, "SceneLoader: some object in emptyBowl scene not found");
+                        ex.printStackTrace();
                     }
                     break;
                 case "Restaurant":
                 case "Brunch":
                 case "Business Lunch":
                 case "Mahlzeit":
+                    loopable = true;
+                    rewindable = true;
+                    speed = 80.0;
                     try {
                         String[] assetsArray = assets.list("models/fullBowl");
                         int counter = 1;
                         for (String asset: assetsArray) {
                             if(asset.endsWith(".obj")){
                                 String filename = "fullBowl_frame" + counter + ".obj";
+                                Log.d(TAG, "SceneLoader: reading file " + filename);
                                 Object3DData object = Object3DBuilder.loadObj(assets, "models/fullBowl", filename);
                                 object.centerAndScale(2.0f);
                                 object.setPosition(new float[]{-1.0f, -0.5f, 0f});
@@ -170,7 +207,8 @@ public class SceneLoader
                             }
                         }
                     } catch (Exception ex) {
-                        Log.e(TAG, "SceneLoader: some object in default scene not found");
+                        Log.e(TAG, "SceneLoader: some object in fullBowl scene not found");
+                        ex.printStackTrace();
                     }
                     break;
                 case "Geburtstag":
@@ -186,13 +224,17 @@ public class SceneLoader
                 case "Ostern":
                 case "Sommersonnenwende":
                 case "Party":
+                    loopable = true;
+                    rewindable = true;
+                    speed = 80.0;
                     try {
-                        String[] assetsArray = assets.list("models/tailWagging");
+                        String[] assetsArray = assets.list("models/tailWag");
                         int counter = 1;
                         for (String asset: assetsArray) {
                             if(asset.endsWith(".obj")){
                                 String filename = "tailWagging_frame" + counter + ".obj";
-                                Object3DData rain = Object3DBuilder.loadObj(assets, "models/tailWagging", filename);
+                                Log.d(TAG, "SceneLoader: reading file " + filename);
+                                Object3DData rain = Object3DBuilder.loadObj(assets, "models/tailWag", filename);
                                 rain.centerAndScale(2.0f);
                                 rain.setPosition(new float[]{-1.0f, -0.5f, 0f});
                                 addObject(rain);
@@ -200,16 +242,20 @@ public class SceneLoader
                             }
                         }
                     } catch (Exception ex) {
-                        Log.e(TAG, "SceneLoader: some object not found");
+                        Log.e(TAG, "SceneLoader: some object in tailWagging scene not found");
+                        ex.printStackTrace();
                     }
                     break;
                 case "Sonne":
+                    loopable = false;
+                    rewindable = false;
                     try {
                         String[] assetsArray = assets.list("models/sunglasses");
                         int counter = 1;
                         for (String asset: assetsArray) {
                             if(asset.endsWith(".obj")){
                                 String filename = "sunglasses_frame" + counter + ".obj";
+                                Log.d(TAG, "SceneLoader: reading file " + filename);
                                 Object3DData rain = Object3DBuilder.loadObj(assets, "models/sunglasses", filename);
                                 rain.centerAndScale(2.0f);
                                 rain.setPosition(new float[]{-1.0f, -0.5f, 0f});
@@ -218,16 +264,21 @@ public class SceneLoader
                             }
                         }
                     } catch (Exception ex) {
-                        Log.e(TAG, "SceneLoader: some object in default scene not found");
+                        Log.e(TAG, "SceneLoader: some object in sunglasses scene not found");
+                        ex.printStackTrace();
                     }
                     break;
                 case "Regen":
+                    loopable = true;
+                    rewindable = true;
+                    speed = 115.0;
                     try {
                         String[] assetsArray = assets.list("models/umbrella");
                         int counter = 1;
                         for (String asset: assetsArray) {
                             if(asset.endsWith(".obj")){
-                                String filename = "umbrella_frame" + counter + ".obj";
+                                String filename = "umbrella_Frame" + counter + ".obj";
+                                Log.d(TAG, "SceneLoader: reading file " + filename);
                                 Object3DData rain = Object3DBuilder.loadObj(assets, "models/umbrella", filename);
                                 rain.centerAndScale(2.0f);
                                 rain.setPosition(new float[]{-1.0f, -0.5f, 0f});
@@ -236,13 +287,16 @@ public class SceneLoader
                             }
                         }
                     } catch (Exception ex) {
-                        Log.e(TAG, "SceneLoader: some object not found");
+                        Log.e(TAG, "SceneLoader: some object in umbrella scene not found");
+                        ex.printStackTrace();
                     }
                     break;
                 default:
                     Log.d(TAG, "SceneLoader: default scene selected");
                     // "Kino", "Wäsche waschen", "Geschirr spühlen", "Bügeln", "Staub wischen", "Staub saugen"
 
+                    loopable = false;
+                    rewindable = false;
                     try {
                         Object3DData chiba = Object3DBuilder.loadObj(assets, "models/chiba", "chiba.obj");
                         chiba.centerAndScale(2.0f);
@@ -250,8 +304,8 @@ public class SceneLoader
                         addObject(chiba);
                     } catch (Exception ex) {
                         Log.e(TAG, "SceneLoader: some object in default scene not found");
+                        ex.printStackTrace();
                     }
-                    break;
             }
 
         }
@@ -262,30 +316,33 @@ public class SceneLoader
 	}
 
 	public void onDrawFrame(){
-        double currentTime = SystemClock.uptimeMillis();
-        if(currentTime - lastTime >= 115.0){
-            for(Object3DData object: objects){
-                if(objects.indexOf(object) == objectcounter)
-                    object.setVisible(true);
-                else
-                    object.setVisible(false);
-            }
-            objectcounter++;
-            if(objectcounter == objects.size()) {
-                objectcounter = 0;
-                runtimeCounter++;
-                if(runtimeCounter == 5) {
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+        if(loopable) {
+            double currentTime = SystemClock.uptimeMillis();
+            if (currentTime - lastTime >= speed) {
+                objects.get(objectcounter).setVisible(true);
+                objects.get(previousobject).setVisible(false);
+                previousobject = objectcounter;
+                objectcounter += loopdirection;
+                if (objectcounter == objects.size() - 1 || objectcounter == 0) {
+                    if (rewindable)
+                        loopdirection *= -1;
+                    else
+                        objectcounter = 0;
+                    runtimeCounter++;
+                    if (runtimeCounter == 5) {
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        runtimeCounter = 0;
                     }
-                    runtimeCounter=0;
                 }
+                lastTime = currentTime;
             }
-            lastTime = currentTime;
-            //animateLight();
         }
+        else
+            objects.get(0).setVisible(true);
     }
 
 	private void animateLight() {
