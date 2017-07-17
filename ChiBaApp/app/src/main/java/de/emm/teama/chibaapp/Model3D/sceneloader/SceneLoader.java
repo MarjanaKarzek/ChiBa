@@ -79,7 +79,6 @@ public class SceneLoader
                                 object.centerAndScale(2.0f);
                                 object.setPosition(new float[]{-1.0f, -0.5f, 0f});
                                 addObject(object);
-                                //objects.get(counter-1).setVisible(false);
                                 counter ++;
                             }
                         }
