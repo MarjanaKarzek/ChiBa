@@ -7,12 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,7 +31,6 @@ import de.emm.teama.chibaapp.Utils.DatabaseHelper;
  * Created by Marjana Karzek on 02.07.2017.
  */
 public class ChiBaApplication extends Application {
-    //Database Initialization
     public static DatabaseHelper database;
     private static final String TAG = "ChiBaApplication";
     private static HashMap<Integer, Timer> appointmentTimers = new HashMap<Integer, Timer>();
@@ -69,7 +66,7 @@ public class ChiBaApplication extends Application {
                     Date time = date.getTime();
                     Timer timer = new Timer();
                     appointmentTimers.put(eventId, timer);
-                    Log.d(TAG, "setUpTimerForAppointments: event " + eventId + " scheduled for " + simpleDateFormat.format(date.getTime()));
+                    //Log.d(TAG, "setUpTimerForAppointments: event " + eventId + " scheduled for " + simpleDateFormat.format(date.getTime()));
                     appointmentTimers.get(eventId).schedule(new ScheduledAppointmentNotification(eventId, hashtags, this, (NotificationManager) getSystemService(NOTIFICATION_SERVICE), getResources()), time);
                 }
             }
@@ -77,7 +74,7 @@ public class ChiBaApplication extends Application {
     }
 
     public static void addAppointmentTimer(int eventId, String startTimeString, ArrayList<String> hashtags) {
-        Log.d(TAG, "addAppointmentTimer: Adding new scheduled notification");
+        //Log.d(TAG, "addAppointmentTimer: Adding new scheduled notification");
         String dateFormat = "d. MMMM yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.GERMANY);
 
@@ -90,7 +87,7 @@ public class ChiBaApplication extends Application {
 
         Timer timer = new Timer();
         appointmentTimers.put(eventId, timer);
-        Log.d(TAG, "addAppointmentTimer: event " + eventId + " scheduled for " + simpleDateFormat.format(date.getTime()));
+        //Log.d(TAG, "addAppointmentTimer: event " + eventId + " scheduled for " + simpleDateFormat.format(date.getTime()));
         appointmentTimers.get(eventId).schedule(new ScheduledAppointmentNotification(eventId, hashtags, context, (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE), context.getResources()), time);
     }
 
@@ -98,7 +95,7 @@ public class ChiBaApplication extends Application {
         if (appointmentTimers.containsKey(eventId)) {
             appointmentTimers.get(eventId).cancel();
             appointmentTimers.remove(eventId);
-            Log.d(TAG, "deleteApplicationTimer: Timer deleted for " + eventId);
+            //Log.d(TAG, "deleteApplicationTimer: Timer deleted for " + eventId);
         }
     }
 
@@ -108,22 +105,18 @@ public class ChiBaApplication extends Application {
     }
 
     private void setUpTimerForToDos() {
-        Log.d(TAG, "setUpTimerForToDos: scheduling notifications");
+        //Log.d(TAG, "setUpTimerForToDos: scheduling notifications");
         Timer timer = new Timer();
         Calendar currentTime = Calendar.getInstance();
-        Date date = currentTime.getTime();
-        String dateFormat = "d. MMMM yyyy HH:mm";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.GERMANY);
 
         if (currentTime.get(Calendar.MINUTE) <= 10) {
             currentTime.add(Calendar.MINUTE, 2);
-            date = currentTime.getTime();
             ScheduledToDoNotification singleNotification = new ScheduledToDoNotification(this, (NotificationManager) getSystemService(NOTIFICATION_SERVICE), getResources());
             singleNotification.run();
         }
         currentTime.add(Calendar.HOUR_OF_DAY, 1);
         currentTime.set(Calendar.MINUTE, 0);
-        date = currentTime.getTime();
+        Date date = currentTime.getTime();
         long period = 3600000;
 
         timer.schedule(new ScheduledToDoNotification(this, (NotificationManager) getSystemService(NOTIFICATION_SERVICE), getResources()), date, period);
@@ -146,6 +139,16 @@ public class ChiBaApplication extends Application {
         private String dateFormat = "d. MMMM yyyy";
         private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.GERMANY);
 
+        private String[] textChoices = {", du hättest jetzt etwas Zeit. Möchtest du dich um folgendes ToDo kümmern: ",
+                                        ", was hältst du davon folgendes zu erledigen: ",
+                                        ", du könntest in der nächsten Zeit folgendes erledigen: "};
+        private String[] yesChoices = {"ja, ok",
+                                       "na gut",
+                                       "ja, gut"};
+        private String[] noChoices = {"nein, danke",
+                                      "nee",
+                                      "später"};
+
         public ScheduledToDoNotification(Context context, NotificationManager notifyMgr, Resources resources) {
             this.context = context;
             this.notifyMgr = notifyMgr;
@@ -166,7 +169,6 @@ public class ChiBaApplication extends Application {
             }
 
             Cursor dataFullDay = database.showEventIdsByStartDateThatAreFullDay(simpleDateFormat.format(currentDate.getTime()));
-            //if there is a fullday event, the complete day is blocked
             if (dataFullDay.getCount() != 0) {
                 Set<Integer> keySet = currentFreeTimeSlots.keySet();
                 currentFreeTimeSlots.clear();
@@ -174,18 +176,9 @@ public class ChiBaApplication extends Application {
                     currentFreeTimeSlots.put(key, false);
                 }
             } else {
-                //0 COLUMN_EVENTS_ID
-                //1 COLUMN_EVENTS_TITLE
-                //2 COLUMN_EVENTS_FULLDAY
-                //3 COLUMN_EVENTS_STARTDATE
-                //4 COLUMN_EVENTS_ENDDATE
-                //5 COLUMN_EVENTS_STARTTIME
-                //6 COLUMN_EVENTS_ENDTIME
-                //7 COLUMN_EVENTS_LOCATION
                 Cursor data = database.showEventsByStartDateWithoutFullDay(simpleDateFormat.format(currentDate.getTime()));
                 if (data.getCount() != 0) {
                     while (data.moveToNext()) {
-                        //set blocks to false if blocked
                         String[] starttime = data.getString(5).split(":");
                         int starthour = Integer.valueOf(starttime[0]);
 
@@ -208,7 +201,6 @@ public class ChiBaApplication extends Application {
                 Cursor toDoData = database.showToDosByStartDate(simpleDateFormat.format(currentDate.getTime()));
                 if (toDoData.getCount() != 0) {
                     while (toDoData.moveToNext()) {
-                        //set blocks to false if blocked by scheduled to do
                         String[] starttime = toDoData.getString(0).split(":");
                         int starthour = Integer.valueOf(starttime[0]);
                         int duration = Integer.valueOf(toDoData.getString(1));
@@ -268,11 +260,8 @@ public class ChiBaApplication extends Application {
         public void run() {
             getCurrentAvailableHours();
             if (availableHours.contains(Calendar.getInstance().HOUR_OF_DAY)) {
-                //calculate current free timeslots
                 getFreeTimeSlots();
-                //write your code here
                 Calendar currentTime = Calendar.getInstance();
-                //get current timeslot length
                 int timeslotlength = 0;
                 int currentHour = currentTime.get(Calendar.HOUR_OF_DAY);
                 int followingHour = currentTime.get(Calendar.HOUR_OF_DAY);
@@ -296,12 +285,16 @@ public class ChiBaApplication extends Application {
                         createPushNotification(selectedToDo);
                     }
                 }
-            } else
-                Log.d(TAG, "run: not scheduled yet");
+            }
+            //else Log.d(TAG, "run: not scheduled yet");
         }
 
         public void createPushNotification(String selectedToDo) {
-            String text = database.getUserName() + ", du hättest jetzt etwas Zeit. Möchtest du dich um folgendes ToDo kümmern: " + selectedToDo;
+            int randomText = random.nextInt(textChoices.length);
+            int randomYes = random.nextInt(yesChoices.length);
+            int randomNo = random.nextInt(noChoices.length);
+
+            String text = database.getUserName() + textChoices[randomText] + selectedToDo;
             NotificationCompat.Builder builder =
                     new NotificationCompat.Builder(context)
                             .setSmallIcon(R.drawable.ic_notification_todo)
@@ -310,8 +303,8 @@ public class ChiBaApplication extends Application {
                             .setContentText(text)
                             .setStyle(new NotificationCompat.BigTextStyle()
                                     .bigText(text))
-                            .addAction(R.drawable.ic_home, "nein, danke", pendingApplicationIntentAction1)
-                            .addAction(R.drawable.ic_home, "ja, ok", pendingApplicationIntentAction2);
+                            .addAction(R.drawable.ic_home, noChoices[randomNo], pendingApplicationIntentAction1)
+                            .addAction(R.drawable.ic_home, yesChoices[randomYes], pendingApplicationIntentAction2);
             notifyMgr.notify(001, builder.build());
         }
     }
