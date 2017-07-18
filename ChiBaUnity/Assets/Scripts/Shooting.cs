@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Shooting : MonoBehaviour {
 
@@ -49,5 +50,6 @@ public class Shooting : MonoBehaviour {
 
             inventory.RemoveItem(ball);
         }
+
     }
 }
