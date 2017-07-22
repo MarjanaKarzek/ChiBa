@@ -311,9 +311,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 int hashtagId = getHashtagIdByName(hashtag);
                 contentEventHashtagValues.put(COLUMN_EVENTMATCHING_EVENT_ID, eventId);
                 contentEventHashtagValues.put(COLUMN_EVENTMATCHING_HASHTAG_ID, hashtagId);
+                result = db.insert(TABLE_NAME_EVENTMATCHING, null, contentEventHashtagValues);
             }
-
-            result = db.insert(TABLE_NAME_EVENTMATCHING, null, contentEventHashtagValues);
             if (result == -1)
                 return false;
             else
@@ -665,9 +664,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 int hashtagId = getHashtagIdByName(hashtag);
                 contentToDoHashtagValues.put(COLUMN_TODOMATCHING_TODO_ID, todoId);
                 contentToDoHashtagValues.put(COLUMN_TODOMATCHING_HASHTAG_ID, hashtagId);
+                result = db.insert(TABLE_NAME_TODOMATCHING, null, contentToDoHashtagValues);
             }
-
-            result = db.insert(TABLE_NAME_TODOMATCHING, null, contentToDoHashtagValues);
             if (result == -1)
                 return false;
             else
