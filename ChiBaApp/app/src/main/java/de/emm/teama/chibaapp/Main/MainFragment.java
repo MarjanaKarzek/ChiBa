@@ -16,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -25,7 +24,6 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 
-import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,7 +43,7 @@ import de.emm.teama.chibaapp.Utils.WeatherRemoteFetch;
 import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
 
 
-public class MainFragment extends Fragment implements CityChangeDialogFragment.CityChangeDialogFragmentListener {
+public class MainFragment extends Fragment {
     private static final String TAG = "MainFragment";
 
     /* Enter into Android Immersive mode so the renderer is full screen or not */
@@ -180,7 +178,8 @@ public class MainFragment extends Fragment implements CityChangeDialogFragment.C
             rlpTextCity.topMargin = 150;
             rlpTextCity.rightMargin = 50;
             textCity.setFocusable(false);
-            textCity.setOnClickListener(new View.OnClickListener() {
+            textCity.setTextColor(getContext().getColor(R.color.colorBlackish));
+            /*textCity.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -196,7 +195,7 @@ public class MainFragment extends Fragment implements CityChangeDialogFragment.C
                     DialogFragment newDialog = CityChangeDialogFragment.newInstance();
                     newDialog.show(transaction, "city_change_dialog_fragment");
                 }
-            });
+            });*/
 
             //Temperature
             RelativeLayout.LayoutParams rlpTextTemperature = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -424,11 +423,11 @@ public class MainFragment extends Fragment implements CityChangeDialogFragment.C
         weathericon.setText(icon);
     }
 
-    @Override
+    /*@Override
     public void onReturnValue(String city) {
         Log.d(TAG, "onReturnValue: city change to " + city);
         database.setSystemInfoData(city, lastKnownTemperature);
         lastKnownCity = city;
         textCity.setText(city);
-    }
+    }*/
 }

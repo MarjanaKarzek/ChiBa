@@ -1,6 +1,6 @@
 package de.emm.teama.chibaapp.Utils;
 
-import android.app.DialogFragment;
+import android.support.v4.app.DialogFragment;;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,14 +11,27 @@ import android.widget.RadioButton;
 import de.emm.teama.chibaapp.R;
 
 /**
- * Created by Marjana Karzek on 12.07.2017.
+ * <h1>CityChangeDialogFragment Class</h1>
+ * This class sets up a DialogFragment to change the city.
+ * This class was not implemented properly in the release version.
+ * <p>
+ * In the comments find log entries to be used for debugging purposes.
+ *
+ * @author  Marjana Karzek
+ * @version 1.0
+ * @since   2017-07-12
  */
 
 public class CityChangeDialogFragment extends DialogFragment{
     private static final String TAG = "CityChangeDialogFragment";
 
-    public static AppointmentDetailDialogFragment newInstance() {
-        AppointmentDetailDialogFragment dialog = new AppointmentDetailDialogFragment();
+    /**
+     * This method creates a new dialog fragment.
+     *
+     * @return The method returns the dialog
+     */
+    public static CityChangeDialogFragment newInstance() {
+        CityChangeDialogFragment dialog = new CityChangeDialogFragment();
         return dialog;
     }
 
