@@ -32,9 +32,15 @@ import de.emm.teama.chibaapp.R;
 import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
 
 /**
- * Created by Marjana Karzek on 18.06.2017.
+ * <h1>SettingsFragment Class</h1>
+ * This class provides the calendar fragment.
+ * <p>
+ * In the comments find log entries to be used for debugging purposes.
+ *
+ * @author  Marjana Karzek
+ * @version 1.0
+ * @since   2017-06-18
  */
-
 public class SettingsFragment extends Fragment {
     private static final String TAG = "SettingsFragment";
 
@@ -54,6 +60,9 @@ public class SettingsFragment extends Fragment {
     private View view;
     private final ViewHolderItem viewHolder = new ViewHolderItem();
 
+    /**
+     * This static class provides the items for the views to avoid reload.
+     */
     static class ViewHolderItem {
         EditText name;
         TextView birthdate;
@@ -65,6 +74,14 @@ public class SettingsFragment extends Fragment {
         ViewFlipper viewFlipper;
     }
 
+    /**
+     * This method creates the view.
+     *
+     * @param inflater This parameter is used to get the inflater.
+     * @param container This parameter is used to get the container.
+     * @param savedInstanceState This parameter is used to get the save state from the dialog.
+     * @return The method returns the view after it was modified.
+     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -148,6 +165,9 @@ public class SettingsFragment extends Fragment {
         return view;
     }
 
+    /**
+     * This method sets up the time picker.
+     */
     private void setUpTimePickers() {
         viewHolder.notDisturbStartTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,17 +185,21 @@ public class SettingsFragment extends Fragment {
 
     }
 
+    /**
+     * This method sets up the date picker.
+     */
     private void setUpDatePicker() {
-
         viewHolder.birthdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new DatePickerDialog(getContext(), birthDatePicker, birthdayCalendar.get(Calendar.YEAR), birthdayCalendar.get(Calendar.MONTH), birthdayCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
-
     }
 
+    /**
+     * This method sets up the OnCheckedChangeListener for the switches.
+     */
     private void setUpOnCheckedChangedListener() {
         viewHolder.doNotDisturb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -202,6 +226,9 @@ public class SettingsFragment extends Fragment {
         });
     }
 
+    /**
+     * This method makes in place edit available.
+     */
     private void setUpInPlaceEdit() {
         viewHolder.name.addTextChangedListener(new TextWatcher() {
             @Override

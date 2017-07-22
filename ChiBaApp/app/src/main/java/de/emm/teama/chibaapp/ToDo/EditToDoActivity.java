@@ -33,9 +33,15 @@ import de.emm.teama.chibaapp.Utils.RemoveHashtagListAdapter;
 import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
 
 /**
- * Created by Marjana Karzek on 18.06.2017.
+ * <h1>EditToDoActivity Class</h1>
+ * This class provides the activity to edit a to-do.
+ * <p>
+ * In the comments find log entries to be used for debugging purposes.
+ *
+ * @author  Marjana Karzek
+ * @version 4.0
+ * @since   2017-06-18
  */
-
 public class EditToDoActivity extends AppCompatActivity {
     private static final String TAG = "EditToDoActivity";
     private Context context = EditToDoActivity.this;
@@ -64,17 +70,20 @@ public class EditToDoActivity extends AppCompatActivity {
 
     private Drawable errorIcon;
 
+    /**
+     * This method creates the view.
+     * @param savedInstanceState This parameter is used to get the saved instance state.
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_todo);
-        Log.d(TAG, "onCreate: started");
+        //Log.d(TAG, "onCreate: started");
 
         errorIcon = getDrawable(R.drawable.ic_error_message);
         errorIcon.setBounds(0, 0,errorIcon.getIntrinsicWidth(), errorIcon.getIntrinsicHeight());
 
         todoId = getIntent().getIntExtra("EXTRA_TODO_ID", -1);
-
         //Get Event Information
         Cursor data = database.showToDoByToDoId(todoId);
         if (data.getCount() != 0) {
@@ -141,6 +150,9 @@ public class EditToDoActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * This method sets up the toolbar.
+     */
     private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.editToDoToolbar);
         setSupportActionBar(toolbar);
@@ -149,7 +161,7 @@ public class EditToDoActivity extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: cancel edit todo");
+                //Log.d(TAG, "onClick: cancel edit todo");
                 final AlertDialog.Builder cancleEditDialogBuilder = new AlertDialog.Builder(context);
                 cancleEditDialogBuilder.setCancelable(true);
                 cancleEditDialogBuilder.setPositiveButton("OK",
@@ -177,8 +189,7 @@ public class EditToDoActivity extends AppCompatActivity {
         check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: save edits of todo option selected");
-
+                //Log.d(TAG, "onClick: save edits of to-do option selected");
                 if (title.getText().toString().length() == 0 || duration.getText().toString().length() == 0 || location.getText().toString().length() == 0) {
                     if (title.getText().toString().length() == 0)
                         title.setError("Eingabe eines Titels ist erforderlich", errorIcon);
@@ -187,11 +198,10 @@ public class EditToDoActivity extends AppCompatActivity {
                     if (location.getText().toString().length() == 0)
                         location.setError("Eingabe eines Orts ist erforderlich", errorIcon);
                 } else {
-
                     String titleString = title.getText().toString();
                     String durationString = duration.getText().toString();
                     String locationString = location.getText().toString();
-                    Log.d(TAG, "onClick: assignedHashtags " + assignedHashtags.toString());
+                    //Log.d(TAG, "onClick: assignedHashtags " + assignedHashtags.toString());
 
                     boolean insertData = database.updateToDo(todoId, titleString, durationString, locationString, assignedHashtags);
                     int successState = 0;
@@ -206,6 +216,9 @@ public class EditToDoActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * This method sets up the search field.
+     */
     private void setupSearchField() {
         searchfield.addTextChangedListener(new TextWatcher() {
             @Override
@@ -225,6 +238,9 @@ public class EditToDoActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * This method sets up the list views.
+     */
     private void setupListViews() {
         initializeHashtags();
         adapter = new AddHashtagListAdapter(this, R.layout.layout_add_hashtag_adapter_view, hashtags);
@@ -234,7 +250,7 @@ public class EditToDoActivity extends AppCompatActivity {
         hashtagListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "onItemClick: clicked " + hashtagListView.getAdapter().getItem(position).toString());
+                //Log.d(TAG, "onItemClick: clicked " + hashtagListView.getAdapter().getItem(position).toString());
                 String currentItem = hashtagListView.getAdapter().getItem(position).toString();
                 if(!assignedHashtags.contains(currentItem)) {
                     assignedHashtags.add(currentItem);
@@ -249,7 +265,7 @@ public class EditToDoActivity extends AppCompatActivity {
         assignedHashtagListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "onItemClick: clicked " + assignedHashtagListView.getAdapter().getItem(position).toString());
+                //Log.d(TAG, "onItemClick: clicked " + assignedHashtagListView.getAdapter().getItem(position).toString());
                 String currentItem = assignedHashtagListView.getAdapter().getItem(position).toString();
                 assignedHashtags.remove(assignedHashtags.indexOf(currentItem));
                 adapter2.notifyDataSetChanged();
@@ -258,6 +274,9 @@ public class EditToDoActivity extends AppCompatActivity {
         assignedHashtagListView.setEmptyView(findViewById(R.id.editToDoListViewAssignedHashtagEmpty));
     }
 
+    /**
+     * This method initializes the hashtag lists.
+     */
     private void initializeHashtags() {
         Cursor data = database.showHashtags();
         if (data.getCount() != 0) {

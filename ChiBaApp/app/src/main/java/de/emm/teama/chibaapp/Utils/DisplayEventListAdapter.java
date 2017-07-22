@@ -15,7 +15,14 @@ import java.util.ArrayList;
 import de.emm.teama.chibaapp.R;
 
 /**
- * Created by Marjana Karzek on 23.06.2017.
+ * <h1>DisplayEventListAdapter Class</h1>
+ * This class handles the list used to add hashtags to appointments and todos.
+ * <p>
+ * In the comments find log entries to be used for debugging purposes.
+ *
+ * @author  Marjana Karzek
+ * @version 2.0
+ * @since   2017-06-23
  */
 
 public class DisplayEventListAdapter extends ArrayAdapter<String> {
@@ -23,12 +30,28 @@ public class DisplayEventListAdapter extends ArrayAdapter<String> {
     private Context context;
     private int resource;
 
+    /**
+     * This constructor is used to receive context, resource and objects from its parent.
+     *
+     * @param context This parameter is used to receive the context from its parent.
+     * @param resource This parameter is used to receive the resources from its parent.
+     * @param objects This parameter is used to receive the objects to be handled by the adapter.
+     */
     public DisplayEventListAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull ArrayList<String> objects) {
         super(context, resource, objects);
         this.context = context;
         this.resource = resource;
     }
 
+    /**
+     * This method creates the view for every element in the list.
+     * It displays title of the event and if it is not fullday the starttime as well.
+     *
+     * @param position This parameter is used to receive the position of the item in the list.
+     * @param convertView This parameter is used to receive the convertView object.
+     * @param parent This parameter is used to receive the parent ViewGroup.
+     * @return The method returns the convertView object after it was modified.
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

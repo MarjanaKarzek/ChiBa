@@ -23,7 +23,14 @@ import de.emm.teama.chibaapp.R;
 import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
 
 /**
- * Created by Marjana Karzek on 22.06.2017.
+ * <h1>ToDoListAdapter Class</h1>
+ * This class handles the list to display all to-dos from the database.
+ * <p>
+ * In the comments find log entries to be used for debugging purposes.
+ *
+ * @author  Marjana Karzek
+ * @version 3.0
+ * @since   2017-06-22
  */
 
 public class ToDoListAdapter extends ArrayAdapter<Integer> {
@@ -34,17 +41,37 @@ public class ToDoListAdapter extends ArrayAdapter<Integer> {
     private String stateString;
     private boolean state;
 
+    /**
+     * This static class is used to hold the items of the current view.
+     */
     static class ViewHolderItem {
         TextView todoText;
         CheckBox checkBox;
     }
 
+    /**
+     * This constructor is used to receive context, resource and objects from its parent.
+     *
+     * @param context This parameter is used to receive the context from its parent.
+     * @param resource This parameter is used to receive the resources from its parent.
+     * @param objects This parameter is used to receive the objects to be handled by the adapter.
+     */
     public ToDoListAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull ArrayList<Integer> objects) {
         super(context, resource, objects);
         this.context = context;
         this.resource = resource;
     }
 
+    /**
+     * This method creates the view for every element in the list.
+     * It displays the to-dos title, duration and state.
+     * Using the ViewHolderItem class it prevents the view from reloading all the contained views again and again.
+     *
+     * @param position This parameter is used to receive the position of the item in the list.
+     * @param convertView This parameter is used to receive the convertView object.
+     * @param parent This parameter is used to receive the parent ViewGroup.
+     * @return The method returns the convertView object after it was modified.
+     */
     @NonNull
     @Override
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -62,11 +89,11 @@ public class ToDoListAdapter extends ArrayAdapter<Integer> {
                 @Override
                 public void onClick(View v) {
                     if(viewHolder.checkBox.isChecked()){
-                        Log.d(TAG, "onCheckedChanged: checking text");
+                        //Log.d(TAG, "onCheckedChanged: checking text");
                         viewHolder.todoText.setPaintFlags(viewHolder.todoText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                         database.setStateOfToDoByToDoId(getItem(position), true);
                     }else{
-                        Log.d(TAG, "onCheckedChanged: unchecking text");
+                        //Log.d(TAG, "onCheckedChanged: unchecking text");
                         viewHolder.todoText.setPaintFlags(viewHolder.todoText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                         database.setStateOfToDoByToDoId(getItem(position), false);
                     }

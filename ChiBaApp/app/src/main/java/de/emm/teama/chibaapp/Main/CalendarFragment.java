@@ -30,9 +30,15 @@ import de.emm.teama.chibaapp.Utils.DisplayEventListAdapter;
 import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
 
 /**
- * Created by Marjana Karzek on 18.06.2017.
+ * <h1>CalendarFragment Class</h1>
+ * This class provides the calendar fragment.
+ * <p>
+ * In the comments find log entries to be used for debugging purposes.
+ *
+ * @author  Marjana Karzek
+ * @version 3.0
+ * @since   2017-06-18
  */
-
 public class CalendarFragment extends Fragment {
     private static final String TAG = "CalendarFragment";
 
@@ -47,12 +53,23 @@ public class CalendarFragment extends Fragment {
     private View view;
     private final ViewHolderItem viewHolder = new ViewHolderItem();
 
+    /**
+     * This static class provides the items for the views to avoid reload.
+     */
     static class ViewHolderItem {
         ListView eventlist;
         TextView selectedDate;
         CalendarView calendarView;
     }
 
+    /**
+     * This method creates the view.
+     *
+     * @param inflater This parameter is used to get the inflater.
+     * @param container This parameter is used to get the container.
+     * @param savedInstanceState This parameter is used to get the save state from the dialog.
+     * @return The method returns the view after it was modified.
+     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -96,6 +113,9 @@ public class CalendarFragment extends Fragment {
         return view;
     }
 
+    /**
+     * This method updates the event list.
+     */
     private void updateEventList() {
         displayedEvents.clear();
         currentEvents.clear();
@@ -106,6 +126,9 @@ public class CalendarFragment extends Fragment {
 
     }
 
+    /**
+     * This method displays the event data.
+     */
     private void displayData() {
         Cursor data = database.showEventsByStartDateWithoutFullDay(viewHolder.selectedDate.getText().toString());
         displayedEvents.clear();

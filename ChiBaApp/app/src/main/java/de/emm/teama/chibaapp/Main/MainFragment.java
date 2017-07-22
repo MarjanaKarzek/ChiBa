@@ -42,14 +42,20 @@ import de.emm.teama.chibaapp.Utils.WeatherRemoteFetch;
 
 import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
 
-
+/**
+ * <h1>MainFragment Class</h1>
+ * This class provides the main fragment.
+ * It displays the avatar, current events and weather information.
+ * <p>
+ * In the comments find log entries to be used for debugging purposes.
+ *
+ * @author  Marjana Karzek & Natalie Grasser
+ * @version 5.0
+ * @since   2017-06-18
+ */
 public class MainFragment extends Fragment {
     private static final String TAG = "MainFragment";
 
-    /* Enter into Android Immersive mode so the renderer is full screen or not */
-    private boolean immersiveMode = true;
-
-    /* Background GL clear color. Default is white */
     private float[] backgroundColor = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
 
     private GLSurfaceView gLView;
@@ -79,6 +85,10 @@ public class MainFragment extends Fragment {
     private long lastKnownSunset;
     private long lastCallTimeStamp;
 
+    /**
+     * This method sets the last known weather information and calls for new.
+     * @param savedInstanceState This parameter is used to get the saved state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +119,14 @@ public class MainFragment extends Fragment {
         }
     }
 
+    /**
+     * This method creates the view.
+     *
+     * @param inflater This parameter is used to get the inflater.
+     * @param container This parameter is used to get the container.
+     * @param savedInstanceState This parameter is used to get the save state from the dialog.
+     * @return The method returns the view after it was modified.
+     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -127,7 +145,6 @@ public class MainFragment extends Fragment {
             relativeLayoutAvatarArea.setLayoutParams(rlpAvatarArea);
 
             //Create Views for Relative Layout
-
             // Create gLView for 3D scenario
             gLView = new ModelSurfaceView(this);
             gLView.setId(new Integer(100000));
@@ -257,13 +274,17 @@ public class MainFragment extends Fragment {
         return fragmentHome;
     }
 
+    /**
+     * This method opens the chiba living room environment.
+     * @param context This parameter gets the context from its parent.
+     * @param packageName This parameter determines which app should be opened.
+     */
     public static void openApp(Context context, String packageName) {
-        Log.d(TAG, "openApp: ");
+        //Log.d(TAG, "openApp: ");
         PackageManager manager = context.getPackageManager();
         Intent i = manager.getLaunchIntentForPackage(packageName);
         if (i == null) {
-            Log.d(TAG, "openApp: package not found");
-            //throw new PackageManager.NameNotFoundException();
+            //Log.d(TAG, "openApp: package not found");
         }
         else {
             i.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -271,20 +292,22 @@ public class MainFragment extends Fragment {
         }
     }
 
+    /**
+     * This method prepares the animation.
+     */
     @Override
     public void onStart() {
         super.onStart();
-
         // Create Scene for 3D scenario
         usesAvatar = database.getUserAvatarOptionState();
 
-        Log.d(TAG, "onStart: displayedEvents " + displayedEvents.toString());
+        //Log.d(TAG, "onStart: displayedEvents " + displayedEvents.toString());
         ArrayList<String> currentActiveEventHashtags = database.getHashtagsOfCurrentActiveEventsByPossibleEvents(displayedEvents);
-        Log.d(TAG, "onStart: currentActiveEventHashtags " + currentActiveEventHashtags.toString());
+        //Log.d(TAG, "onStart: currentActiveEventHashtags " + currentActiveEventHashtags.toString());
 
         if (currentActiveEventHashtags.isEmpty()) {
             int id = lastKnownWeatherID/100;
-            Log.d(TAG, "onStart: id " + id);
+            //Log.d(TAG, "onStart: id " + id);
             if (id <= 5)
                 animation = "Regen";
             else if (id == 800 && (Calendar.getInstance().getTimeInMillis() >= lastKnownSunrise && Calendar.getInstance().getTimeInMillis() < lastKnownSunset))
@@ -295,10 +318,12 @@ public class MainFragment extends Fragment {
             Random rand = new Random();
             animation = currentActiveEventHashtags.get(rand.nextInt(currentActiveEventHashtags.size()));
         }
-
         scene = new SceneLoader(this, this.getActivity().getAssets(), usesAvatar, animation);
     }
 
+    /**
+     * This method gets the current weather data.
+     */
     private void getCurrentEventData() {
         //set currentDate
         selectedDate = simpleDateFormat.format(calendar.getTime());
@@ -331,18 +356,32 @@ public class MainFragment extends Fragment {
         }
     }
 
+    /**
+     * @return This method returns the background color of the view.
+     */
     public float[] getBackgroundColor() {
         return backgroundColor;
     }
 
+    /**
+     * @return This method returns the scene loader.
+     */
     public SceneLoader getScene() {
         return scene;
     }
 
+    /**
+     * This method returns the gLView.
+     * @return
+     */
     public GLSurfaceView getgLView() {
         return gLView;
     }
 
+    /**
+     * This method updates the weather data.
+     * @param city This parameter determines for which city the weather will be updated.
+     */
     private void updateWeatherData(final String city) {
         new Thread() {
             public void run() {
@@ -354,6 +393,10 @@ public class MainFragment extends Fragment {
         }.start();
     }
 
+    /**
+     * This method renders the weather.
+     * @param json This parameter parses the weather data.
+     */
     private void renderWeather(JSONObject json) {
         try {
             textCity.setText(json.getString("name").toUpperCase(Locale.GERMAN) +
@@ -372,13 +415,19 @@ public class MainFragment extends Fragment {
 
             database.setSystemInfoData(textCity.getText().toString(), textTemperature.getText().toString());
         } catch (Exception e) {
-            Log.e("SimpleWeather", "One or more fields not found in the JSON data");
+            //Log.e("SimpleWeather", "One or more fields not found in the JSON data");
             textCity.setText(lastKnownCity);
             textTemperature.setText(lastKnownTemperature);
             setWeatherIcon(lastKnownWeatherID, lastKnownSunrise, lastKnownSunset);
         }
     }
 
+    /**
+     * This method sets the weather icon.
+     * @param actualId This parameter parses the weather id.
+     * @param sunrise This parameter parses the sunrise infomation.
+     * @param sunset This parameter parses the sunset infomation.
+     */
     private void setWeatherIcon(int actualId, long sunrise, long sunset) {
         int id = actualId / 100;
         String icon = "";
@@ -386,16 +435,8 @@ public class MainFragment extends Fragment {
             long currentTime = new Date().getTime();
             if (currentTime >= sunrise && currentTime < sunset) {
                 icon = getActivity().getString(R.string.weather_sunny);
-                Log.d(TAG, "setWeatherIcon: weatherId" + actualId);
-                Log.d(TAG, "setWeatherIcon: weatherId" + sunrise);
-                Log.d(TAG, "setWeatherIcon: weatherId" + currentTime);
-                Log.d(TAG, "setWeatherIcon: weatherId" + sunset);
             } else {
                 icon = getActivity().getString(R.string.weather_clear_night);
-                Log.d(TAG, "setWeatherIcon: weatherId" + actualId);
-                Log.d(TAG, "setWeatherIcon: weatherId" + sunrise);
-                Log.d(TAG, "setWeatherIcon: weatherId" + currentTime);
-                Log.d(TAG, "setWeatherIcon: weatherId" + sunset);
             }
         } else {
             switch (id) {

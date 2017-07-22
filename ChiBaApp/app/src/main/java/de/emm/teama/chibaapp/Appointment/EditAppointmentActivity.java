@@ -45,7 +45,14 @@ import de.emm.teama.chibaapp.Utils.RemoveHashtagListAdapter;
 import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
 
 /**
- * Created by Marjana Karzek on 18.06.2017.
+ * <h1>EditAppointmentActivity Class</h1>
+ * This class provides the activity to edit an appointment.
+ * <p>
+ * In the comments find log entries to be used for debugging purposes.
+ *
+ * @author  Marjana Karzek
+ * @version 4.0
+ * @since   2017-06-18
  */
 
 public class EditAppointmentActivity extends AppCompatActivity {
@@ -101,17 +108,20 @@ public class EditAppointmentActivity extends AppCompatActivity {
 
     private Drawable errorIcon;
 
+    /**
+     * This method creates the view.
+     * @param savedInstanceState This parameter is used to get the saved instance state.
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_appointment);
-        Log.d(TAG, "onCreate: started");
+        //Log.d(TAG, "onCreate: started");
 
         errorIcon = getDrawable(R.drawable.ic_error_message);
         errorIcon.setBounds(0, 0,errorIcon.getIntrinsicWidth(), errorIcon.getIntrinsicHeight());
 
         eventId = getIntent().getIntExtra("EXTRA_EVENT_ID", -1);
-
         //Get Event Information
         Cursor data = database.showEventByEventId(eventId);
         if (data.getCount() != 0) {
@@ -152,7 +162,6 @@ public class EditAppointmentActivity extends AppCompatActivity {
         assignedHashtagListView = (ListView) findViewById(R.id.addAppointmentListViewAssignedHashtag);
         searchfield = (EditText) findViewById(R.id.addAppointmentEditTextSearchHashtag);
         assignedHashtags = currentAssignedHashtags;
-
 
         //Setup Components
         setupToolbar();
@@ -204,6 +213,9 @@ public class EditAppointmentActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * This method sets up the search field.
+     */
     private void setupSearchField() {
         searchfield.addTextChangedListener(new TextWatcher() {
             @Override
@@ -223,6 +235,9 @@ public class EditAppointmentActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * This method sets up the fullday switch
+     */
     private void setupFullDaySwitch() {
         fulldaySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -236,6 +251,9 @@ public class EditAppointmentActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * This method sets up the list views.
+     */
     private void setupListViews() {
         initializeHashtags();
         adapter = new AddHashtagListAdapter(this, R.layout.layout_add_hashtag_adapter_view, hashtags);
@@ -245,7 +263,7 @@ public class EditAppointmentActivity extends AppCompatActivity {
         hashtagListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "onItemClick: clicked " + hashtagListView.getAdapter().getItem(position).toString());
+                //Log.d(TAG, "onItemClick: clicked " + hashtagListView.getAdapter().getItem(position).toString());
                 String currentItem = hashtagListView.getAdapter().getItem(position).toString();
                 if(!assignedHashtags.contains(currentItem)) {
                     assignedHashtags.add(currentItem);
@@ -260,7 +278,7 @@ public class EditAppointmentActivity extends AppCompatActivity {
         assignedHashtagListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "onItemClick: clicked " + assignedHashtagListView.getAdapter().getItem(position).toString());
+                //Log.d(TAG, "onItemClick: clicked " + assignedHashtagListView.getAdapter().getItem(position).toString());
                 String currentItem = assignedHashtagListView.getAdapter().getItem(position).toString();
                 assignedHashtags.remove(assignedHashtags.indexOf(currentItem));
                 adapter2.notifyDataSetChanged();
@@ -269,6 +287,9 @@ public class EditAppointmentActivity extends AppCompatActivity {
         assignedHashtagListView.setEmptyView(findViewById(R.id.addAppointmentListViewAssignedHashtagEmpty));
     }
 
+    /**
+     * This method sets up the OnClickListeners for the TimePickers.
+     */
     private void setupPickersOnClickListener() {
         startDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -299,6 +320,9 @@ public class EditAppointmentActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * This method sets up the toolbar.
+     */
     private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.editAppointmentToolbar);
         setSupportActionBar(toolbar);
@@ -334,11 +358,10 @@ public class EditAppointmentActivity extends AppCompatActivity {
         check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: save edits of appointment option selected");
-                Log.d(TAG, "onClick: add appointment option selected");
+                //Log.d(TAG, "onClick: save edits of appointment option selected");
+                //Log.d(TAG, "onClick: add appointment option selected");
                 if (title.getText().toString().length() == 0 || location.getText().toString().length() == 0) {
                     if (title.getText().toString().length() == 0) {
-
                         title.setError("Eingabe eines Titels ist erforderlich", errorIcon);
                     }
                     if (location.getText().toString().length() == 0) {
@@ -352,13 +375,12 @@ public class EditAppointmentActivity extends AppCompatActivity {
                     String endDateString = endDate.getText().toString();
                     String startTimeString = startTime.getText().toString();
                     String endTimeString = endTime.getText().toString();
-                    Log.d(TAG, "onClick: current assigned hashtags of edited appointment " + assignedHashtags.toString());
+                    //Log.d(TAG, "onClick: current assigned hashtags of edited appointment " + assignedHashtags.toString());
 
                     boolean insertData = database.updateEvent(eventId, titleString, fulldayBoolean, startDateString, endDateString, startTimeString, endTimeString, locationString, assignedHashtags);
                     int successState = 0;
                     if (insertData)
                         successState = 1;
-
                     if(fulldayBoolean == true){
                         database.deleteFulldayMatchingByEventId(eventId);
                         //insert new date
@@ -382,6 +404,9 @@ public class EditAppointmentActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * This method sets up the date and time pickers.
+     */
     private void setupDateTimePickers() {
         startDatePicker = new DatePickerDialog.OnDateSetListener() {
 
@@ -451,6 +476,9 @@ public class EditAppointmentActivity extends AppCompatActivity {
         };
     }
 
+    /**
+     * This method initializes the hashtag lists.
+     */
     private void initializeHashtags() {
         Cursor data = database.showHashtags();
         if (data.getCount() != 0) {
@@ -462,6 +490,6 @@ public class EditAppointmentActivity extends AppCompatActivity {
             }
         }
         Collections.sort(hashtags);
-        Log.d(TAG, "initializeHashtags: hashtags:" + hashtags.toString());
+        //Log.d(TAG, "initializeHashtags: hashtags:" + hashtags.toString());
     }
 }

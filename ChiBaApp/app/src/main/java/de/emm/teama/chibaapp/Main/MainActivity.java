@@ -14,18 +14,31 @@ import de.emm.teama.chibaapp.R;
 
 import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
 
+/**
+ * <h1>MainActivity Class</h1>
+ * This class provides the main acitvity for the application.
+ * <p>
+ * In the comments find log entries to be used for debugging purposes.
+ *
+ * @author  Marjana Karzek
+ * @version 4.0
+ * @since   2017-06-18
+ */
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private SectionsPagerAdapter adapter;
     private ViewPager viewPager;
     private TabLayout tabLayout;
 
+    /**
+     * This method sets up the view.
+     * @param savedInstanceState This parameter is used to get the saved state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d(TAG, "onCreate: starting.");
-
+        //Log.d(TAG, "onCreate: starting.");
         tryToastOnSuccess();
 
         //Setup View Pager
@@ -96,6 +109,9 @@ public class MainActivity extends AppCompatActivity {
         database.checkHashtagTable();
     }
 
+    /**
+     * This method display the Toasts if there is a success state available.
+     */
     private void tryToastOnSuccess() {
         //Success Toast for add Appointment
         int successState_addAppointment = getIntent().getIntExtra("EXTRA_SUCCESS_STATE_ADD_APPOINTMENT", 3);
@@ -127,8 +143,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * ViewPager setup
-     * Adds the fragments: Main, Calendar, ToDoList and Settings
+     * This method adds the fragments: Main, Calendar, ToDoList and Settings.
      */
     private void setupViewPager(ViewPager viewPager) {
         adapter.addFragment(new MainFragment());
@@ -139,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * BottomNavigationView setup
+     * This method performs the setup of the BottomNavigationView.
      */
     private void setupBottomNavigationView() {
         //Log.d(TAG, "setupBottomNavigationView: setting up BottomNavigationView");

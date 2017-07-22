@@ -44,12 +44,12 @@ public class ChiBaApplication extends Application {
     private static HashMap<Integer, Timer> appointmentTimers = new HashMap<Integer, Timer>();
     private static Context context;
 
-    @Override
     /**
      * On creation of the application this method gets called.
      * It initalizes database and checks for user and system.
      * Afterwards it initalizes the timers for existing todos and events.
      */
+    @Override
     public void onCreate() {
         super.onCreate();
         this.context = getApplicationContext();

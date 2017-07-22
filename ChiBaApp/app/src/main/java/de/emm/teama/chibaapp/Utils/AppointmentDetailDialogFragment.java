@@ -22,9 +22,15 @@ import de.emm.teama.chibaapp.R;
 import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
 
 /**
- * Created by Marjana Karzek on 28.06.2017.
+ * <h1>AppointmentDetailDialogFragment Class</h1>
+ * This class sets up a DialogFragment to display the details of an appointment.
+ * <p>
+ * In the comments find log entries to be used for debugging purposes.
+ *
+ * @author  Marjana Karzek
+ * @version 2.0
+ * @since   2017-08-28
  */
-
 public class AppointmentDetailDialogFragment extends DialogFragment {
     private static final String TAG = "AppointmentDetailDialog";
     private int eventId;
@@ -37,14 +43,15 @@ public class AppointmentDetailDialogFragment extends DialogFragment {
     private String eventLocation;
     private ArrayList<String> eventHashtags = new ArrayList<String>();
 
-
-    public AppointmentDetailDialogFragment() {
-    }
-
+    /**
+     * This method creates a new dialog.
+     *
+     * @param eventId This parameter is used to figure out which event was selected.
+     * @return This method returns the dialog.
+     */
     public static AppointmentDetailDialogFragment newInstance(int eventId) {
         AppointmentDetailDialogFragment dialog = new AppointmentDetailDialogFragment();
 
-        // Supply num input as an argument.
         Bundle args = new Bundle();
         args.putInt("eventId", eventId);
         dialog.setArguments(args);
@@ -52,6 +59,11 @@ public class AppointmentDetailDialogFragment extends DialogFragment {
         return dialog;
     }
 
+    /**
+     * On creation this method retrieves the information about the selected event from the database.
+     *
+     * @param savedInstanceState This parameter is used to get the last saved state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,16 +86,24 @@ public class AppointmentDetailDialogFragment extends DialogFragment {
         eventHashtags = database.showHashtagsByEventId(eventId);
     }
 
+    /**
+     * This method sets up the view and the actions on the navigation.
+     *
+     * @param inflater This parameter is used to get the inflater.
+     * @param container This parameter is used to get the container.
+     * @param savedInstanceState This parameter is used to get the save state from the dialog.
+     * @return The method returns the view after it was modified.
+     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_appointment_detail_fragment, container);
-        //set bar navigation
+
         ImageView cancel = (ImageView) view.findViewById(R.id.appointmentDetailCancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: cancel appointment detail dialog");
+                //Log.d(TAG, "onClick: cancel appointment detail dialog");
                 getDialog().dismiss();
             }
         });
@@ -91,15 +111,13 @@ public class AppointmentDetailDialogFragment extends DialogFragment {
         editOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: edit appointment");
+                //Log.d(TAG, "onClick: edit appointment");
                 Intent intent = new Intent(getActivity(), EditAppointmentActivity.class);
                 intent.putExtra("EXTRA_EVENT_ID", eventId);
                 startActivity(intent);
             }
         });
 
-
-        //set view details
         TextView modalTitle = (TextView) view.findViewById(R.id.appointmentDetailModalTitle);
         modalTitle.setText(eventTitle);
         TextView eventLocationView = (TextView) view.findViewById(R.id.appointmentDetailEventLocation);

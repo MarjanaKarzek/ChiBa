@@ -21,7 +21,6 @@ import de.emm.teama.chibaapp.R;
  * @version 1.0
  * @since   2017-07-12
  */
-
 public class CityChangeDialogFragment extends DialogFragment{
     private static final String TAG = "CityChangeDialogFragment";
 
@@ -35,10 +34,21 @@ public class CityChangeDialogFragment extends DialogFragment{
         return dialog;
     }
 
+    /**
+     * This method listens on the user input for a return value.
+     */
     public interface CityChangeDialogFragmentListener {
         public void onReturnValue(String city);
     }
 
+    /**
+     * This method sets up the radio buttons and listener for the different cities.
+     *
+     * @param inflater This parameter is used to get the inflater.
+     * @param container This parameter is used to get the container.
+     * @param savedInstanceState This parameter is used to get the save state from the dialog.
+     * @return The method returns the view after it was modified.
+     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {

@@ -5,23 +5,26 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.text.Editable;
 import android.util.Log;
 
-import java.lang.reflect.Array;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Set;
 
 /**
- * Created by Marjana Karzek on 22.06.2017.
+ * <h1>DatabaseHelper Class</h1>
+ * This class sets up the database and all its tables.
+ * It provides the functionality of reading and writing from and to it.
+ * <p>
+ * In the comments find log entries to be used for debugging purposes.
+ *
+ * @author  Marjana Karzek
+ * @version 9.0
+ * @since   2017-06-22
  */
-
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "DatabaseHelper";
     private static final String DATABASE_NAME = "events.db";
@@ -103,6 +106,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, 1);
     }
 
+    /**
+     * This method creates the tables.
+     * @param db This parameter is used to get the current database.
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         fillReminders();
@@ -171,11 +178,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(createTableHashtagReminders);
     }
 
+    /**
+     * This method can be used to upgrade the database but is not implemented in our version.
+     *
+     * @param db This parameter is used to get the current database.
+     * @param oldVersion This parameter is used to get the old version.
+     * @param newVersion This parameter is used to get the new version.
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
 
+    /**
+     * THis method sets up all reminders.
+     */
     private void fillReminders(){
         reminders.put("Ballsport",new ArrayList<String>(Arrays.asList("Ball","Trainingstasche")));
         reminders.put("Fitness",new ArrayList<String>(Arrays.asList("Handtuch","Trinkflasche")));
@@ -215,15 +232,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         reminders.put("Party",new ArrayList<String>(Arrays.asList("Portmonee","Fahrkarte")));
     }
 
+    /**
+     * This method checks on systeminfo and user and creates them if the don't exist.
+     */
     public void addUserAndSystemIfNotExist(){
         SQLiteDatabase db = this.getWritableDatabase();
         //Check Hashtag Table
         checkHashtagTable();
-        /*String createTableHashtagReminders = "CREATE TABLE " + TABLE_NAME_HASHTAGREMINDERS+ "( "
-                + COLUMN_HASHTAGREMINDERS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
-                + COLUMN_HASHTAGREMINDERS_HASHTAG_NAME + " TEXT, "
-                + COLUMN_HASHTAGREMINDERS_REMINDER + " TEXT)";
-        db.execSQL(createTableHashtagReminders);*/
         checkReminderTable();
         //Create Table SystemInfo if it not exists
         String createTableSystemInfo = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_SYSTEMINFO + "( "
@@ -262,9 +277,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contentUserValues.put(COLUMN_USER_NOTDISTURB_ENDTIME, "06:00");
                 db.insert(TABLE_NAME_USER, null, contentUserValues);
 
-                Log.d(TAG, "addUserAndSystemIfNotExist: user had to be created");
-            } else
-                Log.d(TAG, "addUserAndSystemIfNotExist: user exist");
+                //Log.d(TAG, "addUserAndSystemIfNotExist: user had to be created");
+            } //else Log.d(TAG, "addUserAndSystemIfNotExist: user exist");
         }
         //check if system info exists
         Cursor dataSystem = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_NAME_SYSTEMINFO, null);
@@ -280,13 +294,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contentSystemInfoValues.put(COLUMN_SYSTEMINFO_SUNSET, "1499372285");
                 contentSystemInfoValues.put(COLUMN_SYSTEMINFO_TIMESTAMP, "0");
                 db.insert(TABLE_NAME_SYSTEMINFO, null, contentSystemInfoValues);
-
-                Log.d(TAG, "addUserAndSystemIfNotExist: system info had to be created");
-            } else
-                Log.d(TAG, "addUserAndSystemIfNotExist: system info exist");
+                //Log.d(TAG, "addUserAndSystemIfNotExist: system info had to be created");
+            } //else Log.d(TAG, "addUserAndSystemIfNotExist: system info exist");
         }
     }
 
+    /**
+     * This method add an appointment.
+     *
+     * @param title This parameter is used for the title of the appointment.
+     * @param fullday This parameter is used for the fullday value of the appointment.
+     * @param startdate This parameter is used for the startdate of the appointment.
+     * @param enddate This parameter is used for the enddate of the appointment.
+     * @param starttime This parameter is used for the starttime of the appointment.
+     * @param endtime This parameter is used for the endtime of the appointment.
+     * @param location This parameter is used for the location of the appointment.
+     * @param hashtags This parameter is used for the hashtags of the appointment.
+     * @return This method returns a success value.
+     */
     public boolean addEvent(String title, boolean fullday, String startdate, String enddate, String starttime, String endtime, String location, ArrayList<String> hashtags) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentEventValues = new ContentValues();
@@ -298,7 +323,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentEventValues.put(COLUMN_EVENTS_ENDTIME, endtime);
         contentEventValues.put(COLUMN_EVENTS_LOCATION, location);
 
-        Log.d(TAG, "addEvent: hashtags in database " + hashtags.toString());
+        //Log.d(TAG, "addEvent: hashtags in database " + hashtags.toString());
         long result = db.insert(TABLE_NAME_EVENTS, null, contentEventValues);
         if (result == -1)
             return false;
@@ -307,7 +332,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             ContentValues contentEventHashtagValues = new ContentValues();
             for (String hashtag : hashtags) {
-                Log.d(TAG, "addEvent: hashtag name: " + hashtag);
+                //Log.d(TAG, "addEvent: hashtag name: " + hashtag);
                 int hashtagId = getHashtagIdByName(hashtag);
                 contentEventHashtagValues.put(COLUMN_EVENTMATCHING_EVENT_ID, eventId);
                 contentEventHashtagValues.put(COLUMN_EVENTMATCHING_HASHTAG_ID, hashtagId);
@@ -322,6 +347,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
     }
 
+    /**
+     * @return This method returns the event id that was last used.
+     */
     public int getEventIdByLastEvent() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT MAX(" + COLUMN_EVENTS_ID + ") FROM " + TABLE_NAME_EVENTS, null);
@@ -333,6 +361,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return Integer.valueOf(id);
     }
 
+    /**
+     * This method returns the hashtags id by its name.
+     * @param hashtag This parameter is used to determine which hashtag is used.
+     * @return This method returns the hashtag id.
+     */
     private int getHashtagIdByName(String hashtag) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT " + COLUMN_HASHTAGS_ID + " FROM " + TABLE_NAME_HASHTAGS + " WHERE " + COLUMN_HASHTAGS_NAME + " = '" + hashtag + "'", null);
@@ -344,25 +377,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return Integer.valueOf(id);
     }
 
-    public Cursor showEvent(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_EVENTS, null);
-        return data;
-    }
-
-    public Cursor showEventsOfFulldayMatching(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_FULLDAYMATCHING, null);
-        return data;
-    }
-
-    public Cursor showEventsByStartDate(String startDate){
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_EVENTS + " WHERE " + COLUMN_EVENTS_STARTDATE + " = '" + startDate + "' "
-                                    + "ORDER BY " + COLUMN_EVENTS_STARTTIME, null);
-        return data;
-    }
-
+    /**
+     * This method shows events by startdate without the fullday events.
+     * @param startDate This parameter is used to determine the startdate.
+     * @return The method returns a cursor with all the information found.
+     */
     public Cursor showEventsByStartDateWithoutFullDay(String startDate){
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_EVENTS + " WHERE " + COLUMN_EVENTS_STARTDATE + " = '" + startDate + "' "
@@ -371,18 +390,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return data;
     }
 
+    /**
+     * This method shows the event ids of a startdate that are fullday events.
+     * @param startDate This parameter is used to determine the startdate.
+     * @return The method returns a cursor with all found information.
+     */
     public Cursor showEventIdsByStartDateThatAreFullDay(String startDate) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT " + COLUMN_FULLDAYMATCHING_EVENT_ID + " FROM " + TABLE_NAME_FULLDAYMATCHING + " WHERE " + COLUMN_FULLDAYMATCHING_DATE + " = '" + startDate + "'", null);
         return data;
     }
 
+    /**
+     * This method shows an event by its id.
+     * @param eventId This parameter is used to determine the event.
+     * @return The method returns the corresponding event.
+     */
     public Cursor showEventByEventId(int eventId){
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_EVENTS + " WHERE " + COLUMN_EVENTS_ID + " = " + eventId, null);
         return data;
     }
 
+    /**
+     * This method is used to update an event.
+     * @param eventId This parameter is used to determine the event that must be updated.
+     * @param title This parameter is used to update the title of the event.
+     * @param fullday This parameter is used to update the fullday value of the event.
+     * @param startdate This parameter is used to update the startdate of the event.
+     * @param enddate This parameter is used to update the enddate of the event.
+     * @param starttime This parameter is used to update the starttime of the event.
+     * @param endtime This parameter is used to update the endtime of the event.
+     * @param location This parameter is used to update the location of the event.
+     * @param hashtags This parameter is used to update the hashtags of the event.
+     * @return The method returns a success value.
+     */
     public boolean updateEvent(int eventId, String title, boolean fullday, String startdate, String enddate, String starttime, String endtime, String location, ArrayList<String> hashtags){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "UPDATE " + TABLE_NAME_EVENTS +
@@ -395,45 +437,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_EVENTS_LOCATION + " = '" + location + "' " +
                 " WHERE " + COLUMN_EVENTS_ID + " = " + eventId;
         db.execSQL(query);
-        Log.d(TAG, "updateEvent: to be assigned hashtags in database: "+hashtags.toString());
+        //Log.d(TAG, "updateEvent: to be assigned hashtags in database: "+hashtags.toString());
 
         deleteAssignedHashtagsByEventId(eventId);
         insertAssignedHashtags(eventId,hashtags);
         return true;
     }
 
+    /**
+     * This method refills the reminder table.
+     */
     private void checkReminderTable() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        /*Cursor data = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_NAME_HASHTAGREMINDERS, null);
-        int amountEntries = 0;
-        if(data != null && data.moveToNext()) {
-            amountEntries = Integer.valueOf(data.getString(0));
-            data.close();
-        }
-
-        if(amountEntries != reminders.size()){
-            Log.d(TAG, "checkRemindersTable: entries must be added");
-            db.execSQL("DROP TABLE " + TABLE_NAME_HASHTAGREMINDERS);
-            String createTableHashtagReminders = "CREATE TABLE " + TABLE_NAME_HASHTAGREMINDERS + "("
-                    + COLUMN_HASHTAGREMINDERS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
-                    + COLUMN_HASHTAGREMINDERS_HASHTAG_NAME + " TEXT, "
-                    + COLUMN_HASHTAGREMINDERS_REMINDER + " TEXT)";
-            db.execSQL(createTableHashtagReminders);
-            for(String hashtag: hashtags) {
-                for(String reminder: reminders.get(hashtag)){
-                    ContentValues contentHashtagReminder = new ContentValues();
-                    contentHashtagReminder.put(COLUMN_HASHTAGREMINDERS_HASHTAG_NAME, hashtag);
-                    contentHashtagReminder.put(COLUMN_HASHTAGREMINDERS_REMINDER, reminder);
-                    db.insert(TABLE_NAME_HASHTAGREMINDERS, null, contentHashtagReminder);
-                }
-            }
-        }*/
         reminders.clear();
         fillReminders();
     }
 
+    /**
+     * This method checks the hashtag table and refills it if necessary.
+     */
     public void checkHashtagTable() {
-        Log.d(TAG, "checkHashtagTable: started");
+        //Log.d(TAG, "checkHashtagTable: started");
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_NAME_HASHTAGS, null);
         int amountEntries = 0;
@@ -457,12 +480,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * @return This method returns a cursor with all hashtags.
+     */
     public Cursor showHashtags(){
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_HASHTAGS, null);
         return data;
     }
 
+    /**
+     * This method returns all hashtags of an event id.
+     * @param eventId This parameter is used to determine the event.
+     * @return The method returns a cursor with all found information.
+     */
     public ArrayList<String> showHashtagsByEventId(int eventId){
         ArrayList<String> hashtagIds = new ArrayList<String>();
         ArrayList<String> hashtags = new ArrayList<String>();
@@ -472,20 +503,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (data.getCount() != 0) {
             while (data.moveToNext()) {
                 hashtagIds.add(data.getString(0));
-                Log.d(TAG, "showHashtagsByEventId: retrieved id " + data.getString(0));
+                //Log.d(TAG, "showHashtagsByEventId: retrieved id " + data.getString(0));
             }
         }
         data.close();
-        Log.d(TAG, "showHashtagsByEventId: hashtag ids: " + hashtagIds.toString());
+        //Log.d(TAG, "showHashtagsByEventId: hashtag ids: " + hashtagIds.toString());
 
         for(String id: hashtagIds){
             hashtags.add(showHashtagNameById(id));
         }
-        Log.d(TAG, "showHashtagsByEventId: hashtags: " + hashtags.toString());
+        //Log.d(TAG, "showHashtagsByEventId: hashtags: " + hashtags.toString());
 
         return hashtags;
     }
 
+    /**
+     * This method returns all hashtags of an to-do id.
+     * @param todoId This parameter is used to determine the to-do.
+     * @return The method returns a cursor with all found information.
+     */
     public ArrayList<String> showHashtagsByToDoId(int todoId){
         ArrayList<String> hashtagIds = new ArrayList<String>();
         ArrayList<String> hashtags = new ArrayList<String>();
@@ -506,6 +542,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return hashtags;
     }
 
+    /**
+     * This method returns the hashtag name by its id.
+     * @param hashtagId This parameter is used to determine the hashtag.
+     * @return The method returns the name of the hashtag.
+     */
     public String showHashtagNameById(String hashtagId){
         SQLiteDatabase db = this.getWritableDatabase();
         String hashtag = "";
@@ -521,14 +562,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return hashtag;
     }
 
+    /**
+     * This method inserts the assigned hashtags of an event.
+     * @param eventId This parameter is used to determine the event.
+     * @param hashtags This parameter is used to process the hashtags.
+     */
     public void insertAssignedHashtags(int eventId, ArrayList<String> hashtags){
         SQLiteDatabase db = this.getWritableDatabase();
         if(hashtags.size() > 0) {
             for (String hashtag : hashtags) {
                 ContentValues contentEventHashtagValues = new ContentValues();
-                Log.d(TAG, "insertAssignedHashtags: hashtag name: " + hashtag);
+                //Log.d(TAG, "insertAssignedHashtags: hashtag name: " + hashtag);
                 int hashtagId = getHashtagIdByName(hashtag);
-                Log.d(TAG, "insertAssignedHashtags: hashtag id " + hashtagId);
+                //Log.d(TAG, "insertAssignedHashtags: hashtag id " + hashtagId);
                 contentEventHashtagValues.put(COLUMN_EVENTMATCHING_EVENT_ID, eventId);
                 contentEventHashtagValues.put(COLUMN_EVENTMATCHING_HASHTAG_ID, hashtagId);
                 db.insert(TABLE_NAME_EVENTMATCHING, null, contentEventHashtagValues);
@@ -536,6 +582,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * This method deletes the assigned hashtags of an event.
+     * @param eventId This parameter is used to determine the event.
+     */
     public void deleteAssignedHashtagsByEventId(int eventId){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "DELETE FROM " + TABLE_NAME_EVENTMATCHING +
@@ -543,6 +593,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
+    /**
+     * This method deletes an event by its id.
+     * @param eventId This parameter is used to determine the event.
+     */
     public void deleteEventByEventId(int eventId){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "DELETE FROM " + TABLE_NAME_EVENTS +
@@ -550,12 +604,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
+    /**
+     * This method shows a to-do by its id.
+     * @param todoId This parameter is used to determine the to-do.
+     * @return The method returns a cursor with all information found.
+     */
     public Cursor showToDoByToDoId(int todoId){
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_TODOS + " WHERE " + COLUMN_TODO_ID + " = " + todoId, null);
         return data;
     }
 
+    /**
+     * This method deletes an to-do by its id.
+     * @param todoId This parameter is used to determine the to-do.
+     */
     public void deleteToDoByToDoId(int todoId){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "DELETE FROM " + TABLE_NAME_TODOS +
@@ -563,6 +626,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
+    /**
+     * This method is used to update a to-do.
+     * @param todoId This parameter is used to determine the to-do.
+     * @param title This parameter is used to update the title of the to-do.
+     * @param duration This parameter is used to update the duration of the to-do.
+     * @param location This parameter is used to update the location of the to-do.
+     * @param hashtags This parameter is used to update the hashtags of the to-do.
+     * @return The method returns a success value.
+     */
     public boolean updateToDo(int todoId, String title, String duration, String location, ArrayList<String> hashtags) {
         Log.d(TAG, "updateToDo: hashtags to assign: " + hashtags.toString());
         SQLiteDatabase db = this.getWritableDatabase();
@@ -577,11 +649,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * This method inserts the assigned hashtags of a to-do.
+     * @param todoId This parameter is used to determine the to-do.
+     * @param hashtags This parameter is used to process the hashtags.
+     */
     private void insertAssignedHashtagsOfToDo(int todoId, ArrayList<String> hashtags) {
         SQLiteDatabase db = this.getWritableDatabase();
         if(hashtags.size() > 0) {
             for (String hashtag : hashtags) {
-                Log.d(TAG, "insertAssignedHashtags: hashtag name: " + hashtag);
+                //Log.d(TAG, "insertAssignedHashtags: hashtag name: " + hashtag);
                 ContentValues contentToDoHashtagValues = new ContentValues();
                 int hashtagId = getHashtagIdByName(hashtag);
                 contentToDoHashtagValues.put(COLUMN_TODOMATCHING_TODO_ID, todoId);
@@ -591,6 +668,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * This method deletes the assigned hashtags of a to-do.
+     * @param todoId This parameter is used to determine the to-do.
+     */
     private void deleteAssignedHashtagsByToDoId(int todoId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "DELETE FROM " + TABLE_NAME_TODOMATCHING +
@@ -598,6 +679,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
+    /**
+     * This method is used to return the title of a to-do by its id.
+     * @param todoId This parameter is used to determine the to-do.
+     * @return The method returns the title of the to-do.
+     */
     public String getToDoTitleById(int todoId) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT " + COLUMN_TODO_TITLE + " FROM " + TABLE_NAME_TODOS +
@@ -611,6 +697,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return toDoTitle;
     }
 
+    /**
+     * This method is used to return the duration of a to-do by its id.
+     * @param todoId This parameter is used to determine the to-do.
+     * @return The method returns the duration of the to-do.
+     */
     public String getToDoDurationById(int todoId) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT " + COLUMN_TODO_DURATION + " FROM " + TABLE_NAME_TODOS +
@@ -624,6 +715,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return toDoDuration;
     }
 
+    /**
+     * This method is used to return the state of a to-do by its id.
+     * @param todoId This parameter is used to determine the to-do.
+     * @return The method returns the state of the to-do.
+     */
     public String getToDoStateById(int todoId) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT " + COLUMN_TODO_STATE + " FROM " + TABLE_NAME_TODOS +
@@ -637,12 +733,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return toDoState;
     }
 
+    /**
+     * @return This method returns all to-dos.
+     */
     public Cursor showToDos() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_TODOS, null);
         return data;
     }
 
+    /**
+     * This method is used to add a to-do.
+     * @param title This parameter is used to add the title for the to-do.
+     * @param duration This parameter is used to add the duration for the to-do.
+     * @param location This parameter is used to add the location for the to-do.
+     * @param state This parameter is used to add the state for the to-do.
+     * @param hashtags This parameter is used to add the hashtags for the to-do.
+     * @return The method returns a success value.
+     */
     public boolean addToDo(String title, String duration, String location, boolean state, ArrayList<String> hashtags) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -660,7 +768,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             ContentValues contentToDoHashtagValues = new ContentValues();
             for (String hashtag : hashtags) {
-                Log.d(TAG, "addToDo: hashtag name: " + hashtag);
+                //Log.d(TAG, "addToDo: hashtag name: " + hashtag);
                 int hashtagId = getHashtagIdByName(hashtag);
                 contentToDoHashtagValues.put(COLUMN_TODOMATCHING_TODO_ID, todoId);
                 contentToDoHashtagValues.put(COLUMN_TODOMATCHING_HASHTAG_ID, hashtagId);
@@ -675,6 +783,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
     }
 
+    /**
+     * @return This method returns the last used to-do id.
+     */
     private int getToDoIdByLastToDo() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT MAX(" + COLUMN_TODO_ID + ") FROM " + TABLE_NAME_TODOS, null);
@@ -686,6 +797,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return Integer.valueOf(id);
     }
 
+    /**
+     * This method sets the state of a to-do by its id.
+     * @param todoId This parameter is used to determine the to-do.
+     * @param state This parameter is used to set the state.
+     */
     public void setStateOfToDoByToDoId(int todoId, boolean state) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "UPDATE " + TABLE_NAME_TODOS +
@@ -694,12 +810,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
+    /**
+     * @return This method returns the information about the user.
+     */
     public Cursor showUser() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_USER, null);
         return data;
     }
 
+    /**
+     * This method is used to update the users name.
+     * @param name This parameter is used to update the name.
+     */
     public void updateUserName(String name) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "UPDATE " + TABLE_NAME_USER +
@@ -708,6 +831,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
+    /**
+     * This method is used to update the users address.
+     * @param address This parameter is used to update the address.
+     */
     public void updateUserAddress(String address) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "UPDATE " + TABLE_NAME_USER +
@@ -716,6 +843,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
+    /**
+     * This method is used to update the users do not disturb value.
+     * @param doNotDisturbValue This parameter is used to update the value.
+     */
     public void updateUserDoNotDisturb(boolean doNotDisturbValue) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "UPDATE " + TABLE_NAME_USER +
@@ -724,6 +855,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
+    /**
+     * This method is used to update the users avatar use value.
+     * @param avatarUse This parameter is used to update the value.
+     */
     public void updateUserAvatarUse(boolean avatarUse) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "UPDATE " + TABLE_NAME_USER +
@@ -732,6 +867,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
+    /**
+     * This method is used to update the users birthdate.
+     * @param birhtdate This parameter is used to update the value.
+     */
     public void updateUserBirthdate(String birhtdate) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "UPDATE " + TABLE_NAME_USER +
@@ -740,6 +879,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
+    /**
+     * This method is used to update the users do not disturb starttime.
+     * @param startTime This parameter is used to update the value.
+     */
     public void updateUserDoNotDisturbStartTime(String startTime) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "UPDATE " + TABLE_NAME_USER +
@@ -748,6 +891,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
+    /**
+     * This method is used to update the users do not disturb endtime.
+     * @param endTime This parameter is used to update the value.
+     */
     public void updateUserDoNotDisturbEndTime(String endTime) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "UPDATE " + TABLE_NAME_USER +
@@ -756,6 +903,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
+    /**
+     * This method inserts a fullday event for all days.
+     * @param currentDateString This parameter is used to determine the date.
+     * @param eventId This parameter is used to determine the event.
+     */
     public void insertFullDayEvent(String currentDateString, int eventId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentFullDayMatchingValues = new ContentValues();
@@ -764,6 +916,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insert(TABLE_NAME_FULLDAYMATCHING, null, contentFullDayMatchingValues);
     }
 
+    /**
+     * This method is used to delete a fullday event.
+     * @param eventId This parameter is used to determine the event.
+     */
     public void deleteFulldayMatchingByEventId(int eventId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "DELETE FROM " + TABLE_NAME_FULLDAYMATCHING +
@@ -771,6 +927,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
+    /**
+     * This method is used to get all to-dos that have a maximum duration of the timeslot length.
+     * @param timeslotlength This paramater is used to check the length.
+     * @return The method returns a cursor with all information found.
+     */
     public Cursor showToDosByMaxDuration(int timeslotlength) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_TODOS +
@@ -778,6 +939,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return data;
     }
 
+    /**
+     * @return This method returns the users name.
+     */
     public String getUserName() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT " + COLUMN_USER_NAME + " FROM " + TABLE_NAME_USER +
@@ -789,6 +953,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return name;
     }
 
+    /**
+     * @return This method returns the users do not disturb state.
+     */
     public boolean getUserDoNotDisturbOptionState() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT " + COLUMN_USER_NOTDISTURB + " FROM " + TABLE_NAME_USER +
@@ -803,6 +970,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
     }
 
+    /**
+     * @return This method returns the users do not disturb start time.
+     */
     public String getUserDoNotDisturbStartTime() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT " + COLUMN_USER_NOTDISTURB_STARTTIME + " FROM " + TABLE_NAME_USER +
@@ -814,6 +984,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return starttime;
     }
 
+    /**
+     * @return This method returns the users do not disturb end time.
+     */
     public String getUserDoNotDisturbEndTime() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT " + COLUMN_USER_NOTDISTURB_ENDTIME + " FROM " + TABLE_NAME_USER +
@@ -825,6 +998,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return endtime;
     }
 
+    /**
+     * @return This method returns all the system information.
+     */
     public Cursor getSystemInformation() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME_SYSTEMINFO +
@@ -832,6 +1008,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return data;
     }
 
+    /**
+     * This method sets the city and temperature of the system info table.
+     * @param city This parameter is used to set the city information.
+     * @param temperature This parameter is used to set the temperature information.
+     */
     public void setSystemInfoData(String city, String temperature) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "UPDATE " + TABLE_NAME_SYSTEMINFO +
@@ -841,6 +1022,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
+    /**
+     * This method sets the weather id, sunrise and sunset of the system info table.
+     * @param weatherId This parameter is used to set the weather id information.
+     * @param sunrise This parameter is used to set the sunrise information.
+     * @param sunset This parameter is used to set the sunset information.
+     */
     public void setSystemInfoWeatherData(int weatherId, long sunrise, long sunset) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "UPDATE " + TABLE_NAME_SYSTEMINFO +
@@ -851,6 +1038,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
+    /**
+     * This method sets the timestamp of the system info table.
+     * @param timestamp This parameter is used to set the timestamp information.
+     */
     public void setSystemInfoTimeStamp(long timestamp) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "UPDATE " + TABLE_NAME_SYSTEMINFO +
@@ -859,6 +1050,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
+    /**
+     * This method schedules a to-do that was accepted by the user.
+     * @param todoId This parameter is used to determine the to-do.
+     * @param date This parameter is used to set the date.
+     * @param hour This parameter is used to set the time.
+     */
     public void scheduleToDoByToDoId(Integer todoId, String date, int hour) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "UPDATE " + TABLE_NAME_TODOS +
@@ -868,6 +1065,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
+    /**
+     * This method returns all to-dos of a specific date.
+     * @param date This parameter is used to determine the date.
+     * @return This method returns a cursor with all found information.
+     */
     public Cursor showToDosByStartDate(String date) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT " + COLUMN_TODO_STARTTIME + ", " + COLUMN_TODO_DURATION + " FROM " + TABLE_NAME_TODOS +
@@ -875,10 +1077,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return data;
     }
 
+    /**
+     * This method returns a list of all reminders of a hashtag.
+     * @param hashtag This parameter is used to determine the hashtag.
+     * @return The method returns a list of reminders of the hashtag.
+     */
     public ArrayList<String> showRemindersByHashtagString(String hashtag) {
         return reminders.get(hashtag);
     }
 
+    /**
+     * This method returns the title of an event by its id.
+     * @param eventId This parameter is used to determine the event.
+     * @return The method returns the title.
+     */
     public String getEventTitleByEventId(String eventId) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT " + COLUMN_EVENTS_TITLE + " FROM " + TABLE_NAME_EVENTS +
@@ -890,6 +1102,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return title;
     }
 
+    /**
+     * @return This method returns the avatar use state of the user.
+     */
     public boolean getUserAvatarOptionState() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT " + COLUMN_USER_AVATAR_USE+ " FROM " + TABLE_NAME_USER +
@@ -903,11 +1118,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return avatarUse;
     }
 
+    /**
+     * This method returns the hashtags of all current events.
+     * @param possibleEvents This parameter is used to determine the hashtags.
+     * @return The method returns the hashtags of all current events in a list.
+     */
     public ArrayList<String> getHashtagsOfCurrentActiveEventsByPossibleEvents(ArrayList<Integer> possibleEvents) {
         Set<String> hashtagSet = new HashSet<String>();
         Calendar currentDate = Calendar.getInstance();
-        String timeFormat = "kk:mm";
-        SimpleDateFormat simpleTimeFormat = new SimpleDateFormat(timeFormat, Locale.GERMANY);
         for(int eventId: possibleEvents){
             Cursor data = showEventByEventId(eventId);
             if(data.getCount() != 0 && data.moveToNext()){
@@ -927,7 +1145,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
             }
         }
-        Log.d(TAG, "getHashtagsOfCurrentActiveEventsByPossibleEvents: " + hashtagSet.toString());
+        //Log.d(TAG, "getHashtagsOfCurrentActiveEventsByPossibleEvents: " + hashtagSet.toString());
         return new ArrayList<String>(hashtagSet);
     }
 }

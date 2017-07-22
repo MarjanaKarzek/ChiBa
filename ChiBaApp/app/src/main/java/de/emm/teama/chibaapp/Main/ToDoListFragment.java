@@ -22,9 +22,15 @@ import de.emm.teama.chibaapp.Utils.ToDoListAdapter;
 import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
 
 /**
- * Created by Marjana Karzek on 18.06.2017.
+ * <h1>ToDoListFragment Class</h1>
+ * This class provides the calendar fragment.
+ * <p>
+ * In the comments find log entries to be used for debugging purposes.
+ *
+ * @author  Marjana Karzek
+ * @version 2.0
+ * @since   2017-06-18
  */
-
 public class ToDoListFragment extends Fragment {
     private static final String TAG = "ToDoListFragment";
 
@@ -32,10 +38,21 @@ public class ToDoListFragment extends Fragment {
     private ArrayList<Integer> currentToDos = new ArrayList<Integer>();
     private View view;
 
+    /**
+     * This static class provides the items for the views to avoid reload.
+     */
     static class ViewHolderItem {
         ListView todoList;
     }
 
+    /**
+     * This method creates the view.
+     *
+     * @param inflater This parameter is used to get the inflater.
+     * @param container This parameter is used to get the container.
+     * @param savedInstanceState This parameter is used to get the save state from the dialog.
+     * @return The method returns the view after it was modified.
+     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -52,7 +69,7 @@ public class ToDoListFragment extends Fragment {
             viewHolder.todoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Log.d(TAG, "onItemClick: clicked");
+                    //Log.d(TAG, "onItemClick: clicked");
                     Intent intent = new Intent(getActivity(), EditToDoActivity.class);
                     intent.putExtra("EXTRA_TODO_ID", currentToDos.get(position));
                     startActivity(intent);
@@ -62,6 +79,9 @@ public class ToDoListFragment extends Fragment {
         return view;
     }
 
+    /**
+     * This method displays the to-do data.
+     */
     private void displayData() {
         Cursor data = database.showToDos();
         currentToDos.clear();
