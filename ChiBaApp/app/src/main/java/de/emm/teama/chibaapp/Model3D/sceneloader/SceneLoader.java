@@ -65,6 +65,7 @@ public class SceneLoader
     private boolean rewindable;
     private boolean loopable;
 
+    private boolean usesAvatar;
 
 	// Light bulb 3d data
 	private final Object3DData lightPoint = Object3DBuilder.buildPoint(new float[4]).setId("light").setPosition(lightPosition);
@@ -72,8 +73,9 @@ public class SceneLoader
     public SceneLoader(MainFragment main, AssetManager assets, boolean usesAvatar, String animation)
     {
         this.parent = main;
-        // Tests with Ballsport, Lernen, Laptop, Arbeit, Einkaufen, Restaurant, Geburtstag, Sonne, Regen, ""
-        // animation = "Ballsport";
+        this.usesAvatar = usesAvatar;
+        //Tests with Ballsport, Lernen, Laptop, Arbeit, Einkaufen, Restaurant, Geburtstag, Sonne, Regen, ""
+        //animation = "Laptop";
 
         if(usesAvatar) {
             switch (animation) {
@@ -319,33 +321,34 @@ public class SceneLoader
 	}
 
 	public void onDrawFrame(){
-        if(loopable) {
-            double currentTime = SystemClock.uptimeMillis();
-            if (currentTime - lastTime >= speed) {
-                objects.get(objectcounter).setVisible(true);
-                objects.get(previousobject).setVisible(false);
-                previousobject = objectcounter;
-                objectcounter += loopdirection;
-                if (objectcounter == objects.size() - 1 || objectcounter == 0) {
-                    if (rewindable)
-                        loopdirection *= -1;
-                    else
-                        objectcounter = 0;
-                    runtimeCounter++;
-                    if (runtimeCounter == 5) {
-                        try {
-                            Thread.sleep(5000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+        if(usesAvatar) {
+            if (loopable) {
+                double currentTime = SystemClock.uptimeMillis();
+                if (currentTime - lastTime >= speed) {
+                    objects.get(objectcounter).setVisible(true);
+                    objects.get(previousobject).setVisible(false);
+                    previousobject = objectcounter;
+                    objectcounter += loopdirection;
+                    if (objectcounter == objects.size() - 1 || objectcounter == 0) {
+                        if (rewindable)
+                            loopdirection *= -1;
+                        else
+                            objectcounter = 0;
+                        runtimeCounter++;
+                        if (runtimeCounter == 5) {
+                            try {
+                                Thread.sleep(5000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            runtimeCounter = 0;
                         }
-                        runtimeCounter = 0;
                     }
+                    lastTime = currentTime;
                 }
-                lastTime = currentTime;
-            }
+            } else
+                objects.get(0).setVisible(true);
         }
-        else
-            objects.get(0).setVisible(true);
     }
 
     private float[] rotateAroundY(Object3DData obj, float angle) {

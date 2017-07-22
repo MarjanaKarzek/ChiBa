@@ -109,7 +109,6 @@ public class MainFragment extends Fragment implements CityChangeDialogFragment.C
             textTemperature.setText(lastKnownTemperature);
             setWeatherIcon(lastKnownWeatherID, lastKnownSunrise, lastKnownSunset);
         }
-
     }
 
     @Nullable
@@ -118,7 +117,6 @@ public class MainFragment extends Fragment implements CityChangeDialogFragment.C
         if (fragmentHome == null) {
             LinearLayout linearLayoutRoot = new LinearLayout(this.getContext());
             linearLayoutRoot.setOrientation(LinearLayout.VERTICAL);
-            //linearLayoutRoot.setWeightSum(2f);
             LinearLayout.LayoutParams rlpRoot = new LinearLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -281,10 +279,13 @@ public class MainFragment extends Fragment implements CityChangeDialogFragment.C
         // Create Scene for 3D scenario
         usesAvatar = database.getUserAvatarOptionState();
 
+        Log.d(TAG, "onStart: displayedEvents " + displayedEvents.toString());
         ArrayList<String> currentActiveEventHashtags = database.getHashtagsOfCurrentActiveEventsByPossibleEvents(displayedEvents);
+        Log.d(TAG, "onStart: currentActiveEventHashtags " + currentActiveEventHashtags.toString());
 
         if (currentActiveEventHashtags.isEmpty()) {
-            int id = lastKnownWeatherID / 100;
+            int id = lastKnownWeatherID/100;
+            Log.d(TAG, "onStart: id " + id);
             if (id <= 5)
                 animation = "Regen";
             else if (id == 800 && (Calendar.getInstance().getTimeInMillis() >= lastKnownSunrise && Calendar.getInstance().getTimeInMillis() < lastKnownSunset))
