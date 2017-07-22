@@ -52,6 +52,19 @@ import static de.emm.teama.chibaapp.Application.ChiBaApplication.database;
  * @author  Marjana Karzek & Natalie Grasser
  * @version 5.0
  * @since   2017-06-18
+ *
+ * <p>
+ * Based on
+ * Author: Ashraff Hathibelagal
+ * Date: 2014-09-01
+ * Title: Create a Weather App on Android
+ * Version: 1
+ * Availability: https://code.tutsplus.com/tutorials/create-a-weather-app-on-android--cms-21587
+ * <p>
+ * Weather icons by
+ * Author: Erik Flowers
+ * Availability: https://github.com/erikflowers/weather-icons
+ *
  */
 public class MainFragment extends Fragment {
     private static final String TAG = "MainFragment";

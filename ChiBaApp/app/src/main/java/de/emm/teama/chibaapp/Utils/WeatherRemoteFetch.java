@@ -22,7 +22,7 @@ import de.emm.teama.chibaapp.R;
  * @version 1.0
  * @since   2017-07-06
  *
- *  * <p>
+ * <p>
  * Based on
  * Author: Ashraff Hathibelagal
  * Date: 2014-09-01
