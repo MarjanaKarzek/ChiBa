@@ -12,7 +12,7 @@ import java.util.List;
  * <h1>Camera Class </h1>
  * This class represents the basic 3D data necessary to build the 3D object.
  *
- * @author Allen Sherrod
+ * @author Allen Sherrod, modified by Natalie Grasser
  * @since modified 2017-06-28
  * Title: CCamera
  * Description: This class represents a camera in a 3D scene.
@@ -22,17 +22,7 @@ import java.util.List;
 
 public class Camera {
 
-	public static final float UP = 0.5f; 			// Forward speed.
-	public static final float DOWN = -0.5f; 		// Backward speed.
-	public static final float LEFT = 0.5f; 			// Left speed.
-	public static final float RIGHT = -0.5f; 		// Right speed.
-	public static final float STRAFE_LEFT = -0.5f; 	// Left straft speed.
-	public static final float STRAFE_RIGHT = 0.5f; 	// Right straft speed.
-
-	public static final int AIM = 10;
-
-	public float xPos, yPos; 						// Camera position.
-	public float zPos;
+	public float xPos, yPos, zPos; 					// Camera position.
 	public float xView, yView, zView; 				// Look at position.
 	public float xUp, yUp, zUp; 					// Up direction.
 
@@ -41,15 +31,30 @@ public class Camera {
 
 	float[] matrix = new float[16];
 	float[] buffer = new float[12 + 12 + 16 + 16];
-	float[] buffer4x3 = new float[12];
+
 	private boolean changed = false;
 
+    /**
+     * Constructor to set a camera to default position.
+     * */
 	public Camera() {
-		// Initialize variables
-		this(0, 0, 3, 0, 0, -1, 0, 1, 0);
+		this(0, 0, 3, 0, 0, -1, 0, 1, 0);			// Initialize variables
 
 	}
 
+	/**
+	 * Parameterized constructor to set a camera position.
+     *
+     * @param xPos      x position of the camera
+     * @param yPos      y position of the camera
+     * @param zPos      z position of the camera
+     * @param xView     x position of the view
+     * @param yView     y position of the view
+     * @param zView     z position of the view
+     * @param xUp       x position of the up
+     * @param yUp       y position of the up
+     * @param zUp       z position og the up
+	 * */
 	public Camera(float xPos, float yPos, float zPos, float xView, float yView, float zView, float xUp, float yUp, float zUp) {
 		// Here we set the camera to the values sent in to us. This is mostly used to set up a default position.
 		this.xPos = xPos;
@@ -63,65 +68,23 @@ public class Camera {
 		this.zUp = zUp;
 	}
 
+	/**
+     * Setter method for a SceneLoader object.
+     *
+     * @param scene
+     * */
 	public void setScene(SceneLoader scene) {
 		this.scene = scene;
 	}
 
-	private void normalize() {
-		float xLook = 0, yLook = 0, zLook = 0;
-		float xRight = 0, yRight = 0, zRight = 0;
-		float xArriba = 0, yArriba = 0, zArriba = 0;
-		float vlen;
-
-		// Translating the camera requires a directional vector to rotate
-		// First we need to get the direction at which we are looking.
-		// The look direction is the view minus the position (where we are).
-		// Get the Direction of the view.
-		xLook = xView - xPos;
-		yLook = yView - yPos;
-		zLook = zView - zPos;
-		vlen = Matrix.length(xLook, yLook, zLook);
-		xLook /= vlen;
-		yLook /= vlen;
-		zLook /= vlen;
-
-		// Next we get the axis which is a perpendicular vector of the view
-		// direction and up values.
-		// We use the cross product of that to get the axis then we normalize
-		// it.
-		xArriba = xUp - xPos;
-		yArriba = yUp - yPos;
-		zArriba = zUp - zPos;
-		// Normalize the Right.
-		vlen = Matrix.length(xArriba, yArriba, zArriba);
-		xArriba /= vlen;
-		yArriba /= vlen;
-		zArriba /= vlen;
-
-		// // Get the cross product of the direction and the up.
-		// xRight = (yLook * zArriba) - (zLook * yArriba);
-		// yRight = (zLook * xArriba) - (xLook * zArriba);
-		// zRight = (xLook * yArriba) - (yLook * xArriba);
-		// // Normalize the Right.
-		// vlen = Matrix.length(xRight, yRight, zRight);
-		// xRight /= vlen;
-		// yRight /= vlen;
-		// zRight /= vlen;
-
-		xView = xLook + xPos;
-		yView = yLook + yPos;
-		zView = zLook + zPos;
-		xUp = xArriba + xPos;
-		yUp = yArriba + yPos;
-		zUp = zArriba + zPos;
-	}
-
 	/**
-     * Moving the camera requires a little more then adding 1 to the z or subracting 1.
+     * This method is used for moving the camera position.
      *
+     * @param direction
      * */
 	public void MoveCameraZ(float direction) {
-        //First we need to get the direction at which we are looking.
+        // Moving the camera requires a little more then adding 1 to the z or subracting 1.
+        // First we need to get the direction at which we are looking.
 		float xLookDirection = 0, yLookDirection = 0, zLookDirection = 0;
 
 		// The look direction is the view minus the position (where we are).
@@ -139,6 +102,14 @@ public class Camera {
 		UpdateCamera(xLookDirection, yLookDirection, zLookDirection, direction);
 	}
 
+	/**
+     * Updating the camera happens with this method.
+     *
+     * @param xDir  x value of look direction
+     * @param yDir  y value of look direction
+     * @param zDir  z value of look direction
+     * @param dir   direction of camera
+     * */
 	void UpdateCamera(float xDir, float yDir, float zDir, float dir) {
 
 		Matrix.setIdentityM(matrix, 0);
@@ -163,6 +134,12 @@ public class Camera {
 		setChanged(true);
 	}
 
+	/**
+     * The method isOutOfBounds is used to check whether the camera position is out of bounds.
+     *
+     * @param buffer
+     * @return whether the camera is out of bounds
+     * */
 	private boolean isOutOfBounds(float[] buffer) {
 		if (boundingBox.outOfBound(buffer[0] / buffer[3],buffer[1] / buffer[3],buffer[2] / buffer[3])){
 			Log.d("Camera", "Out of bounds scene bounds");
@@ -307,6 +284,16 @@ public class Camera {
 
 	}
 
+	/**
+     * This method which creates a rotation matrix around a vector.
+     *
+     * @param matrix    the matrix
+     * @param offset    the offset
+     * @param angle     the rotation angle
+     * @param x         the x value
+     * @param y         the y value
+     * @param z         the z value
+     * */
 	public static void createRotationMatrixAroundVector(float[] matrix, int offset, float angle, float x, float y, float z) {
 		float cos = (float) Math.cos(angle);
 		float sin = (float) Math.sin(angle);
@@ -321,38 +308,83 @@ public class Camera {
 		// @formatter:on
 	}
 
+	/**
+     * This method multiplies a matrix.
+     *
+     * @param result            the result
+     * @param retOffset         the offset of the result
+     * @param matrix            the matrix
+     * @param matOffet          the offset of the matrix
+     * @param vector4Matrix     the vector coordinates for the matrix
+     * @param vecOffset         the offset for the vector for the matrix
+     * */
 	public static void multiplyMMV(float[] result, int retOffset, float[] matrix, int matOffet, float[] vector4Matrix, int vecOffset) {
 		for (int i = 0; i < vector4Matrix.length / 4; i++) {
 			Matrix.multiplyMV(result, retOffset + (i * 4), matrix, matOffet, vector4Matrix, vecOffset + (i * 4));
 		}
 	}
 
+	/**
+     * Getter methods for location vector.
+     *
+     * @return the new location vector
+     * */
 	public float[] getLocationVector() {
 		return new float[] { xPos, yPos, zPos, 1f };
 	}
 
+    /**
+     * Getter methods for location view vector.
+     *
+     * @return the new location view vector
+     * */
 	public float[] getLocationViewVector() {
 		return new float[] { xView, yView, zView, 1f };
 	}
 
+    /**
+     * Getter methods for location up vector.
+     *
+     * @return the new location up vector
+     * */
 	public float[] getLocationUpVector() {
 		return new float[] { xUp, yUp, zUp, 1f };
 	}
 
+	/**
+     * The detection to check if something has changed.
+     *
+     * @return whether the camera has changed
+     * */
 	public boolean hasChanged() {
 		return changed;
 	}
 
+    /**
+     * Setter method to set that something has changed.
+     *
+     * @param changed   the state whether the camera has changed
+     * */
 	public void setChanged(boolean changed) {
 		this.changed = changed;
 	}
 
+    /**
+     * A method to get information about a camera.
+     *
+     * @return This method returns a cameras position information as STRING.
+     * */
 	@Override
 	public String toString() {
 		return "Camera [xPos=" + xPos + ", yPos=" + yPos + ", zPos=" + zPos + ", xView=" + xView + ", yView=" + yView
 				+ ", zView=" + zView + ", xUp=" + xUp + ", yUp=" + yUp + ", zUp=" + zUp + "]";
 	}
 
+	/**
+     * This method rotates the camera.
+     *
+     * @param rotViewerZ the rotation around z axis
+     * */
 	public void Rotate(float rotViewerZ) {
 		if (Float.isNaN(rotViewerZ)) {
 			Log.w("Rot", "NaN");
@@ -382,6 +414,4 @@ public class Camera {
 
 		setChanged(true);
 	}
-
-
 }

@@ -26,6 +26,11 @@ public class ModelSurfaceView extends GLSurfaceView {
 	private ModelRenderer mRenderer;
 	private TouchController touchHandler;
 
+	/**
+	 * Parameterized constructor to set up a surface view.
+     *
+     * @param parent the main fragment
+	 * */
     public ModelSurfaceView(MainFragment parent)
 	{
 		super(parent.getContext());
@@ -47,12 +52,19 @@ public class ModelSurfaceView extends GLSurfaceView {
 
 	/**
      * This method handles an touch event on an object of the GLSurfaceView.
+     *
+     * @param event the MotionEvent
      * */
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		return touchHandler.onTouchEvent(event);
 	}
 
+	/**
+     * Getter method for the main fragment (parent object).
+     *
+     * @return the main fragment
+     * */
 	public MainFragment getMainFragment() {
 		return parent;
 	}

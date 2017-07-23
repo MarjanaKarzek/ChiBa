@@ -84,49 +84,89 @@ public class WavefrontLoader {
 	// flags
 	private final int triangleMode = GLES20.GL_TRIANGLE_FAN;
 
+	/**
+     * Parameterized constructor to load a WavefrontOBJ-File.
+     *
+     * @param nm  the models name
+     * */
 	public WavefrontLoader(String nm) {
 		modelNm = nm;
 		maxSize = 1.0F;
 
 		texCoords = new ArrayList<Tuple3>();
 
-
 		faceMats = new FaceMaterials();
 		modelDims = new ModelDimensions();
 	}
 
 	/**
-     * Getter methods for vertex buffer, normal buffer, texture coordinates, face materials, materials and dimensions.*/
+     * Getter method for vertex buffer.
+     *
+     * @return the vertex buffer as FloatBuffer
+     * */
 	public FloatBuffer getVerts() {
 		return vertsBuffer;
 	}
 
+	/**
+     * Getter method for normal buffer.
+     *
+     * @return the normals buffer as FloatBuffer
+     * */
 	public FloatBuffer getNormals() {
 		return normalsBuffer;
 	}
 
+	/**
+     * Getter method for the texture coordinates.
+     *
+     * @return the texture coordinates as an ArrayList
+     * */
 	public ArrayList<Tuple3> getTexCoords() {
 		return texCoords;
 	}
 
+	/**
+     * Getter method for the faces.
+     *
+     * @return the faces as Faces
+     * */
 	public Faces getFaces() {
 		return faces;
 	}
 
+	/**
+     * Getter method for the face materials.
+     *
+     * @return the face materials as FaceMaterials
+     * */
 	public FaceMaterials getFaceMats() {
 		return faceMats;
 	}
 
+	/**
+     * Getter method for the materials.
+     *
+     * @return the materials as Materials
+     * */
 	public Materials getMaterials() {
 		return materials;
 	}
 
+    /**
+     * Getter method for the dimensions.
+     *
+     * @return the dimensions as ModelDimensions
+     * */
 	public ModelDimensions getDimensions() {
 		return modelDims;
 	}
 
 	/**
-     *  Count verts, normals, faces etc and reserve buffers to save the data. */
+     * Method to count the vertices, faces, etc. and and reserve buffers to save the data.
+     *
+     * @param is the input stream of the OBJ file
+     * */
 	public void analyzeModel(InputStream is) {
 		int lineNum = 0;
 		String line;
@@ -190,7 +230,8 @@ public class WavefrontLoader {
 	}
 
 	/**
-     * Allocate buffers for pushing the model data */
+     * Method to allocate buffers for pushing the model data
+     * */
 	public void allocateBuffers() {
 		// size = 3 (x,y,z) * 4 (bytes per float)
 		vertsBuffer = createNativeByteBuffer(numVerts*3*4).asFloatBuffer();
@@ -201,7 +242,10 @@ public class WavefrontLoader {
 	}
 
 	/**
-     * Method to load the model.*/
+     * Method to load the model.
+     *
+     * @param is the input stream of the OBJ file
+     * */
 	public void loadModel(InputStream is) {
 		BufferedReader br = null;
 		try {
@@ -221,6 +265,8 @@ public class WavefrontLoader {
 
 	/**
      * Method to initialize vertex byte buffer for shape coordinates and use the device hardware's native byte order.
+     *
+     * @param length
      * */
 	private static ByteBuffer createNativeByteBuffer(int length) {
 		ByteBuffer bb = ByteBuffer.allocateDirect(length);
@@ -228,7 +274,11 @@ public class WavefrontLoader {
 		return bb;
 	}
 
-	/* Method to parse the OBJ file line-by-line */
+	/**
+     * Method to parse the OBJ file line-by-line
+     *
+     * @param br BufferedReader to read the model
+     * */
 	private void readModel(BufferedReader br) {
 		boolean isLoaded = true;
 
@@ -290,6 +340,8 @@ public class WavefrontLoader {
 	/**
 	 * Parse the vertex and add it to the buffer. If the vertex cannot be parsed,
 	 * then a default (0,0,0) vertex is added instead.
+     * <p>
+     * Add vertex from line "v x y z" to vert ArrayList, and update the model dimension's info.
 	 *
 	 * @param buffer the buffer where the vertex is to be added
 	 * @param offset the offset of the buffer
@@ -297,9 +349,7 @@ public class WavefrontLoader {
 	 * @param isFirstCoord if this is the first vertex to be parsed
 	 * @param dimensions the model dimesions so they are updated
 	 * @return <code>true</code> if the vertex could be parsed, <code>false</code> otherwise
-	 */
-
-	/* Add vertex from line "v x y z" to vert ArrayList, and update the model dimension's info. */
+	 * */
     private boolean addVert(FloatBuffer buffer, int offset, String line, boolean isFirstCoord, ModelDimensions dimensions) {
 		float x=0,y=0,z=0;
 		try{
@@ -333,7 +383,14 @@ public class WavefrontLoader {
 		return false;
 	}
 
-    /* Add the texture coordinate from the line "vt u v w" to the texCoords ArrayList. There may only be two tex coords on the line, which is determined by looking at the first tex coord line. */
+    /**
+     * Method to add the texture coordinate from the line "vt u v w" to the texCoords ArrayList.
+     * There may only be two tex coords on the line, which is determined by looking at the first tex coord line.
+     *
+     * @param line
+     * @param isFirstTC
+     * @return <code>true</code> if the texture coodinates could be read and added, <code>false</code> otherwise
+     * */
     private boolean addTexCoord(String line, boolean isFirstTC) {
 		if (isFirstTC) {
 			hasTCs3D = checkTC3D(line);
@@ -348,13 +405,24 @@ public class WavefrontLoader {
 		return false;
 	}
 
-    /* Check if the line has 4 tokens, which will be the "vt" token and 3 tex coords in this case. */
+    /**
+     * Method to check if the line has 4 tokens, which will be the "vt" token and 3 tex coords in this case.
+     *
+     * @param line the current line to be read
+     * */
 	private boolean checkTC3D(String line) {
 		String[] tokens = line.split("\\s+");
 		return (tokens.length == 4);
 	}
 
-	/* The line starts with a "vt" OBJ word and two or three floats (x, y, z) for the tex coords separated by spaces. If there are only two coords, then the z-value is assigned a dummy value, DUMMY_Z_TC. */
+	/**
+     * Method to read the current tuple.
+     * <p>
+     * The line starts with a "vt" OBJ word and two or three floats (x, y, z) for the tex coords separated by spaces.
+     * If there are only two coords, then the z-value is assigned a dummy value, DUMMY_Z_TC.
+     *
+     * @param line the current line to be read
+     * */
 	private Tuple3 readTCTuple(String line) {
 		StringTokenizer tokens = new StringTokenizer(line, " ");
 		tokens.nextToken(); // skip "vt" OBJ word
@@ -375,7 +443,8 @@ public class WavefrontLoader {
 	}
 
 	/**
-     * Helper Class to provide tuples. */
+     * Helper Class to provide tuples.
+     * */
 	public static class Tuple3 {
 		private float x, y, z;
 
@@ -416,7 +485,8 @@ public class WavefrontLoader {
 	}
 
 	/**
-     * Helper Class to set the correct model dimensions.*/
+     * Helper Class to set the correct model dimensions.
+     * */
 	public static class ModelDimensions {
 		private float leftPt, rightPt;  // on x-axis
 		private float topPt, bottomPt;  // on y-axis
@@ -498,6 +568,9 @@ public class WavefrontLoader {
 
 	}
 
+    /**
+     * Helper Class to store and provide the OBJ Files materials.
+     * */
 	public static class Materials {
 
 		public Map<String, Material> materials;     // stores the Material objects built from the MTL file data
@@ -613,6 +686,9 @@ public class WavefrontLoader {
 
 	}
 
+    /**
+     * Helper Class to store and provide the OBJ Files material.
+     * */
 	public static class Material {
 		private String name;
 
@@ -697,6 +773,9 @@ public class WavefrontLoader {
 
 	}
 
+    /**
+     * Helper Class to provide the faces of a model.
+     * */
 	public class Faces {
 		private static final float DUMMY_Z_TC = -5.0f;
 
@@ -825,6 +904,9 @@ public class WavefrontLoader {
 
 	}
 
+    /**
+     * Helper Class to provide the face materials of a model.
+     * */
 	public static class FaceMaterials {
 		private HashMap<Integer, String> faceMats;
         private HashMap<String, Integer> matCount;

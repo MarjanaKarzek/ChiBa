@@ -42,13 +42,9 @@ public class SceneLoader
 
 	private boolean drawingPoints = false;
 
-	private boolean drawBoundingBox = false;
-
 	private boolean drawNormals = false;
 
 	private boolean drawTextures = true;
-
-	private boolean rotatingLight = false;                      // Light toggle feature: we have 3 states: no light, light, light + rotation
 
 	private boolean drawLighting = true;                        // Light toggle feature: whether to draw using lights
 
@@ -70,12 +66,18 @@ public class SceneLoader
 	// Light bulb 3d data
 	private final Object3DData lightPoint = Object3DBuilder.buildPoint(new float[4]).setId("light").setPosition(lightPosition);
 
+    /**
+     * Parameterized constructor to set up a scene for a 3D object scenario.
+     *
+     * @param main          the parent fragment
+     * @param assets        the current assets manager
+     * @param usesAvatar    the state whether to use an avatar
+     * @param animation     the current animation for the 3D object
+     * */
     public SceneLoader(MainFragment main, AssetManager assets, boolean usesAvatar, String animation)
     {
         this.parent = main;
         this.usesAvatar = usesAvatar;
-        //Tests with Ballsport, Lernen, Laptop, Arbeit, Einkaufen, Restaurant, Geburtstag, Sonne, Regen, ""
-        //animation = "Laptop";
 
         if(usesAvatar) {
             switch (animation) {
@@ -316,10 +318,19 @@ public class SceneLoader
         }
 	}
 
+	/**
+     * Method to return the light point of a 3D object scenario.
+     *
+     * @return the light point
+     * */
 	public Object3DData getLightBulb() {
 		return lightPoint;
 	}
 
+	/**
+     * Method called by the ModelRenderer onDrawFrame() to draw a scenario frame by frame.
+     * Also enables to show animation of 3D objects.
+     * */
 	public void onDrawFrame(){
         if(usesAvatar) {
             if (loopable) {
@@ -351,24 +362,11 @@ public class SceneLoader
         }
     }
 
-    private float[] rotateAroundY(Object3DData obj, float angle) {
-        float[] rotation = obj.getRotation();
-
-        float x = (float) (rotation[2] * Math.sin(angle) + rotation[0] * Math.cos(angle));
-        float y = rotation[1];
-        float z = (float) (rotation[2] * Math.cos(angle) - rotation[0] * Math.sin(angle));
-
-        return new float[]{x, y, z};
-    }
-
-	private void animateLight() {
-		if (!rotatingLight) return;
-
-        long time = SystemClock.uptimeMillis() % 5000L;
-		float angleInDegrees = (360.0f / 5000.0f) * ((int) time);
-        lightPoint.setRotationY(angleInDegrees);
-	}
-
+    /**
+     * Method to add an Object3DData object to the current scene.
+     *
+     * @param obj the 3d object data
+     * */
 	public synchronized void addObject(Object3DData obj) {
 		List<Object3DData> newList = new ArrayList<Object3DData>(objects);
 		newList.add(obj);
@@ -376,38 +374,81 @@ public class SceneLoader
 		requestRender();
 	}
 
+	/**
+     * Method which request that the renderer render a frame.
+     * */
 	private void requestRender() {
 		parent.getgLView().requestRender();
 	}
 
+	/**
+     * Method to return the 3d objects used in the scene.
+     *
+     * @return the 3d objects used in the scene
+     * */
 	public synchronized List<Object3DData> getObjects() {
 		return objects;
 	}
 
+	/**
+     * Method to detect whether a wire frame should be drawn.
+     *
+     * @return whether a wire frame should be drawn
+     * */
 	public boolean isDrawWireframe() {
 		return this.drawWireframe;
 	}
 
+    /**
+     * Method to detect whether points should be drawn.
+     *
+     * @return whether points should be drawn
+     * */
 	public boolean isDrawPoints() {
 		return this.drawingPoints;
 	}
 
+    /**
+     * Method to detect whether normals should be drawn.
+     *
+     * @return whether normals should be drawn
+     * */
 	public boolean isDrawNormals() {
 		return drawNormals;
 	}
 
+    /**
+     * Method to detect whether texture should be drawn.
+     *
+     * @return whether normals texture be drawn
+     * */
 	public boolean isDrawTextures() {
 		return drawTextures;
 	}
 
+    /**
+     * Method to detect whether lighting should be drawn.
+     *
+     * @return whether lighting should be drawn
+     * */
 	public boolean isDrawLighting() {
 		return drawLighting;
 	}
 
+	/**
+     * Method which returns the selected 3d object.
+     *
+     * @return the selected 3d object
+     * */
     public Object3DData getSelectedObject() {
         return selectedObject;
     }
 
+    /**
+     * Method to set an selected 3d object and the command to open the external Unity ChiBa Application.
+     *
+     * @param selectedObject the selected 3d object
+     * */
     public void setSelectedObject(Object3DData selectedObject) {
         this.selectedObject = selectedObject;
 

@@ -5,7 +5,7 @@ package de.emm.teama.chibaapp.Model3D.entities;
  * This class implements the scene for the OpenGL implementation.
  * <p>
  *
- * @author Andres Oviedo, modified Natalie Grasser
+ * @author Andres Oviedo, modified by Natalie Grasser
  * @version 1.3.1
  * @since 2017-04-23, modified 2017-06-28
  * Title: Android 3D Model Viewer
@@ -22,6 +22,17 @@ public final class BoundingBox {
 	private float zMin = Float.MAX_VALUE;
 	private float zMax = Float.MIN_VALUE;
 
+    /**
+     * Parameterized constructor to set up a bounding box.
+     *
+     * @param id    identifier for bounding box
+     * @param xMin  minumum on x axis
+     * @param xMax  maximum on x axis
+     * @param yMin  minumum on y axis
+     * @param yMax  maximum on y axis
+     * @param zMin  minumum on z axis
+     * @param zMax  maximum on z axis
+     * */
 	public BoundingBox(String id, float xMin, float xMax, float yMin, float yMax, float zMin, float zMax) {
 		this.id = id;
 		this.xMin = xMin;
@@ -32,58 +43,80 @@ public final class BoundingBox {
 		this.zMax = zMax;
 	}
 
+	/**
+	 * Getter method for bounding box.
+     *
+     * @return the minumum on x axis
+	 * */
 	public float getxMin() {
 		return xMin;
 	}
 
-	public void setxMin(float xMin) {
-		this.xMin = xMin;
-	}
-
+    /**
+     * Getter method for bounding box.
+     *
+     * @return the maximum on x axis
+     * */
 	public float getxMax() {
 		return xMax;
 	}
 
-	public void setxMax(float xMax) {
-		this.xMax = xMax;
-	}
-
+    /**
+     * Getter method for bounding box.
+     *
+     * @return minumum on y axis
+     * */
 	public float getyMin() {
 		return yMin;
 	}
 
-	public void setyMin(float yMin) {
-		this.yMin = yMin;
-	}
-
+    /**
+     * Getter method for bounding box.
+     *
+     * @return maximum on y axis
+     * */
 	public float getyMax() {
 		return yMax;
 	}
 
-	public void setyMax(float yMax) {
-		this.yMax = yMax;
-	}
-
+    /**
+     * Getter method for bounding box.
+     *
+     * @return minimum on z axis
+     * */
 	public float getzMin() {
 		return zMin;
 	}
 
-	public void setzMin(float zMin) {
-		this.zMin = zMin;
-	}
-
+    /**
+     * Getter method for bounding box.
+     *
+     * @return maximum on z axis
+     * */
 	public float getzMax() {
 		return zMax;
 	}
 
-	public void setzMax(float zMax) {
-		this.zMax = zMax;
-	}
-
+	/**
+     * Method to check whether a point is inside of a bounding box.
+     *
+     * @param x coordinate of point on x axis
+     * @param y coordinate of point on y axis
+     * @param z coordinate of point on z axis
+     * @return whether the point is inside the bounding box
+     * */
 	public boolean insideBounds(float x, float y, float z){
 		return !outOfBound(x,y,z);
 	}
 
+    /**
+     * Method to check whether a point is outside of a bounding box.
+     *
+     * @param x coordinate of point on x axis
+     * @param y coordinate of point on y axis
+     * @param z coordinate of point on z axis
+     * @return whether the point is outside the bounding box
+     * */
 	public boolean outOfBound(float x, float y, float z) {
 		if (x > getxMax()) {
 			return true;
@@ -106,6 +139,11 @@ public final class BoundingBox {
 		return false;
 	}
 
+	/**
+     * A method to get information about a bounding box.
+     *
+     * @return the boundaries of a bounding box as STRING.
+     * */
 	@Override
 	public String toString() {
 		return "BoundingBox{" +

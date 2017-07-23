@@ -63,22 +63,38 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
     private final float[] lightPosInEyeSpace = new float[4];                    // light position required to render with lighting
 
     /**
-     * Construct a new renderer for the specified surface view
+     * Parameterized constructor to set up a new renderer for the specified surface view
      *
-     * @param modelSurfaceView the 3D window
+     * @param modelSurfaceView the 3D window, the model surface view
      */
     public ModelRenderer(ModelSurfaceView modelSurfaceView) {
         this.main = modelSurfaceView;
     }
 
+    /**
+     * Getter method to get the near.
+     *
+     * @return near
+     * */
     public float getNear() {
         return near;
     }
 
+    /**
+     * Getter method to get the far.
+     *
+     * @return far
+     * */
     public float getFar() {
         return far;
     }
 
+    /**
+     * This method is called when the surface is created or recreated.
+     *
+     * @param unused    the GL interface
+     * @param config    the EGLConfig of the created surface
+     * */
     @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         // Set the background frame color
@@ -99,6 +115,13 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
         drawer = new Object3DBuilder();
     }
 
+    /**
+     * This method is called when the surface changed size.
+     *
+     * @param unused    the GL interface
+     * @param width     the surfaces width
+     * @param height    the surfaces height
+     * */
     @Override
     public void onSurfaceChanged(GL10 unused, int width, int height) {
         this.width = width;
@@ -119,6 +142,11 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
         Matrix.multiplyMM(mvpMatrix, 0, modelProjectionMatrix, 0, modelViewMatrix, 0);
     }
 
+    /**
+     * This method is responsible for drawing the current frame.
+     *
+     * @param unused    the GL interface
+     * */
     @Override
     public void onDrawFrame(GL10 unused) {
 
@@ -216,26 +244,46 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
     }
 
     /**
-     * Getter methods for width and height of the screen.
-     * As well as model projection matrix, model view matrix and camera.
+     * Getter method for the surfaces width.
      *
+     * @return the width as int
      * */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * Getter method for the surfaces height.
+     *
+     * @return the height as int
+     * */
     public int getHeight() {
         return height;
     }
 
+    /**
+     * Getter method for the model projection matrix.
+     *
+     * @return the model projection matrix as float array
+     * */
     public float[] getModelProjectionMatrix() {
         return modelProjectionMatrix;
     }
 
+    /**
+     * Getter method for the model view matrix.
+     *
+     * @return the model view matrix as float array
+     * */
     public float[] getModelViewMatrix() {
         return modelViewMatrix;
     }
 
+    /**
+     * Getter method for the camera.
+     *
+     * @return the camera
+     * */
     public Camera getCamera() {
         return camera;
     }

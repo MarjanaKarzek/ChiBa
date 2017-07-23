@@ -44,11 +44,25 @@ public final class Object3DBuilder {
 	private Object3DsingleColor object3DsingleColor;
     private Object3DfullObject object3DfullObject;
 
+    /**
+     * Builds a point by using GL_POINTS.
+     *
+     * @param point     the float array of the point
+     * @return the 3d point
+     */
 	public static Object3DData buildPoint(float[] point) {
 		return new Object3DData(createNativeByteBuffer(point.length * 4).asFloatBuffer().put(point))
 				.setDrawMode(GLES20.GL_POINTS);
 	}
 
+    /**
+     * This method builds the model by using the wavefrontloader class.
+     *
+     * @param assets            current asset manager
+     * @param assetDir          current asset directory as STRING
+     * @param assetFilename     current asset filename
+     * @return the 3d object
+     */
 	public static Object3DData loadObj(AssetManager assets, String assetDir, String assetFilename) {
 		try {
 			final String modelId = assetDir + "/" + assetFilename;
@@ -78,6 +92,15 @@ public final class Object3DBuilder {
 		}
 	}
 
+    /**
+     * This method creates an instance of an object using either the Object3DsingleColor class
+     * or the Object3DfullObject class depending on the params.
+     *
+     * @param obj               current Object3DData object
+     * @param usingTextures     whether Object3DData object is using textures
+     * @param usingLights       whether Object3DData object is using lights
+     * @return the instance of the 3d object
+     */
 	public Object3D getDrawer(Object3DData obj, boolean usingTextures, boolean usingLights) throws IOException {
 
 		if (object3DsingleColor == null) {
@@ -97,7 +120,14 @@ public final class Object3DBuilder {
 		}
 	}
 
-	public static Object3DData generateArrays(AssetManager assets, Object3DData obj) throws IOException {
+    /**
+     * Generates the array of the model by using the Object3DData object.
+     *
+     * @param assets    current assets manager
+     * @param obj       current Object3DData object
+     * @return the generated arrays of the 3d object
+     */
+	private static Object3DData generateArrays(AssetManager assets, Object3DData obj) throws IOException {
 
 		Faces faces = obj.getFaces(); // model faces
 		FaceMaterials faceMats = obj.getFaceMats();
@@ -302,10 +332,20 @@ public final class Object3DBuilder {
 		return obj;
 	}
 
+    /**
+     * Getter method face normals.
+     *
+     * @return the instance of a Object3DsingleColor object
+     */
 	public Object3D getFaceNormalsDrawer() {
 		return object3DsingleColor;
 	}
 
+    /**
+     * Getter method for point drawer.
+     *
+     * @return the instance of a Object3DsinglePoint object
+     */
 	public Object3D getPointDrawer() {
 		if (object3DsinglePoint == null) {
 			object3DsinglePoint = new Object3DsinglePoint();
@@ -316,6 +356,7 @@ public final class Object3DBuilder {
 	/**
 	 * Builds a wireframe of the model by drawing all lines (3) of the triangles. This method uses
 	 * the drawOrder buffer.
+     *
 	 * @param objData the 3d model
 	 * @return the 3d wireframe
 	 */
@@ -430,10 +471,14 @@ public final class Object3DBuilder {
 				.setPosition(obj.getPosition()).setVersion(1);
 	}
 
+    /**
+     * Initialize the vertex byte buffer for shape coordinates and use the device hardware's native byte order.
+     *
+     * @param length    the lenght of the needed byte buffer
+     * @return ByteBuffer
+     */
 	private static ByteBuffer createNativeByteBuffer(int length) {
-		// initialize vertex byte buffer for shape coordinates
 		ByteBuffer bb = ByteBuffer.allocateDirect(length);
-		// use the device hardware's native byte order
 		bb.order(ByteOrder.nativeOrder());
 		return bb;
 	}

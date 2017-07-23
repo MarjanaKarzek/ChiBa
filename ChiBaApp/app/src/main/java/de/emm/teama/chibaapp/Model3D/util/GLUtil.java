@@ -41,8 +41,7 @@ public final class GLUtil {
 	 *            Attributes that need to be bound to the program.
 	 * @return An OpenGL handle to the program.
 	 */
-	public static int createAndLinkProgram(final int vertexShaderHandle, final int fragmentShaderHandle,
-			final String[] attributes) {
+	public static int createAndLinkProgram(final int vertexShaderHandle, final int fragmentShaderHandle, final String[] attributes) {
 		int programHandle = GLES20.glCreateProgram();
 
 		if (programHandle != 0) {
@@ -114,6 +113,9 @@ public final class GLUtil {
 
 	/**
      * Utility method to load texture onto Object3DData object within ModelRenderer.
+	 *
+	 * @param is the current input stream
+     * @return the texture
      * */
 	public static int loadTexture(final InputStream is) {
 		final int[] textureHandle = new int[1];

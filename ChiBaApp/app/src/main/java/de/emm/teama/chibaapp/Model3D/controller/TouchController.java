@@ -76,16 +76,27 @@ public class TouchController {
 	float[] rotationVector = new float[4];
 	private float previousRotationSquare;
 
+
+	/**
+     * Parameterized constructor of the TouchController class.
+     *
+     * @param view      the current ModelSurfaceView
+     * @param renderer  the current ModelRenderer
+     * */
 	public TouchController(ModelSurfaceView view, ModelRenderer renderer) {
 		super();
 		this.view = view;
 		this.mRenderer = renderer;
 	}
 
+	/**
+     *  MotionEvent reports input details from the touch screen and other input controls.
+     *  In this case, you are only interested in events where the touch position changed.
+     *
+     *  @param motionEvent  the motion event
+     *  @return the onTouchEvent state as boolean value
+     * */
 	public synchronized boolean onTouchEvent(MotionEvent motionEvent) {
-		// MotionEvent reports input details from the touch screen
-		// and other input controls. In this case, you are only
-		// interested in events where the touch position changed.
 
 		switch (motionEvent.getActionMasked()) {
 		case MotionEvent.ACTION_UP:
@@ -242,10 +253,8 @@ public class TouchController {
 	/**
 	 * Get the nearest object intersecting the specified ray and selects it
 	 * 
-	 * @param nearPoint
-	 *            the near point in world coordinates
-	 * @param farPoint
-	 *            the far point in world coordinates
+	 * @param nearPoint     the near point in world coordinates
+	 * @param farPoint      the far point in world coordinates
 	 */
 	private void selectObjectImpl(float[] nearPoint, float[] farPoint) {
 		SceneLoader scene = view.getMainFragment().getScene();
@@ -272,6 +281,14 @@ public class TouchController {
 		}
 	}
 
+	/**
+     * This method calculates coordinates of a touch on the screen.
+     *
+     * @param rx    the renderer x position
+     * @param ry    the renderer y position
+     * @param rz    the renderer z position
+     * @return the coordinates as float array
+     * */
 	public float[] unproject(float rx, float ry, float rz) {
 		float[] xyzw = { 0, 0, 0, 0 };
 

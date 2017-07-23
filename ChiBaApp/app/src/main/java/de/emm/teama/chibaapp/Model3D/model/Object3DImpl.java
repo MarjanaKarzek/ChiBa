@@ -43,6 +43,14 @@ public abstract class Object3DImpl implements Object3D {
 	private long counter = -1;
 	private double shift = -1d;
 
+	/**
+	 * Parameterized constructor of Object3DImpl object.
+	 *
+	 * @param id                    the identifier of the Object3DImpl object
+     * @param vertexShaderCode      the vertex shader code of the Object3DImpl object
+     * @param fragmentShaderCode    the fragment shader code of the Object3DImpl object
+     * @param variables             the variables of the Object3DImpl objects such as position, color, texture coordinates, normals, ...
+	 */
 	public Object3DImpl(String id, String vertexShaderCode, String fragmentShaderCode, String... variables) {
 		this.id = id;
 		// prepare shaders and OpenGL program
@@ -51,14 +59,33 @@ public abstract class Object3DImpl implements Object3D {
 		mProgram = GLUtil.createAndLinkProgram(vertexShader, fragmentShader, variables);
 	}
 
+	/**
+     * Interface method implementation to draw an Object3D object.
+     *
+     * @param obj           the object 3D data
+     * @param pMatrix       the projection matrix of the Object3D object
+     * @param vMatrix       the vector matrix of the Object3D object
+     * @param textureId     the texture identifier of the Object3D object
+     * @param lightPos      the light position of the Object3D object
+     * */
 	@Override
 	public void draw(Object3DData obj, float[] pMatrix, float[] vMatrix, int textureId, float[] lightPos) {
 		this.draw(obj, pMatrix, vMatrix, obj.getDrawMode(), obj.getDrawSize(), textureId, lightPos);
 	}
 
+    /**
+     * Interface method implementation to draw an Object3D object.
+     *
+     * @param obj           the object 3D data
+     * @param pMatrix       the projection matrix of the Object3D object
+     * @param vMatrix       the vector matrix of the Object3D object
+     * @param drawMode      the draw mode of the Object3D object
+     * @param drawSize      the draw size of the Object3D object
+     * @param textureId     the texture identifier of the Object3D object
+     * @param lightPos      the light position of the Object3D object
+     * */
 	@Override
-	public void draw(Object3DData obj, float[] pMatrix, float[] vMatrix, int drawMode, int drawSize, int textureId,
-					 float[] lightPos) {
+	public void draw(Object3DData obj, float[] pMatrix, float[] vMatrix, int drawMode, int drawSize, int textureId, float[] lightPos) {
 
 		// Add program to OpenGL environment
 		GLES20.glUseProgram(mProgram);
@@ -133,16 +160,35 @@ public abstract class Object3DImpl implements Object3D {
 		return mMatrix;
 	}
 
+	/**
+     * Method to get the model view matrix of an 3D object.
+     *
+     * @param mMatrix   the model matrix of an 3D object
+     * @param vMatrix   the view matrix of an 3D object
+     * @return the model view matrix of an 3D object
+     * */
 	public float[] getMvMatrix(float[] mMatrix, float[] vMatrix) {
 		Matrix.multiplyMM(mvMatrix, 0, vMatrix, 0, mMatrix, 0);
 		return mvMatrix;
 	}
 
+    /**
+     * Method to return the model view projection matrix of an 3D object.
+     *
+     * @param mvMatrix  the model view matrix of an 3D object
+     * @param pMatrix   the projection matrix of an 3D object
+     * @return the model view projection matrix of an 3D object
+     * */
 	protected float[] getMvpMatrix(float[] mvMatrix, float[] pMatrix) {
 		Matrix.multiplyMM(mvpMatrix, 0, pMatrix, 0, mvMatrix, 0);
 		return mvpMatrix;
 	}
 
+    /**
+     * Method to set the model view projection matrix of an 3D object.
+     *
+     * @param mvpMatrix the model view projection matrix of an 3D object
+     * */
 	protected void setMvpMatrix(float[] mvpMatrix) {
 
 		// get handle to shape's transformation matrix
@@ -154,10 +200,20 @@ public abstract class Object3DImpl implements Object3D {
 		GLUtil.checkGlError("glUniformMatrix4fv");
 	}
 
+    /**
+     * Method to check whether an 3D object supports colors.
+     *
+     * @return whether the colors are supported
+     * */
 	protected boolean supportsColors() {
 		return false;
 	}
 
+    /**
+     * Method to set one color of an 3D object.
+     *
+     * @param obj the Object3DData object
+     * */
 	protected void setColor(Object3DData obj) {
 
 		// get handle to fragment shader's vColor member
@@ -170,6 +226,12 @@ public abstract class Object3DImpl implements Object3D {
 		GLUtil.checkGlError("glUniform4fv");
 	}
 
+    /**
+     * Method to set multiple colors of an 3D object.
+     *
+     * @param obj the Object3DData object
+     * @return the colors of the 3D object
+     * */
 	protected int setColors(Object3DData obj) {
 
 		// get handle to fragment shader's vColor member
@@ -187,6 +249,12 @@ public abstract class Object3DImpl implements Object3D {
 		return mColorHandle;
 	}
 
+    /**
+     * Method to set the position of an 3D object.
+     *
+     * @param obj the Object3DData object
+     * @return the position of the 3D object
+     * */
 	protected int setPosition(Object3DData obj) {
 
 		// get handle to vertex shader's a_Position member
@@ -207,10 +275,21 @@ public abstract class Object3DImpl implements Object3D {
 		return mPositionHandle;
 	}
 
+    /**
+     * Method to check whether an 3D object supports normals.
+     *
+     * @return whether the normals are supported
+     * */
 	protected boolean supportsNormals() {
 		return false;
 	}
 
+	/**
+     * Method to set the normals of an 3D object.
+     *
+     * @param obj the Object3DData object
+     * @return the normals of an 3D object
+     * */
 	protected int setNormals(Object3DData obj) {
 		int mNormalHandle = GLES20.glGetAttribLocation(mProgram, "a_Normal");
 		GLUtil.checkGlError("glGetAttribLocation");
@@ -225,20 +304,40 @@ public abstract class Object3DImpl implements Object3D {
 		return mNormalHandle;
 	}
 
+    /**
+     * Method to check whether an 3D object supports lighting.
+     *
+     * @return whether the lighting are supported
+     * */
 	protected boolean supportsLighting() {
 		return false;
 	}
 
+    /**
+     * Method to set the lighting of an 3D object.
+     *
+     * @param lightPosInEyeSpace the position of the lighting
+     * */
 	protected void setLightPos(float[] lightPosInEyeSpace) {
 		int mLightPosHandle = GLES20.glGetUniformLocation(mProgram, "u_LightPos");
 		// Pass in the light position in eye space.
 		GLES20.glUniform3f(mLightPosHandle, lightPosInEyeSpace[0], lightPosInEyeSpace[1], lightPosInEyeSpace[2]);
 	}
 
+    /**
+     * Method to check whether an 3D object supports the model view matrix.
+     *
+     * @return whether the model view matrix is supported
+     * */
 	protected boolean supportsMvMatrix() {
 		return false;
 	}
 
+	/**
+     * Method to set the model view matrix of an 3D object.
+     *
+     * @param mvMatrix the model view matrix
+     * */
 	protected void setMvMatrix(float[] mvMatrix) {
 		int mMVMatrixHandle = GLES20.glGetUniformLocation(mProgram, "u_MVMatrix");
 		GLUtil.checkGlError("glGetUniformLocation");
@@ -248,10 +347,22 @@ public abstract class Object3DImpl implements Object3D {
 		GLUtil.checkGlError("glUniformMatrix4fv");
 	}
 
+    /**
+     * Method to check whether an 3D object supports textures.
+     *
+     * @return whether the textures are supported
+     * */
 	protected boolean supportsTextures() {
 		return false;
 	}
 
+	/**
+     * Method to set the texture of an 3D object.
+     *
+     * @param obj       the object 3D data
+     * @param textureId the texture identifier of the Object3D object
+     * @return the texture coordinates of the 3D object
+     * */
 	protected int setTexture(Object3DData obj, int textureId) {
 		int mTextureUniformHandle = GLES20.glGetUniformLocation(mProgram, "u_Texture");
 		GLUtil.checkGlError("glGetUniformLocation");
@@ -284,6 +395,13 @@ public abstract class Object3DImpl implements Object3D {
 		return mTextureCoordinateHandle;
 	}
 
+	/**
+     * Method to draw the shape of an 3D object.
+     *
+     * @param obj       the object 3D data
+     * @param drawMode  the draw mode of the Object3D object
+     * @param drawSize  the draw size of the Object3D object
+     * */
 	protected void drawShape(Object3DData obj, int drawMode, int drawSize) {
 		FloatBuffer vertexBuffer = obj.getVertexArrayBuffer() != null ? obj.getVertexArrayBuffer()
 				: obj.getVertexBuffer();
@@ -357,7 +475,19 @@ public abstract class Object3DImpl implements Object3D {
 	}
 }
 
-/* Draw a single point in space */
+/**
+ * <h1>Object3DsinglePoint Class </h1>
+ * A class that extends the abstract class Object3DImpl to draw opengl objects.
+ * <p>
+ * This subclass enables drawing a single point in space and provides a vertex shader code and a fragment shaders code.
+ *
+ * @author Andres Oviedo, modified by Natalie Grasser
+ * @version 1.3.1
+ * @since 2017-04-23, modified 2017-06-28
+ * Title: Android 3D Model Viewer
+ * Availability: https://github.com/andresoviedo/android-3D-model-viewer
+ *
+ */
 class Object3DsinglePoint extends Object3DImpl {
 	// @formatter:off
 	private static final String pointVertexShader =
@@ -384,7 +514,19 @@ class Object3DsinglePoint extends Object3DImpl {
 	}
 }
 
-/* Draw using single color */
+/**
+ * <h1>Object3DsingleColor Class </h1>
+ * A class that extends the abstract class Object3DImpl to draw opengl objects.
+ * <p>
+ * This subclass enables drawing an object using a single color and provides a vertex shader code and a fragment shaders code.
+ *
+ * @author Andres Oviedo, modified by Natalie Grasser
+ * @version 1.3.1
+ * @since 2017-04-23, modified 2017-06-28
+ * Title: Android 3D Model Viewer
+ * Availability: https://github.com/andresoviedo/android-3D-model-viewer
+ *
+ */
 class Object3DsingleColor extends Object3DImpl {
 
 	// @formatter:off
@@ -414,7 +556,19 @@ class Object3DsingleColor extends Object3DImpl {
 	}
 }
 
-/* Drawer using colors, textures & lights */
+/**
+ * <h1>Object3DfullObject Class </h1>
+ * A class that extends the abstract class Object3DImpl to draw opengl objects.
+ * <p>
+ * This subclass enables drawing an object using colors, textures & lights and provides a vertex shader code and a fragment shaders code.
+ *
+ * @author Andres Oviedo, modified by Natalie Grasser
+ * @version 1.3.1
+ * @since 2017-04-23, modified 2017-06-28
+ * Title: Android 3D Model Viewer
+ * Availability: https://github.com/andresoviedo/android-3D-model-viewer
+ *
+ */
 class Object3DfullObject extends Object3DImpl {
 	// @formatter:off
 	private final static String vertexShaderCode =
