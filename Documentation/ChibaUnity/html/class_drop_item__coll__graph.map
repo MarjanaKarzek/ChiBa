@@ -1,0 +1,4 @@
+<map id="DropItem" name="DropItem">
+<area shape="rect" id="node3" href="$class_inventory.html" title="This class sets up the inventory. Based on the book: Spiele entwickeln mit Unity 5. " alt="" coords="65,81,139,108"/>
+<area shape="rect" id="node4" href="$class_inventory_item.html" title="This class defines scriptable objects for the inventory. " alt="" coords="163,81,262,108"/>
+</map>
