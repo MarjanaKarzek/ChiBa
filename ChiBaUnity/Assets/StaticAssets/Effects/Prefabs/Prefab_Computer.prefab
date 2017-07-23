@@ -27,7 +27,6 @@ GameObject:
   - component: {fileID: 65350826243727502}
   - component: {fileID: 114763187754877326}
   - component: {fileID: 114812868303182994}
-  - component: {fileID: 114426522376634154}
   - component: {fileID: 114359508369747018}
   m_Layer: 0
   m_Name: Prefab_Computer
@@ -150,18 +149,6 @@ MonoBehaviour:
   sunglasses: {fileID: 0}
   umbrella: {fileID: 0}
   ball: {fileID: 0}
---- !u!114 &114426522376634154
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1033980657435130}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d591986d502a45458d8a1e21bea0b20, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 10
 --- !u!114 &114568270612097556
 MonoBehaviour:
   m_ObjectHideFlags: 1
