@@ -2,24 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FadeMainScene : MonoBehaviour {
+/**
+ * \author   Jhomar Besmens
+ * \version 1.0
+ * \date    2017-07-19
+ *
+ * \brief   This class creates an flash bang effect when the transition from the Intro_Scene to the Main_Scene happens.
+ */
+public class FadeMainScene : MonoBehaviour
+{
+    private CanvasGroup fadeGroup;  /*!< Variable for the CanvasGroup */
+    private float fadeInSpeed = 0.15f;  /*!< Variable for the fade duration */
 
-    private CanvasGroup fadeGroup;
-    private float fadeInSpeed = 0.15f;
-
+    /**
+     * This method gets the CanvasGroup in the scene and starts then with a white screen.
+     */
     private void Start()
     {
-        // Grab the only CanvasGroup in the scene
         fadeGroup = GetComponent<CanvasGroup>();
 
-        // Start with a white screen;
         fadeGroup.alpha = 1;
     }
 
+    /**
+     * This method takes the alpha value from the fadeGroup and substract the time since the transition multiplied by fadeInSpeeed.
+     */
     private void Update()
     {
-        // Fade-in
-        fadeGroup.alpha = 1 - Time.timeSinceLevelLoad * fadeInSpeed;
+               fadeGroup.alpha = 1 - Time.timeSinceLevelLoad * fadeInSpeed;
     }
 
 }
